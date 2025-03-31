@@ -1,0 +1,36 @@
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "https://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <!-- 開發模式：錯誤資訊詳細 -->
+    <constant name="struts.devMode" value="true" />
+
+    <!-- 功能模組配置 -->
+    <package name="default" extends="struts-default">
+
+        <!-- 商品列表 -->
+        <action name="productList" class="com.eshop.product.ProductController">
+            <result name="success">/product/product_list.jsp</result>
+        </action>
+
+        <!-- 商品詳情 -->
+        <action name="productDetail" class="com.eshop.product.ProductController" method="detail">
+            <result name="detail">/product/product_detail.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <!-- 顯示新增商品頁 -->
+        <action name="showAddProduct" class="com.eshop.product.ProductController" method="showAddForm">
+            <result name="success">/product/product_add.jsp</result> <!-- 路徑與檔名一致 -->
+        </action>
+
+        <!-- 新增商品處理 -->
+        <action name="addProduct" class="com.eshop.product.ProductController" method="addProduct">
+            <result name="success" type="redirectAction">productList</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+
+    </package>
+</struts>
