@@ -3,16 +3,19 @@
 
 <html>
 <head>
-    <title>新增商品</title>
+    <title>修改商品</title>
 </head>
 <body>
-<h2>新增商品</h2>
+<h2>修改商品</h2>
 
-<s:form action="addProduct" method="post">
+<s:form action="updateProduct" method="post">
+    <!-- 隱藏欄位：商品編號 -->
+    <s:hidden name="product.productNo" />
+
     <table>
         <tr>
             <td><label for="productName">商品名稱</label></td>
-            <td><s:textfield name="product.productName" id="productName" required="true" size="30" /></td>
+            <td><s:textfield name="product.productName" id="productName" size="30" required="true" /></td>
         </tr>
 
         <tr>
@@ -22,12 +25,12 @@
 
         <tr>
             <td><label for="productPrice">商品價格</label></td>
-            <td><s:textfield name="product.productPrice" id="productPrice" required="true" size="10" /></td>
+            <td><s:textfield name="product.productPrice" id="productPrice" size="10" required="true" /></td>
         </tr>
 
         <tr>
             <td><label for="productAddQty">上架數量</label></td>
-            <td><s:textfield name="product.productAddQty" id="productAddQty" required="true" size="10" /></td>
+            <td><s:textfield name="product.productAddQty" id="productAddQty" size="10" required="true" /></td>
         </tr>
 
         <tr>
@@ -40,7 +43,6 @@
                           listValue="value"
                           headerKey=""
                           headerValue="請選擇狀態" />
-
             </td>
         </tr>
 
@@ -53,17 +55,17 @@
                           listKey="productCategoryId"
                           listValue="productCategoryName"
                           headerKey=""
-                          headerValue="請選擇分類" />
+                          headerValue="請選擇類別" />
             </td>
         </tr>
 
-
         <tr>
             <td></td>
-            <td><s:submit value="新增商品" /></td>
+            <td><s:submit value="更新商品" /></td>
         </tr>
     </table>
 </s:form>
 
+<p><a href="productList.action">← 回商品列表</a></p>
 </body>
 </html>

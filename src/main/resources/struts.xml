@@ -28,8 +28,19 @@
         <!-- 新增商品處理 -->
         <action name="addProduct" class="com.eshop.product.ProductController" method="addProduct">
             <result name="success" type="redirectAction">productList</result>
+            <result name="error">/product/product_add.jsp</result>
+        </action>
+
+        <action name="editProduct" class="com.eshop.product.ProductController" method="editProduct">
+            <result name="edit">/product/product_edit.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
+
+        <action name="updateProduct" class="com.eshop.product.ProductController" method="updateProduct">
+            <result name="success" type="redirectAction">productList</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
 
 
     </package>

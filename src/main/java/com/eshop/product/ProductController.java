@@ -14,68 +14,81 @@ import java.util.Map;
 public class ProductController extends ActionSupport {
 
     private List<ProductCategory> categoryList;
-    private Map<String, String> statusOptions = new LinkedHashMap<>();
+    private Map<String, String> statusOptions = new LinkedHashMap<>(); // 給 JSP 狀態下拉選單用
 
-    private ProductDAO productDAO = new ProductDAO();
     private ProductService productService = new ProductService();
-
-    // 表單綁定欄位
     private List<Product> productList;
     private Product product;
     private int productNo;
 
-    // 商品列表 (對應 productList.action)
+    // 商品列表
     public String execute() {
         productList = productService.getAllProducts();
         return SUCCESS;
     }
 
-    // 商品詳情 (對應 productDetail.action?productNo=xxx)
+    // 商品詳情
     public String detail() {
         product = productService.getProductById(productNo);
         return (product != null) ? "detail" : ERROR;
     }
 
-    // 顯示新增商品頁面 (對應 showAddProduct.action)
+    // 顯示新增商品頁面
     public String showAddForm() {
+        // 取得分類列表 (供 JSP 下拉選單使用)
         ProductCategoryDAO categoryDAO = new ProductCategoryDAO();
-        categoryList = categoryDAO.findAll(); // ✅ 把分類資料撈出來
-        return SUCCESS; // product_add.jsp
+        categoryList = categoryDAO.findAll();
+
+        // 狀態選項初始化（上架/下架）
+        statusOptions = new LinkedHashMap<>();
+        statusOptions.put("1", "上架");
+        statusOptions.put("0", "下架");
+
+        return SUCCESS;
     }
 
 
-    // 處理新增商品 (對應 addProduct.action)
+    // 處理新增商品
     public String addProduct() {
+        categoryList = new ProductCategoryDAO().findAll(); // 確保驗證失敗能重新顯示下拉選單
+
         if (product != null) {
-            // 自動補上時間與預設值
             product.setProductAddTime(LocalDateTime.now());
-            product.setProductRemoveTime(null);
-
-            // 自動補齊庫存數量
-            if (product.getProductAddQty() != null && product.getRemainingQty() == null) {
-                product.setRemainingQty(product.getProductAddQty());
-            }
-
-            // 印出確認用
-            System.out.println("✅ 收到新增商品資料：");
-            System.out.println("名稱：" + product.getProductName());
-            System.out.println("價格：" + product.getProductPrice());
-            System.out.println("上架數量：" + product.getProductAddQty());
-            System.out.println("庫存：" + product.getRemainingQty());
-            System.out.println("分類ID：" + product.getProductCategory());
-            System.out.println("狀態：" + product.getProductStatus());
-
+            product.setRemainingQty(product.getProductAddQty());
             productService.addProduct(product);
-            addActionMessage("商品新增成功！");
             return SUCCESS;
+        }
+        return ERROR;
+    }
+
+    // 顯示修改頁面 (對應 editProduct.action)
+    public String editProduct() {
+        product = productService.getProductById(productNo);
+        if (product != null) {
+            categoryList = new ProductCategoryDAO().findAll();
+            statusOptions.put("1", "上架");
+            statusOptions.put("0", "下架");
+            return "edit";
         } else {
-            addActionError("新增商品失敗，請檢查輸入資料！");
+            addActionError("找不到此商品");
             return ERROR;
         }
     }
 
-    // ===== Getter / Setter =====
+    // 處理修改提交 (對應 updateProduct.action)
+    public String updateProduct() {
+        if (product != null && product.getProductNo() != null) {
+            productService.updateProduct(product);
+            addActionMessage("商品修改成功！");
+            return SUCCESS;
+        } else {
+            addActionError("商品修改失敗！");
+            return ERROR;
+        }
+    }
 
+
+    // ===== Getter / Setter =====
     public List<Product> getProductList() {
         return productList;
     }
@@ -96,7 +109,12 @@ public class ProductController extends ActionSupport {
         return categoryList;
     }
 
+
     public Map<String, String> getStatusOptions() {
         return statusOptions;
+    }
+
+    public void setStatusOptions(Map<String, String> statusOptions) {
+        this.statusOptions = statusOptions;
     }
 }
