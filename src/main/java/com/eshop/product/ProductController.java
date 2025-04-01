@@ -1,12 +1,11 @@
 package com.eshop.product;
 
 import com.eshop.product.DAO.ProductCategoryDAO;
-import com.eshop.product.DAO.ProductDAO;
+import com.eshop.product.ProductService.ProductService;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductCategory;
 import com.opensymphony.xwork2.ActionSupport;
 
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,14 +13,14 @@ import java.util.Map;
 public class ProductController extends ActionSupport {
 
     private List<ProductCategory> categoryList;
-    private Map<String, String> statusOptions = new LinkedHashMap<>(); // 給 JSP 狀態下拉選單用
+    private Map<String, String> statusOptions = new LinkedHashMap<>();
 
     private ProductService productService = new ProductService();
     private List<Product> productList;
     private Product product;
     private int productNo;
 
-    // 商品列表
+      // 商品列表
     public String execute() {
         productList = productService.getAllProducts();
         return SUCCESS;
@@ -35,33 +34,24 @@ public class ProductController extends ActionSupport {
 
     // 顯示新增商品頁面
     public String showAddForm() {
-        // 取得分類列表 (供 JSP 下拉選單使用)
-        ProductCategoryDAO categoryDAO = new ProductCategoryDAO();
-        categoryList = categoryDAO.findAll();
-
-        // 狀態選項初始化（上架/下架）
-        statusOptions = new LinkedHashMap<>();
+        categoryList = new ProductCategoryDAO().findAll();
         statusOptions.put("1", "上架");
         statusOptions.put("0", "下架");
-
         return SUCCESS;
     }
 
-
     // 處理新增商品
     public String addProduct() {
-        categoryList = new ProductCategoryDAO().findAll(); // 確保驗證失敗能重新顯示下拉選單
+        categoryList = new ProductCategoryDAO().findAll();
 
         if (product != null) {
-            product.setProductAddTime(LocalDateTime.now());
-            product.setRemainingQty(product.getProductAddQty());
             productService.addProduct(product);
             return SUCCESS;
         }
         return ERROR;
     }
 
-    // 顯示修改頁面 (對應 editProduct.action)
+    // 顯示修改頁面
     public String editProduct() {
         product = productService.getProductById(productNo);
         if (product != null) {
@@ -75,16 +65,33 @@ public class ProductController extends ActionSupport {
         }
     }
 
-    // 處理修改提交 (對應 updateProduct.action)
+    // 處理商品更新
     public String updateProduct() {
         if (product != null && product.getProductNo() != null) {
-            productService.updateProduct(product);
-            addActionMessage("商品修改成功！");
+            boolean success = productService.updateProduct(product);
+            if (success) {
+                addActionMessage("商品修改成功！");
+                return SUCCESS;
+            }
+        }
+        addActionError("商品修改失敗！");
+        return ERROR;
+    }
+
+    // 刪除商品
+    public String deleteProduct() {
+        boolean success = productService.deleteProduct(productNo);
+        if (success) {
+            addActionMessage("商品刪除成功！");
             return SUCCESS;
         } else {
-            addActionError("商品修改失敗！");
+            addActionError("商品刪除失敗！");
             return ERROR;
         }
+
+
+
+
     }
 
 
@@ -108,7 +115,6 @@ public class ProductController extends ActionSupport {
     public List<ProductCategory> getCategoryList() {
         return categoryList;
     }
-
 
     public Map<String, String> getStatusOptions() {
         return statusOptions;

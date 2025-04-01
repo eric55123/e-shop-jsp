@@ -4,12 +4,28 @@
 <html>
 <head>
     <title>修改商品</title>
+    <style>
+        .img-preview {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        .img-preview img {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+        .img-preview input[type="checkbox"] {
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
 <h2>修改商品</h2>
 
-<s:form action="updateProduct" method="post">
-    <!-- 隱藏欄位：商品編號 -->
+<!-- 商品編輯表單和圖片管理混合 -->
+<s:form action="updateProductWithImages" method="post" enctype="multipart/form-data">
     <s:hidden name="product.productNo" />
 
     <table>
@@ -29,8 +45,8 @@
         </tr>
 
         <tr>
-            <td><label for="productAddQty">上架數量</label></td>
-            <td><s:textfield name="product.productAddQty" id="productAddQty" size="10" required="true" /></td>
+            <td><label for="remainingQty">剩餘庫存</label></td>
+            <td><s:textfield name="product.remainingQty" id="remainingQty" size="10" readonly="true" /></td>
         </tr>
 
         <tr>
@@ -59,6 +75,32 @@
             </td>
         </tr>
 
+        <!-- 上傳圖片欄位 -->
+        <tr>
+            <td><label for="uploadFiles">上傳圖片</label></td>
+            <td><input type="file" name="uploadFiles" id="uploadFiles" multiple accept="image/*" /></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><div class="preview" style="margin-top:10px;"></div></td>
+        </tr>
+
+        <!-- 已上傳圖片列出來 -->
+        <tr>
+            <td valign="top">已上傳圖片</td>
+            <td>
+                <s:iterator value="productImgs" var="img">
+                    <div class="img-preview">
+                        <label>
+                            <img src="${pageContext.request.contextPath}/<s:property value='#img.productImgUrl' />" />
+                            <br/>
+                            <input type="checkbox" name="deleteImgNos" value="<s:property value='#img.productImgNo' />" /> 刪除
+                        </label>
+                    </div>
+                </s:iterator>
+            </td>
+        </tr>
+
         <tr>
             <td></td>
             <td><s:submit value="更新商品" /></td>
@@ -67,5 +109,25 @@
 </s:form>
 
 <p><a href="productList.action">← 回商品列表</a></p>
+
+<script>
+    document.getElementById("uploadFiles").addEventListener("change", function (event) {
+        const previewContainer = document.querySelector(".preview");
+        if (previewContainer) previewContainer.innerHTML = "";
+
+        const files = event.target.files;
+        for (let i = 0; i < files.length; i++) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.style.maxWidth = "100px";
+                img.style.margin = "5px";
+                if (previewContainer) previewContainer.appendChild(img);
+            }
+            reader.readAsDataURL(files[i]);
+        }
+    });
+</script>
 </body>
 </html>

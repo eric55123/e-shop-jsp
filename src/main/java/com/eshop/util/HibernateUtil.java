@@ -1,23 +1,27 @@
 package com.eshop.util;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil {
 
-    private static final EntityManagerFactory emf;
+    private static final SessionFactory sessionFactory = buildSessionFactory();
 
-    static {
+    private static SessionFactory buildSessionFactory() {
         try {
-            emf = Persistence.createEntityManagerFactory("eShopPU");
+            // 會讀取 src/main/resources 下的 hibernate.cfg.xml
+            return new Configuration().configure().buildSessionFactory();
         } catch (Throwable ex) {
-            System.err.println("Initial EntityManagerFactory creation failed." + ex);
+            System.err.println("SessionFactory 建立失敗：" + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
 
-    public static EntityManager getEntityManager() {
-        return emf.createEntityManager();
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public static void shutdown() {
+        getSessionFactory().close();
     }
 }

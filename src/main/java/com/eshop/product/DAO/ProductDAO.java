@@ -60,6 +60,8 @@ public class ProductDAO {
             tx.begin();
             Product product = em.find(Product.class, productNo);
             if (product != null) {
+                // 初始化圖片清單以避免 Lazy loading 問題
+                product.getProductImgs().size();
                 em.remove(product);
             }
             tx.commit();

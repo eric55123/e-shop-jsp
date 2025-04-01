@@ -41,6 +41,35 @@
             <result name="error">/error.jsp</result>
         </action>
 
+        <action name="deleteProduct" class="com.eshop.product.ProductController" method="deleteProduct">
+            <result name="success" type="redirectAction">productList</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="addProductWithImage" class="com.eshop.product.AddProductWithImageAction">
+            <interceptor-ref name="fileUpload">
+                <param name="maximumSize">2097152</param> <!-- 2MB -->
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack" />
+            <result name="success" type="redirect">productList.action</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="deleteProductImg" class="com.eshop.product.DeleteProductImgAction">
+            <result name="success" type="redirect">editProduct.action?productNo=${productNo}</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="updateProductWithImages" class="com.eshop.product.UpdateProductWithImagesAction">
+            <interceptor-ref name="fileUpload">
+                <param name="maximumSize">5242880</param> <!-- 5MB -->
+                <param name="allowedTypes">image/jpeg,image/png,image/gif</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack"/>
+            <result name="success" type="redirectAction">productList</result>
+            <result name="error">/product/product_edit.jsp</result>
+        </action>
+
 
 
     </package>

@@ -1,4 +1,4 @@
--- -
+-- -DROP DATABASE e_shop;
 -- 適用於 MySQL + InnoDB + utf8mb4
 
 CREATE DATABASE IF NOT EXISTS e_shop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
