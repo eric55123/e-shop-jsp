@@ -1,4 +1,4 @@
-package com.eshop.product.ProductService;
+package com.eshop.product.Service;
 
 import com.eshop.product.DAO.ProductImgDAO;
 import com.eshop.product.Model.Product;

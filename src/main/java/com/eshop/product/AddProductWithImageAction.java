@@ -1,7 +1,7 @@
 package com.eshop.product;
 
-import com.eshop.product.ProductService.ProductImgService;
-import com.eshop.product.ProductService.ProductService;
+import com.eshop.product.Service.ProductImgService;
+import com.eshop.product.Service.ProductService;
 import com.eshop.product.Model.Product;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.commons.io.FileUtils;

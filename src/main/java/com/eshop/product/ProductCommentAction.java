@@ -5,8 +5,8 @@ package com.eshop.product;
 import com.eshop.member.model.Member;
 import com.eshop.product.Model.Product;
 import com.eshop.product.Model.ProductComment;
-import com.eshop.product.ProductService.ProductCommentService;
-import com.eshop.product.ProductService.ProductService;
+import com.eshop.product.Service.ProductCommentService;
+import com.eshop.product.Service.ProductService;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
