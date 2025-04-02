@@ -24,8 +24,7 @@
 <body>
 <h2>修改商品</h2>
 
-<!-- 商品編輯表單和圖片管理混合 -->
-<s:form action="updateProductWithImages" method="post" enctype="multipart/form-data">
+<s:form action="updateProductWithImages" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
     <s:hidden name="product.productNo" />
 
     <table>
@@ -75,7 +74,6 @@
             </td>
         </tr>
 
-        <!-- 上傳圖片欄位 -->
         <tr>
             <td><label for="uploadFiles">上傳圖片</label></td>
             <td><input type="file" name="uploadFiles" id="uploadFiles" multiple accept="image/*" /></td>
@@ -85,7 +83,6 @@
             <td><div class="preview" style="margin-top:10px;"></div></td>
         </tr>
 
-        <!-- 已上傳圖片列出來 -->
         <tr>
             <td valign="top">已上傳圖片</td>
             <td>
@@ -111,6 +108,29 @@
 <p><a href="productList.action">← 回商品列表</a></p>
 
 <script>
+    function validateForm() {
+        const price = document.getElementById("productPrice").value.trim();
+        const status = document.getElementById("productStatus").value;
+        const category = document.getElementById("productCategory").value;
+
+        if (!price || isNaN(price) || Number(price) <= 0) {
+            alert("請輸入正確的商品價格（必須為正數）");
+            return false;
+        }
+
+        if (!status) {
+            alert("請選擇商品狀態");
+            return false;
+        }
+
+        if (!category) {
+            alert("請選擇商品類別");
+            return false;
+        }
+
+        return true;
+    }
+
     document.getElementById("uploadFiles").addEventListener("change", function (event) {
         const previewContainer = document.querySelector(".preview");
         if (previewContainer) previewContainer.innerHTML = "";

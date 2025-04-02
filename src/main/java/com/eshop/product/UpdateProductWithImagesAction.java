@@ -19,7 +19,7 @@ public class UpdateProductWithImagesAction extends ActionSupport {
     private List<File> uploadFiles;
     private List<String> uploadFilesFileName;
     private List<Integer> deleteImgNos;
-
+    private List<String> uploadFilesContentType;
     private ProductService productService = new ProductService();
     private ProductImgService imgService = new ProductImgService();
 
@@ -82,15 +82,43 @@ public class UpdateProductWithImagesAction extends ActionSupport {
 
     // ===== Getter / Setter =====
 
-    public Product getProduct() { return product; }
-    public void setProduct(Product product) { this.product = product; }
+    public Product getProduct() {
+        return product;
+    }
 
-    public List<File> getUploadFiles() { return uploadFiles; }
-    public void setUploadFiles(List<File> uploadFiles) { this.uploadFiles = uploadFiles; }
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-    public List<String> getUploadFilesFileName() { return uploadFilesFileName; }
-    public void setUploadFilesFileName(List<String> uploadFilesFileName) { this.uploadFilesFileName = uploadFilesFileName; }
+    public List<File> getUploadFiles() {
+        return uploadFiles;
+    }
 
-    public List<Integer> getDeleteImgNos() { return deleteImgNos; }
-    public void setDeleteImgNos(List<Integer> deleteImgNos) { this.deleteImgNos = deleteImgNos; }
+    public void setUploadFiles(List<File> uploadFiles) {
+        this.uploadFiles = uploadFiles;
+    }
+
+    public List<String> getUploadFilesFileName() {
+        return uploadFilesFileName;
+    }
+
+    public void setUploadFilesFileName(List<String> uploadFilesFileName) {
+        this.uploadFilesFileName = uploadFilesFileName;
+    }
+
+    public List<String> getUploadFilesContentType() {
+        return uploadFilesContentType;
+    }
+
+    public void setUploadFilesContentType(List<String> uploadFilesContentType) {
+        this.uploadFilesContentType = uploadFilesContentType;
+    }
+
+    public List<Integer> getDeleteImgNos() {
+        return deleteImgNos;
+    }
+
+    public void setDeleteImgNos(List<Integer> deleteImgNos) {
+        this.deleteImgNos = deleteImgNos;
+    }
 }

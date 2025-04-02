@@ -54,4 +54,13 @@ public class ProductImgDAO {
             em.close();
         }
     }
+    public ProductImg findById(int imgNo) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(ProductImg.class, imgNo); // 透過主鍵查詢
+        } finally {
+            em.close();
+        }
+    }
+
 }

@@ -1,9 +1,10 @@
 package com.eshop.product;
 
-import com.eshop.product.DAO.ProductCategoryDAO;
+import com.eshop.product.ProductService.ProductImgService;
 import com.eshop.product.ProductService.ProductService;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductCategory;
+import com.eshop.product.DAO.ProductCategoryDAO;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.LinkedHashMap;
@@ -12,15 +13,17 @@ import java.util.Map;
 
 public class ProductController extends ActionSupport {
 
-    private List<ProductCategory> categoryList;
-    private Map<String, String> statusOptions = new LinkedHashMap<>();
-
-    private ProductService productService = new ProductService();
     private List<Product> productList;
     private Product product;
     private int productNo;
 
-      // 商品列表
+    private List<ProductCategory> categoryList;
+    private Map<String, String> statusOptions = new LinkedHashMap<>();
+
+    private ProductService productService = new ProductService();
+    private ProductImgService imgService = new ProductImgService();
+
+    // 商品列表
     public String execute() {
         productList = productService.getAllProducts();
         return SUCCESS;
@@ -42,8 +45,6 @@ public class ProductController extends ActionSupport {
 
     // 處理新增商品
     public String addProduct() {
-        categoryList = new ProductCategoryDAO().findAll();
-
         if (product != null) {
             productService.addProduct(product);
             return SUCCESS;
@@ -69,31 +70,30 @@ public class ProductController extends ActionSupport {
     public String updateProduct() {
         if (product != null && product.getProductNo() != null) {
             boolean success = productService.updateProduct(product);
-            if (success) {
-                addActionMessage("商品修改成功！");
-                return SUCCESS;
-            }
+            return success ? SUCCESS : ERROR;
         }
-        addActionError("商品修改失敗！");
         return ERROR;
     }
 
-    // 刪除商品
+    // 刪除商品（包含圖片與實體圖片檔案）
     public String deleteProduct() {
-        boolean success = productService.deleteProduct(productNo);
-        if (success) {
-            addActionMessage("商品刪除成功！");
-            return SUCCESS;
-        } else {
-            addActionError("商品刪除失敗！");
+        try {
+            Product product = productService.getProductById(productNo);
+            if (product != null) {
+                imgService.deleteAllImagesWithFilesByProduct(product);
+                productService.deleteProduct(productNo);
+                addActionMessage("商品與圖片成功刪除！");
+                return SUCCESS;
+            } else {
+                addActionError("找不到商品");
+                return ERROR;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            addActionError("刪除失敗：" + e.getMessage());
             return ERROR;
         }
-
-
-
-
     }
-
 
     // ===== Getter / Setter =====
     public List<Product> getProductList() {

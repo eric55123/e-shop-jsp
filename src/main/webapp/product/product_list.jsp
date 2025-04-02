@@ -31,11 +31,18 @@
                 <s:if test="productStatus == 0">下架</s:if>
             </td>
             <td>
-                <a href="productDetail.action?productNo=<s:property value='productNo'/>">查看</a> |
-                <a href="editProduct.action?productNo=<s:property value='productNo'/>">修改</a>
-                <a href="deleteProduct.action?productNo=<s:property value='productNo'/>"
+                <a href="<s:url action='productDetail'>
+                <s:param name='productNo' value='productNo'/>
+             </s:url>">查看</a> |
+                <a href="<s:url action='editProduct'>
+                <s:param name='productNo' value='productNo'/>
+             </s:url>">修改</a> |
+                <a href="<s:url action='deleteProduct'>
+                <s:param name='productNo' value='productNo'/>
+             </s:url>"
                    onclick="return confirm('確定要刪除這筆商品嗎？')">刪除</a>
             </td>
+
         </tr>
     </s:iterator>
 </table>

@@ -8,8 +8,8 @@
 <body>
 <h2>新增商品</h2>
 
-<!-- ✅ 改成新的 Action 並加上 enctype -->
-<s:form action="addProductWithImage" method="post" enctype="multipart/form-data">
+<!-- ✅ 改成新的 Action 並加上 enctype 和驗證事件 -->
+<s:form action="addProductWithImage" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
     <table>
         <tr>
             <td><label for="productName">商品名稱</label></td>
@@ -66,8 +66,6 @@
             </td>
         </tr>
 
-
-
         <tr>
             <td></td>
             <td><s:submit value="新增商品並上傳圖片" /></td>
@@ -75,11 +73,41 @@
     </table>
 </s:form>
 
-
+<!-- ✅ 表單驗證腳本 -->
 <script>
+    function validateForm() {
+        const price = document.getElementById("productPrice").value.trim();
+        const qty = document.getElementById("productAddQty").value.trim();
+        const status = document.getElementById("productStatus").value;
+        const category = document.getElementById("productCategory").value;
+
+        if (!price || isNaN(price) || Number(price) <= 0) {
+            alert("請輸入正確的商品價格（必須為正數）");
+            return false;
+        }
+
+        if (!qty || isNaN(qty) || !Number.isInteger(Number(qty)) || Number(qty) <= 0) {
+            alert("請輸入正確的上架數量（必須為正整數）");
+            return false;
+        }
+
+        if (!status) {
+            alert("請選擇商品狀態");
+            return false;
+        }
+
+        if (!category) {
+            alert("請選擇商品類別");
+            return false;
+        }
+
+        return true;
+    }
+
+    // ✅ 圖片預覽
     document.getElementById("uploadFile").addEventListener("change", function (event) {
         const preview = document.getElementById("preview");
-        preview.innerHTML = ""; // 清空舊預覽圖
+        preview.innerHTML = "";
 
         const files = event.target.files;
         for (let i = 0; i < files.length; i++) {
