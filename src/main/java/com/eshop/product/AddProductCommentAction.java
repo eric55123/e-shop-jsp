@@ -4,7 +4,7 @@ import com.eshop.product.Model.Product;
 import com.eshop.product.Model.ProductComment;
 import com.eshop.product.Service.ProductCommentService;
 import com.eshop.product.Service.ProductService;
-import com.eshop.member.model.Member;
+import com.eshop.member.Model.Member;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.List;

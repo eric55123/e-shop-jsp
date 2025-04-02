@@ -9,6 +9,15 @@
     <!-- 功能模組配置 -->
     <package name="default" extends="struts-default">
 
+        <interceptors>
+            <interceptor name="loginCheck" class="com.eshop.interceptor.LoginInterceptor"/>
+            <interceptor-stack name="authStack">
+                <interceptor-ref name="loginCheck"/>
+                <interceptor-ref name="defaultStack"/>
+            </interceptor-stack>
+        </interceptors>
+
+
         <!-- 商品列表 -->
         <action name="productList" class="com.eshop.product.ProductController">
             <result name="success">/product/product_list.jsp</result>
@@ -79,6 +88,56 @@
             <result name="error">/error.jsp</result>
         </action>
 
+        <action name="register" class="com.eshop.member.MemberAction" method="register">
+            <result name="success">/member/login.jsp</result>
+            <result name="input">/member/register.jsp</result>
+        </action>
+
+        <action name="login" class="com.eshop.member.MemberAction" method="login">
+            <result name="success" type="redirect">/productList.action</result>
+            <result name="input">/member/login.jsp</result>
+        </action>
+
+        <action name="logout" class="com.eshop.member.MemberAction" method="logout">
+            <result name="success" type="redirect">/productList.action</result>
+        </action>
+
+        <action name="profile" class="com.eshop.member.MemberAction" method="profile">
+            <result name="success">/member/profile.jsp</result>
+            <result name="login" type="redirect">/login.jsp</result>
+        </action>
+
+        <action name="addProductComment" class="com.eshop.product.AddProductCommentAction" method="execute">
+            <interceptor-ref name="authStack"/>
+            <result name="success" type="redirect">productDetail.action?productNo=${productNo}</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="productDetail" class="com.eshop.product.ProductController" method="detail">
+            <result name="detail">/product/product_detail.jsp</result>
+        </action>
+
+
+        <action name="memberRegister" class="com.eshop.member.MemberAction" method="showRegisterForm">
+            <result>/member/register.jsp</result>
+        </action>
+
+        <action name="register" class="com.eshop.member.MemberAction" method="register">
+            <result name="success">/member/login.jsp</result>
+            <result name="input">/member/register.jsp</result>
+        </action>
+
+        <action name="memberProfile" class="com.eshop.member.MemberAction" method="profile">
+            <result name="success">/member/profile.jsp</result>
+            <result name="login">/login.jsp</result>
+        </action>
+
+        <action name="updateMember" class="com.eshop.member.MemberAction" method="update">
+            <interceptor-ref name="authStack"/>
+            <result name="success" type="redirect">productList.action</result>
+            <result name="input">/memberProfile.jsp</result>
+            <result name="login" type="redirect">login.action</result>
+        </action>
 
 
     </package>

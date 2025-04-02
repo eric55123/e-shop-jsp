@@ -1,6 +1,7 @@
-package com.eshop.member.model;
+package com.eshop.member.Model;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -34,16 +35,17 @@ public class Member {
     private String phone;
 
     @Column(name = "status")
-    private Integer status;
+    private Integer status = 1;
 
     @Column(name = "created_at", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at", columnDefinition = "DATETIME ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
     @Column(name = "birthday")
-    private LocalDateTime birthday;
+    private java.time.LocalDate birthday;
+
 
     // ===== Getter / Setter =====
     public Integer getMemberId() {
@@ -134,11 +136,11 @@ public class Member {
         this.updatedAt = updatedAt;
     }
 
-    public LocalDateTime getBirthday() {
+    public LocalDate getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDateTime birthday) {
+    public void setBirthday(LocalDate birthday) {
         this.birthday = birthday;
     }
 }

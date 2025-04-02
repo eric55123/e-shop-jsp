@@ -8,23 +8,23 @@
     <persistence-unit name="eShopPU" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <!-- 註冊 Entity 類別（你可以依實際情況增減） -->
+        <!-- ✅ 註冊 Entity 類別 -->
         <class>com.eshop.product.Model.Product</class>
         <class>com.eshop.product.Model.ProductCategory</class>
         <class>com.eshop.product.Model.ProductImg</class>
-        <class>com.eshop.product.Model.ProductCategory</class>
-
+        <class>com.eshop.product.Model.ProductComment</class>
+        <class>com.eshop.member.Model.Member</class>
 
         <properties>
-            <!-- 資料庫連線設定 -->
+            <!-- ✅ 資料庫連線 -->
             <property name="javax.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
             <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/e_shop?useSSL=false&amp;serverTimezone=UTC"/>
             <property name="javax.persistence.jdbc.user" value="root"/>
             <property name="javax.persistence.jdbc.password" value="a"/>
 
-            <!-- Hibernate 設定 -->
+            <!-- ✅ Hibernate 設定 -->
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
-            <property name="hibernate.hbm2ddl.auto" value="update"/> <!-- create / update / validate / none -->
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
             <property name="hibernate.use_sql_comments" value="true"/>

@@ -1,6 +1,6 @@
 package com.eshop.product.Model;
 
-import com.eshop.member.model.Member;
+import com.eshop.member.Model.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -2,7 +2,7 @@ package com.eshop.product;
 
 
 
-import com.eshop.member.model.Member;
+import com.eshop.member.Model.Member;
 import com.eshop.product.Model.Product;
 import com.eshop.product.Model.ProductComment;
 import com.eshop.product.Service.ProductCommentService;
