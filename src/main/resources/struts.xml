@@ -70,6 +70,15 @@
             <result name="error">/product/product_edit.jsp</result>
         </action>
 
+        <action name="addProductComment" class="com.eshop.product.AddProductCommentAction">
+            <result name="success" type="redirectAction">
+                <param name="actionName">productDetail</param>
+                <param name="productNo">${productNo}</param>
+            </result>
+            <result name="loginRequired">/login.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
 
 
     </package>

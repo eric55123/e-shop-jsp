@@ -2,8 +2,10 @@ package com.eshop.product;
 
 import com.eshop.product.ProductService.ProductImgService;
 import com.eshop.product.ProductService.ProductService;
-import com.eshop.product.model.Product;
-import com.eshop.product.model.ProductCategory;
+import com.eshop.product.ProductService.ProductCommentService;
+import com.eshop.product.Model.Product;
+import com.eshop.product.Model.ProductCategory;
+import com.eshop.product.Model.ProductComment;
 import com.eshop.product.DAO.ProductCategoryDAO;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -16,12 +18,13 @@ public class ProductController extends ActionSupport {
     private List<Product> productList;
     private Product product;
     private int productNo;
-
     private List<ProductCategory> categoryList;
     private Map<String, String> statusOptions = new LinkedHashMap<>();
+    private List<ProductComment> comments;
 
     private ProductService productService = new ProductService();
     private ProductImgService imgService = new ProductImgService();
+    private ProductCommentService commentService = new ProductCommentService();
 
     // 商品列表
     public String execute() {
@@ -32,8 +35,22 @@ public class ProductController extends ActionSupport {
     // 商品詳情
     public String detail() {
         product = productService.getProductById(productNo);
-        return (product != null) ? "detail" : ERROR;
+        if (product != null) {
+            comments = commentService.getPublicCommentsByProduct(product);
+
+            // 🌟 加這段來預先觸發 LazyLoad
+            for (ProductComment c : comments) {
+                if (c.getMember() != null) {
+                    c.getMember().getName(); // 觸發初始化（防止 LazyInitializationException）
+                }
+            }
+
+            return "detail";
+        }
+        return ERROR;
     }
+
+
 
     // 顯示新增商品頁面
     public String showAddForm() {
@@ -122,5 +139,9 @@ public class ProductController extends ActionSupport {
 
     public void setStatusOptions(Map<String, String> statusOptions) {
         this.statusOptions = statusOptions;
+    }
+
+    public List<ProductComment> getComments() {
+        return comments;
     }
 }

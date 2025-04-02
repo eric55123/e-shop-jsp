@@ -1,8 +1,8 @@
 package com.eshop.product.ProductService;
 
 import com.eshop.product.DAO.ProductImgDAO;
-import com.eshop.product.model.Product;
-import com.eshop.product.model.ProductImg;
+import com.eshop.product.Model.Product;
+import com.eshop.product.Model.ProductImg;
 
 import java.io.File;
 import java.time.LocalDateTime;

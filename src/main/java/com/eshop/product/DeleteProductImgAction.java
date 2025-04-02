@@ -1,7 +1,7 @@
 package com.eshop.product;
 
 import com.eshop.product.ProductService.ProductImgService;
-import com.eshop.product.model.ProductImg;
+import com.eshop.product.Model.ProductImg;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.io.File;

@@ -1,6 +1,6 @@
 package com.eshop.product.DAO;
 
-import com.eshop.product.model.ProductCategory;
+import com.eshop.product.Model.ProductCategory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

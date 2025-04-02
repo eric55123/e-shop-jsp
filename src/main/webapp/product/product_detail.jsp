@@ -1,10 +1,15 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ page import="com.eshop.product.model.Product" %>
+<%@ page import="com.eshop.product.Model.Product" %>
+<%@ page import="com.eshop.product.Model.ProductComment" %>
+<%@ page import="com.eshop.member.model.Member" %>
 <%@ page import="java.util.*" %>
 
 <%
     Product product = (Product) request.getAttribute("product");
+    List<ProductComment> comments = (List<ProductComment>) request.getAttribute("comments");
+    Member loginMember = (Member) session.getAttribute("loginMember");
 %>
+
 <html>
 <head>
     <title>商品詳情</title>
@@ -23,11 +28,57 @@
     <input type="hidden" name="productNo" value="<%= product.getProductNo() %>">
     <button type="submit">加入購物車</button>
 </form>
+
+<hr>
+<h3>評論區</h3>
+
+<!-- 所有評論列表 -->
+<% if (comments != null && !comments.isEmpty()) { %>
+<ul>
+    <% for (ProductComment comment : comments) { %>
+    <li>
+        ⭐ <%= comment.getRating() %> 顆星 - <strong><%= comment.getMember().getName() %></strong>：
+        <%= comment.getCommentText() %><br>
+        <small>🕓 <%= comment.getCommentTime() %></small>
+    </li>
+    <% } %>
+</ul>
+<% } else { %>
+<p>目前尚無評論。</p>
+<% } %>
+
+<!-- 登入才能留言 -->
+<% if (loginMember != null) { %>
+<hr>
+<h4>發表評論</h4>
+<form action="addProductComment.action" method="post">
+    <input type="hidden" name="productNo" value="<%= product.getProductNo() %>">
+    <p>
+        評分：
+        <select name="rating" required>
+            <option value="">請選擇</option>
+            <option value="5">5 顆星</option>
+            <option value="4">4 顆星</option>
+            <option value="3">3 顆星</option>
+            <option value="2">2 顆星</option>
+            <option value="1">1 顆星</option>
+        </select>
+    </p>
+    <p>
+        評論內容：<br>
+        <textarea name="commentText" rows="4" cols="40" required></textarea>
+    </p>
+    <button type="submit">送出評論</button>
+</form>
+<% } else { %>
+<p>請先 <a href="login.jsp">登入</a> 才能留言。</p>
+<% } %>
+
 <% } else { %>
 <p>查無此商品。</p>
 <% } %>
 
 <br>
-<a href="productList.action">回商品列表</a>
+<a href="productList.action">← 回商品列表</a>
 </body>
 </html>

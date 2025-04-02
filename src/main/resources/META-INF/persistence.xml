@@ -9,10 +9,10 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
         <!-- 註冊 Entity 類別（你可以依實際情況增減） -->
-        <class>com.eshop.product.model.Product</class>
-        <class>com.eshop.product.model.ProductCategory</class>
-        <class>com.eshop.product.model.ProductImg</class>
-        <class>com.eshop.product.model.ProductCategory</class>
+        <class>com.eshop.product.Model.Product</class>
+        <class>com.eshop.product.Model.ProductCategory</class>
+        <class>com.eshop.product.Model.ProductImg</class>
+        <class>com.eshop.product.Model.ProductCategory</class>
 
 
         <properties>
