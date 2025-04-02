@@ -8,6 +8,7 @@
     Product product = (Product) request.getAttribute("product");
     List<ProductComment> comments = (List<ProductComment>) request.getAttribute("comments");
     Member loginMember = (Member) session.getAttribute("loginMember");
+    Set<Integer> reportedCommentIds = (Set<Integer>) request.getAttribute("reportedCommentIds");
 %>
 
 <html>
@@ -37,9 +38,31 @@
 <ul>
     <% for (ProductComment comment : comments) { %>
     <li>
-        ⭐ <%= comment.getRating() %> 顆星 - <strong><%= comment.getMember().getName() %></strong>：
+        ⭐ <%= comment.getRating() %> 顆星 -
+        <strong><%= comment.getMember().getUsername() != null
+                ? comment.getMember().getUsername()
+                : comment.getMember().getName() %></strong>：
         <%= comment.getCommentText() %><br>
         <small>🕓 <%= comment.getCommentTime() %></small>
+
+        <% if (loginMember != null) {
+            boolean alreadyReported = reportedCommentIds != null && reportedCommentIds.contains(comment.getCommentId());
+            if (!alreadyReported) { %>
+        <form action="reportComment.action" method="post" style="display:inline; margin-left: 10px;">
+            <input type="hidden" name="commentId" value="<%= comment.getCommentId() %>">
+            <select name="reason" required>
+                <option value="">檢舉原因</option>
+                <option value="辱罵">辱罵</option>
+                <option value="廣告">廣告</option>
+                <option value="歧視">歧視</option>
+                <option value="其他">其他</option>
+            </select>
+            <button type="submit">檢舉</button>
+        </form>
+        <%   } else { %>
+        <span style="color:gray; margin-left: 10px;">您已檢舉</span>
+        <%   }
+        } %>
     </li>
     <% } %>
 </ul>
