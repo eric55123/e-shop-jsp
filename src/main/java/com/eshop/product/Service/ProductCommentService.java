@@ -1,9 +1,10 @@
 package com.eshop.product.Service;
 
-import com.eshop.product.DAO.ProductCommentDAO;
 import com.eshop.member.Model.Member;
-import com.eshop.product.Model.Product;
-import com.eshop.product.Model.ProductComment;
+import com.eshop.product.DAO.ProductCommentDAO;
+import com.eshop.product.model.Product;
+import com.eshop.product.model.ProductComment;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +14,7 @@ public class ProductCommentService {
     private ProductCommentDAO commentDAO = new ProductCommentDAO();
 
     // 新增評論
-    public void addComment(Product product, Member member, int rating, String text) {
+    public void addComment(com.eshop.product.model.Product product, Member member, int rating, String text) {
         ProductComment comment = new ProductComment();
         comment.setProduct(product);
         comment.setMember(member);

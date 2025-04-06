@@ -1,7 +1,7 @@
 package com.eshop.product.DAO;
 
-import com.eshop.product.Model.Product;
-import com.eshop.product.Model.ProductComment;
+import com.eshop.product.model.Product;
+import com.eshop.product.model.ProductComment;
 
 import javax.persistence.*;
 import java.util.List;

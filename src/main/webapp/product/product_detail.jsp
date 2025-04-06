@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<%@ page import="com.eshop.product.Model.Product" %>
-<%@ page import="com.eshop.product.Model.ProductComment" %>
+<%@ page import="com.eshop.product.model.Product" %>
+<%@ page import="com.eshop.product.model.ProductComment" %>
 <%@ page import="com.eshop.member.Model.Member" %>
 <%@ page import="java.util.*" %>
 

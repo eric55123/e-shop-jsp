@@ -2,7 +2,7 @@ package com.eshop.product.DAO;
 
 
 
-import com.eshop.product.Model.CommentReport;
+import com.eshop.product.model.CommentReport;
 
 import javax.persistence.*;
 import java.util.List;

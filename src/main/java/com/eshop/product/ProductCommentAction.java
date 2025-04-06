@@ -3,8 +3,8 @@ package com.eshop.product;
 
 
 import com.eshop.member.Model.Member;
-import com.eshop.product.Model.Product;
-import com.eshop.product.Model.ProductComment;
+import com.eshop.product.model.Product;
+import com.eshop.product.model.ProductComment;
 import com.eshop.product.Service.ProductCommentService;
 import com.eshop.product.Service.ProductService;
 import com.opensymphony.xwork2.ActionSupport;

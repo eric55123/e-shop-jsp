@@ -1,7 +1,7 @@
 package com.eshop.product.Service;
 
 import com.eshop.product.DAO.CommentReportDAO;
-import com.eshop.product.Model.CommentReport;
+import com.eshop.product.model.CommentReport;
 
 import java.util.List;
 

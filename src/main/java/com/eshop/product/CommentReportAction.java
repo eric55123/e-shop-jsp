@@ -1,8 +1,8 @@
 package com.eshop.product;
 
 import com.eshop.member.Model.Member;
-import com.eshop.product.Model.CommentReport;
-import com.eshop.product.Model.ProductComment;
+import com.eshop.product.model.CommentReport;
+import com.eshop.product.model.ProductComment;
 import com.eshop.product.Service.CommentReportService;
 import com.eshop.product.Service.ProductCommentService;
 import com.opensymphony.xwork2.ActionSupport;

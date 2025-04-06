@@ -2,8 +2,8 @@ package com.eshop.product;
 
 import com.eshop.product.Service.ProductImgService;
 import com.eshop.product.Service.ProductService;
-import com.eshop.product.Model.Product;
-import com.eshop.product.Model.ProductImg;
+import com.eshop.product.model.Product;
+import com.eshop.product.model.ProductImg;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;

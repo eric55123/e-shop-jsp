@@ -1,11 +1,11 @@
 package com.eshop.product;
 
+import com.eshop.product.model.ProductCategory;
 import com.eshop.product.Service.ProductImgService;
 import com.eshop.product.Service.ProductService;
 import com.eshop.product.Service.ProductCommentService;
-import com.eshop.product.Model.Product;
-import com.eshop.product.Model.ProductCategory;
-import com.eshop.product.Model.ProductComment;
+import com.eshop.product.model.Product;
+import com.eshop.product.model.ProductComment;
 import com.eshop.product.DAO.ProductCategoryDAO;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -45,7 +45,7 @@ public class ProductController extends ActionSupport {
                 }
             }
 
-            return "detail";
+            return "success";
         }
         return ERROR;
     }

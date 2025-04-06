@@ -1,7 +1,7 @@
 package com.eshop.product.Service;
 
 import com.eshop.product.DAO.ProductDAO;
-import com.eshop.product.Model.Product;
+import com.eshop.product.model.Product;
 
 import java.time.LocalDateTime;
 import java.util.List;
