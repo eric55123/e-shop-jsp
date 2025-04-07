@@ -1,6 +1,5 @@
-package com.eshop.product.DAO;
+package com.eshop.product.dao;
 
-import com.eshop.member.Model.Member;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductComment;
 

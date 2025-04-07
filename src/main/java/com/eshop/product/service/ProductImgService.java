@@ -1,6 +1,6 @@
-package com.eshop.product.Service;
+package com.eshop.product.service;
 
-import com.eshop.product.DAO.ProductImgDAO;
+import com.eshop.product.dao.ProductImgDAO;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductImg;
 

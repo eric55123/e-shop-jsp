@@ -1,6 +1,6 @@
-package com.eshop.product.Service;
+package com.eshop.product.service;
 
-import com.eshop.product.DAO.ProductDAO;
+import com.eshop.product.dao.ProductDAO;
 import com.eshop.product.model.Product;
 
 import java.time.LocalDateTime;

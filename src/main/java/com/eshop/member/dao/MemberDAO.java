@@ -1,6 +1,6 @@
-package com.eshop.member.DAO;
+package com.eshop.member.dao;
 
-import com.eshop.member.Model.Member;
+import com.eshop.member.model.Member;
 
 import javax.persistence.*;
 

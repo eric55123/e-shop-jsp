@@ -1,4 +1,4 @@
-package com.eshop.member.Model;
+package com.eshop.member.model;
 
 import javax.persistence.*;
 import java.time.LocalDate;

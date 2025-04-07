@@ -1,13 +1,13 @@
 package com.eshop.product;
 
-import com.eshop.member.Model.Member;
+import com.eshop.member.model.Member;
 import com.eshop.product.model.ProductCategory;
-import com.eshop.product.Service.ProductImgService;
-import com.eshop.product.Service.ProductService;
-import com.eshop.product.Service.ProductCommentService;
+import com.eshop.product.service.ProductImgService;
+import com.eshop.product.service.ProductService;
+import com.eshop.product.service.ProductCommentService;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductComment;
-import com.eshop.product.DAO.ProductCategoryDAO;
+import com.eshop.product.dao.ProductCategoryDAO;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 

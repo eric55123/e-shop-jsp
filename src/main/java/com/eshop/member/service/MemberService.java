@@ -1,7 +1,7 @@
 package com.eshop.member.service;
 
-import com.eshop.member.DAO.MemberDAO;
-import com.eshop.member.Model.Member;
+import com.eshop.member.dao.MemberDAO;
+import com.eshop.member.model.Member;
 
 public class MemberService {
 

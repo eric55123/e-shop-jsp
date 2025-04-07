@@ -1,7 +1,7 @@
-package com.eshop.product.Service;
+package com.eshop.product.service;
 
-import com.eshop.member.Model.Member;
-import com.eshop.product.DAO.ProductCommentDAO;
+import com.eshop.member.model.Member;
+import com.eshop.product.dao.ProductCommentDAO;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductComment;
 

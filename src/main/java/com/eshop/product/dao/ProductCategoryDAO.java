@@ -1,4 +1,4 @@
-package com.eshop.product.DAO;
+package com.eshop.product.dao;
 
 import com.eshop.product.model.ProductCategory;
 

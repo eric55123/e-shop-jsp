@@ -2,9 +2,9 @@ package com.eshop.product;
 
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductComment;
-import com.eshop.product.Service.ProductCommentService;
-import com.eshop.product.Service.ProductService;
-import com.eshop.member.Model.Member;
+import com.eshop.product.service.ProductCommentService;
+import com.eshop.product.service.ProductService;
+import com.eshop.member.model.Member;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.util.List;

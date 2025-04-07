@@ -1,6 +1,6 @@
 package com.eshop.member;
 
-import com.eshop.member.Model.Member;
+import com.eshop.member.model.Member;
 import com.eshop.member.service.MemberService;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;

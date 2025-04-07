@@ -1,4 +1,4 @@
-package com.eshop.product.DAO;
+package com.eshop.product.dao;
 
 
 
