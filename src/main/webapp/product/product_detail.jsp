@@ -101,8 +101,11 @@
 
 <form action="addToCart.action" method="post">
     <input type="hidden" name="productNo" value="<%= product.getProductNo() %>">
+    <label for="qty">數量：</label>
+    <input type="number" id="qty" name="quantity" value="1" min="1" max="<%= product.getRemainingQty() %>">
     <button type="submit">加入購物車</button>
 </form>
+
 
 <hr>
 <h3>評論區</h3>

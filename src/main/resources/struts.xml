@@ -150,6 +150,26 @@
 
         </action>
 
+        <action name="addToCart" class="com.eshop.cartitem.AddToCartAction">
+            <result name="success">/cartitem/cart.jsp</result>
+        </action>
+
+        <action name="updateCart" class="com.eshop.cartitem.UpdateCartAction">
+            <result name="success">/cartitem/cart.jsp</result>
+        </action>
+
+        <action name="removeFromCart" class="com.eshop.cartitem.RemoveFromCartAction">
+            <result name="success">/cartitem/cart.jsp</result>
+        </action>
+
+        <action name="clearCart" class="com.eshop.cartitem.ClearCartAction">
+            <result name="success">/cartitem/cart.jsp</result>
+        </action>
+
+        <action name="cart" class="com.eshop.cartitem.ShowCartAction">
+            <result name="success">/cartitem/cart.jsp</result>
+        </action>
+
 
 
     </package>

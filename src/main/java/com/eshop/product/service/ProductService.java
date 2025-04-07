@@ -53,4 +53,8 @@ public class ProductService {
         dao.delete(id);
         return true;
     }
+
+    public Product findById(int productNo) {
+        return dao.findById(productNo);
+    }
 }
