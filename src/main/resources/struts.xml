@@ -170,6 +170,20 @@
             <result name="success">/cartitem/cart.jsp</result>
         </action>
 
+        <action name="checkout" class="com.eshop.orders.CheckoutAction">
+            <result name="success">/ecpay/ecpay_submit.jsp</result>
+            <result name="ecpay">/ecpay/ecpay_submit.jsp</result>
+            <result name="login">/member/login.jsp</result> <!-- <== 必須有 -->
+            <result name="error">/cartitem/cart.jsp</result>
+        </action>
+
+        <action name="checkoutForm">
+            <result>/cartitem/checkoutForm.jsp</result>
+        </action>
+
+
+
+
 
 
     </package>

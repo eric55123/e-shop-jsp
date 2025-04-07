@@ -14,6 +14,9 @@
         <class>com.eshop.product.model.ProductImg</class>
         <class>com.eshop.product.model.ProductComment</class>
         <class>com.eshop.member.model.Member</class>
+        <class>com.eshop.orders.model.Orders</class>
+        <class>com.eshop.orders.model.OrderItem</class>
+
 
         <properties>
             <!-- ✅ 資料庫連線 -->

@@ -10,7 +10,7 @@
     String redirected = request.getParameter("redirected");
 
     if (referer != null && referer.contains("addToCart.action") && redirected == null) {
-        response.sendRedirect("cartitem/cart.jsp?redirected=true");
+        response.sendRedirect(request.getContextPath() + "/cartitem/cart.jsp?redirected=true");
         return;
     }
 %>
@@ -72,10 +72,12 @@
     </tr>
 </table>
 <br>
-<form action="checkout.action" method="post">
+<form action="checkoutForm.action" method="get">
     <button type="submit">我要結帳</button>
 </form>
-<form action="clearCart.action" method="post">
+
+
+<form action="<%= request.getContextPath() %>/clearCart.action" method="post">
     <button type="submit" onclick="return confirm('確定要清空購物車嗎？')">清空購物車</button>
 </form>
 
