@@ -1,5 +1,6 @@
 package com.eshop.product.DAO;
 
+import com.eshop.member.Model.Member;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductComment;
 
@@ -32,7 +33,7 @@ public class ProductCommentDAO {
         try {
             return em.createQuery(
                             "SELECT c FROM ProductComment c JOIN FETCH c.member " +
-                                    "WHERE c.product = :product AND c.status = 1 " +
+                                    "WHERE c.product = :product AND c.status IN (0, 1) " +
                                     "ORDER BY c.commentTime DESC", ProductComment.class)
                     .setParameter("product", product)
                     .getResultList();
@@ -53,14 +54,34 @@ public class ProductCommentDAO {
 
     // 更新評論狀態（0: 使用者刪除，-1: 管理員封鎖）
     public void updateStatus(int commentId, int newStatus) {
+        System.out.println("🧪 DAO: 使用 JPQL 更新狀態 commentId=" + commentId + ", newStatus=" + newStatus);
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            ProductComment comment = em.find(ProductComment.class, commentId);
-            if (comment != null) {
-                comment.setStatus(newStatus);
-            }
+            int updatedCount = em.createQuery(
+                            "UPDATE ProductComment c SET c.status = :status WHERE c.commentId = :id")
+                    .setParameter("status", newStatus)
+                    .setParameter("id", commentId)
+                    .executeUpdate();
+            tx.commit();
+
+            System.out.println("📝 JPQL 更新完成，受影響筆數：" + updatedCount);
+        } catch (Exception e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+    // 更新留言內容與評分
+    public void update(ProductComment comment) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.merge(comment); // 使用 merge 以避免 DetachedEntity 問題
             tx.commit();
         } catch (Exception e) {
             tx.rollback();
@@ -69,4 +90,5 @@ public class ProductCommentDAO {
             em.close();
         }
     }
+
 }

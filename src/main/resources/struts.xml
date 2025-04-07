@@ -19,38 +19,38 @@
 
 
         <!-- 商品列表 -->
-        <action name="productList" class="com.eshop.product.ProductController">
+        <action name="productList" class="com.eshop.product.ProductAction">
             <result name="success">/product/product_list.jsp</result>
         </action>
 
         <!-- 商品詳情 -->
-        <action name="productDetail" class="com.eshop.product.ProductController" method="detail">
+        <action name="productDetail" class="com.eshop.product.ProductAction" method="detail">
             <result name="detail">/product/product_detail.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
 
         <!-- 顯示新增商品頁 -->
-        <action name="showAddProduct" class="com.eshop.product.ProductController" method="showAddForm">
+        <action name="showAddProduct" class="com.eshop.product.ProductAction" method="showAddForm">
             <result name="success">/product/product_add.jsp</result> <!-- 路徑與檔名一致 -->
         </action>
 
         <!-- 新增商品處理 -->
-        <action name="addProduct" class="com.eshop.product.ProductController" method="addProduct">
+        <action name="addProduct" class="com.eshop.product.ProductAction" method="addProduct">
             <result name="success" type="redirectAction">productList</result>
             <result name="error">/product/product_add.jsp</result>
         </action>
 
-        <action name="editProduct" class="com.eshop.product.ProductController" method="editProduct">
+        <action name="editProduct" class="com.eshop.product.ProductAction" method="editProduct">
             <result name="edit">/product/product_edit.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="updateProduct" class="com.eshop.product.ProductController" method="updateProduct">
+        <action name="updateProduct" class="com.eshop.product.ProductAction" method="updateProduct">
             <result name="success" type="redirectAction">productList</result>
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="deleteProduct" class="com.eshop.product.ProductController" method="deleteProduct">
+        <action name="deleteProduct" class="com.eshop.product.ProductAction" method="deleteProduct">
             <result name="success" type="redirectAction">productList</result>
             <result name="error">/error.jsp</result>
         </action>
@@ -113,7 +113,7 @@
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="productDetail" class="com.eshop.product.ProductController" method="detail">
+        <action name="productDetail" class="com.eshop.product.ProductAction" method="detail">
             <result name="success">/product/product_detail.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
@@ -140,15 +140,15 @@
             <result name="login" type="redirect">login.action</result>
         </action>
 
-        <action name="reportComment" class="com.eshop.product.CommentReportAction" method="execute">
-            <result name="success" type="redirectAction">
-                <param name="actionName">productDetail</param>
-                <param name="productNo">${productNo}</param>
-            </result>
-            <result name="error">/error.jsp</result>
+        <action name="reportComment" class="com.eshop.product.CommentReportAction" >
+
         </action>
 
+        <action name="updateComment" class="com.eshop.product.ProductCommentAction" method="updateComment"/>
 
+        <action name="deleteComment" class="com.eshop.product.ProductCommentAction" method="deleteComment">
+
+        </action>
 
 
 

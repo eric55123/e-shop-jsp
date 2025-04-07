@@ -14,6 +14,80 @@
 <html>
 <head>
     <title>商品詳情</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function reportComment(commentId, form) {
+            const reason = $(form).find("select[name='reason']").val();
+            if (!reason) {
+                alert("請選擇檢舉原因！");
+                return false;
+            }
+
+            $.post("reportComment.action", {
+                commentId: commentId,
+                reason: reason
+            }).done(function () {
+                $(form).replaceWith('<span style="color:gray; margin-left: 10px;">您已檢舉</span>');
+            }).fail(function () {
+                alert("檢舉失敗，請稍後再試");
+            });
+
+            return false;
+        }
+
+        function showEditForm(commentId) {
+            $("#commentDisplay_" + commentId).hide();
+            $("#commentEdit_" + commentId).show();
+        }
+
+        function cancelEdit(commentId) {
+            $("#commentEdit_" + commentId).hide();
+            $("#commentDisplay_" + commentId).show();
+        }
+
+        function submitEdit(commentId, productNo) {
+            const rating = $("#rating_" + commentId).val();
+            const text = $("#text_" + commentId).val();
+            const $div = $("#commentDisplay_" + commentId);
+            const username = $div.data("username") || "使用者";
+
+            $.post("updateComment.action", {
+                commentId: commentId,
+                rating: rating,
+                commentText: text,
+                productNo: productNo
+            }).done(function () {
+                $div.html(
+                    "⭐ " + rating + " 顆星 - <strong>" + username + "</strong>：<br>" +
+                    text + "<br>" +
+                    "<small>🕓 剛剛</small><br>" +
+                    '<button onclick="showEditForm(' + commentId + ')">編輯</button>' +
+                    '<button onclick="deleteComment(' + commentId + ', ' + productNo + ')">刪除</button>'
+                );
+                cancelEdit(commentId);
+            }).fail(function () {
+                alert("更新失敗，請稍後再試");
+            });
+
+            return false;
+        }
+
+        function deleteComment(commentId, productNo) {
+            if (!confirm("確定要刪除這則留言嗎？")) return;
+
+            $.post("deleteComment.action", {
+                commentId: commentId,
+                productNo: productNo
+            }).done(function () {
+                $("#commentDisplay_" + commentId).html(
+                    '<span style="color:gray; font-style:italic;">此留言已由使用者刪除</span>'
+                );
+            }).fail(function () {
+                alert("刪除失敗，請稍後再試");
+            });
+        }
+    </script>
 </head>
 <body>
 <h2>商品詳情</h2>
@@ -33,36 +107,68 @@
 <hr>
 <h3>評論區</h3>
 
-<!-- 所有評論列表 -->
 <% if (comments != null && !comments.isEmpty()) { %>
 <ul>
-    <% for (ProductComment comment : comments) { %>
+    <% for (ProductComment comment : comments) {
+        int cid = comment.getCommentId();
+        int status = comment.getStatus();
+        boolean isOwner = loginMember != null && comment.getMember().getMemberId().equals(loginMember.getMemberId());
+        String displayName = comment.getMember().getUsername() != null ? comment.getMember().getUsername() : comment.getMember().getName();
+    %>
     <li>
-        ⭐ <%= comment.getRating() %> 顆星 -
-        <strong><%= comment.getMember().getUsername() != null
-                ? comment.getMember().getUsername()
-                : comment.getMember().getName() %></strong>：
-        <%= comment.getCommentText() %><br>
-        <small>🕓 <%= comment.getCommentTime() %></small>
+        <div id="commentDisplay_<%= cid %>" data-username="<%= displayName %>">
+            <% if (status == 0) { %>
+            <span style="color:gray; font-style:italic;">此留言已由使用者刪除</span>
+            <% } else if (status == -1) { %>
+            <span style="color:gray; font-style:italic;">此留言為不當言論</span>
+            <% } else { %>
+            ⭐ <%= comment.getRating() %> 顆星 -
+            <strong><%= displayName %></strong>：
+            <%= comment.getCommentText() %><br>
+            <%
+                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
+            %>
+            <small>🕓 <%= comment.getCommentTime().format(formatter) %></small><br>
 
-        <% if (loginMember != null) {
-            boolean alreadyReported = reportedCommentIds != null && reportedCommentIds.contains(comment.getCommentId());
-            if (!alreadyReported) { %>
-        <form action="reportComment.action" method="post" style="display:inline; margin-left: 10px;">
-            <input type="hidden" name="commentId" value="<%= comment.getCommentId() %>">
-            <select name="reason" required>
-                <option value="">檢舉原因</option>
-                <option value="辱罵">辱罵</option>
-                <option value="廣告">廣告</option>
-                <option value="歧視">歧視</option>
-                <option value="其他">其他</option>
-            </select>
-            <button type="submit">檢舉</button>
-        </form>
-        <%   } else { %>
-        <span style="color:gray; margin-left: 10px;">您已檢舉</span>
-        <%   }
-        } %>
+
+            <% if (isOwner) { %>
+            <button onclick="showEditForm(<%= cid %>)">編輯</button>
+            <button onclick="deleteComment(<%= cid %>, <%= product.getProductNo() %>)">刪除</button>
+            <% } else if (loginMember != null) {
+                boolean alreadyReported = reportedCommentIds != null && reportedCommentIds.contains(cid);
+                if (!alreadyReported) { %>
+            <form onsubmit="return reportComment(<%= cid %>, this)" style="display:inline; margin-left: 10px;">
+                <select name="reason" required>
+                    <option value="">檢舉原因</option>
+                    <option value="辱罵">辱罵</option>
+                    <option value="廣告">廣告</option>
+                    <option value="歧視">歧視</option>
+                    <option value="其他">其他</option>
+                </select>
+                <button type="submit">檢舉</button>
+            </form>
+            <% } else { %>
+            <span style="color:gray; margin-left: 10px;">您已檢舉</span>
+            <% }
+            } %>
+            <% } %>
+        </div>
+
+        <!-- 隱藏的編輯表單 -->
+        <% if (status == 1 && isOwner) { %>
+        <div id="commentEdit_<%= cid %>" style="display:none;">
+            <form onsubmit="return submitEdit(<%= cid %>, <%= product.getProductNo() %>)">
+                <select id="rating_<%= cid %>" required>
+                    <% for (int i = 5; i >= 1; i--) { %>
+                    <option value="<%= i %>" <%= (i == comment.getRating()) ? "selected" : "" %>><%= i %> 顆星</option>
+                    <% } %>
+                </select><br>
+                <textarea id="text_<%= cid %>" rows="3" cols="40" required><%= comment.getCommentText() %></textarea><br>
+                <button type="submit">儲存</button>
+                <button type="button" onclick="cancelEdit(<%= cid %>)">取消</button>
+            </form>
+        </div>
+        <% } %>
     </li>
     <% } %>
 </ul>
@@ -70,7 +176,6 @@
 <p>目前尚無評論。</p>
 <% } %>
 
-<!-- 登入才能留言 -->
 <% if (loginMember != null) { %>
 <hr>
 <h4>發表評論</h4>
@@ -94,7 +199,7 @@
     <button type="submit">送出評論</button>
 </form>
 <% } else { %>
-<p>請先 <a href="login.jsp">登入</a> 才能留言。</p>
+<p>請先 <a href="login.action">登入</a> 才能留言。</p>
 <% } %>
 
 <% } else { %>

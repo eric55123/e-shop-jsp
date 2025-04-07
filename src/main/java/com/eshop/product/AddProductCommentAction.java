@@ -37,7 +37,7 @@ public class AddProductCommentAction extends ActionSupport {
             }
 
             commentService.addComment(product, loginMember, rating, commentText);
-            comments = commentService.getPublicCommentsByProduct(product);
+            comments = commentService.getPublicCommentsByProduct(product, loginMember);
             addActionMessage("評論成功");
             return SUCCESS;
         } catch (Exception e) {

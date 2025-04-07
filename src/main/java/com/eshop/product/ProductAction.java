@@ -1,5 +1,6 @@
 package com.eshop.product;
 
+import com.eshop.member.Model.Member;
 import com.eshop.product.model.ProductCategory;
 import com.eshop.product.Service.ProductImgService;
 import com.eshop.product.Service.ProductService;
@@ -8,12 +9,14 @@ import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductComment;
 import com.eshop.product.DAO.ProductCategoryDAO;
 import com.opensymphony.xwork2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
 
+import javax.servlet.http.HttpSession;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ProductController extends ActionSupport {
+public class ProductAction extends ActionSupport {
 
     private List<Product> productList;
     private Product product;
@@ -35,13 +38,17 @@ public class ProductController extends ActionSupport {
     // 商品詳情
     public String detail() {
         product = productService.getProductById(productNo);
-        if (product != null) {
-            comments = commentService.getPublicCommentsByProduct(product);
 
-            // 🌟 加這段來預先觸發 LazyLoad
+        HttpSession session = ServletActionContext.getRequest().getSession();
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        if (product != null) {
+            comments = commentService.getPublicCommentsByProduct(product, loginMember);
+
+            // 可選的 Lazy Load 預載（但 JOIN FETCH 已預載就不必）
             for (ProductComment c : comments) {
                 if (c.getMember() != null) {
-                    c.getMember().getName(); // 觸發初始化（防止 LazyInitializationException）
+                    c.getMember().getName();
                 }
             }
 
@@ -49,6 +56,7 @@ public class ProductController extends ActionSupport {
         }
         return ERROR;
     }
+
 
 
 

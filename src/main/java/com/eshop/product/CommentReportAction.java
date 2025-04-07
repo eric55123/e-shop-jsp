@@ -8,7 +8,9 @@ import com.eshop.product.Service.ProductCommentService;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.PrintWriter;
 import java.time.LocalDateTime;
 
 public class CommentReportAction extends ActionSupport {
@@ -16,37 +18,54 @@ public class CommentReportAction extends ActionSupport {
     private int commentId;
     private String reason;
     private int productNo;
+
     private CommentReportService reportService = new CommentReportService();
     private ProductCommentService commentService = new ProductCommentService();
 
     @Override
     public String execute() {
-        HttpSession session = ServletActionContext.getRequest().getSession();
-        Member member = (Member) session.getAttribute("loginMember");
+        try {
+            HttpSession session = ServletActionContext.getRequest().getSession();
+            Member member = (Member) session.getAttribute("loginMember");
 
-        if (member == null) {
-            addActionError("請先登入才能檢舉評論");
-            return LOGIN;
+            if (member == null) {
+                return writeJson("{\"message\":\"請先登入\"}");
+            }
+
+            ProductComment comment = commentService.getCommentById(commentId);
+            if (comment == null) {
+                return writeJson("{\"message\":\"找不到該評論\"}");
+            }
+
+            CommentReport report = new CommentReport();
+            report.setComment(comment);
+            report.setReporter(member);
+            report.setReason(reason);
+            report.setReportTime(LocalDateTime.now());
+            report.setCommentTime(comment.getCommentTime());
+            report.setStatus(0); // 預設未處理
+
+            reportService.insert(report);
+
+            return writeJson("{\"message\":\"檢舉成功\"}");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return writeJson("{\"message\":\"伺服器錯誤，請稍後再試\"}");
         }
+    }
 
-        ProductComment comment = commentService.getCommentById(commentId);
-        if (comment == null) {
-            addActionError("找不到該評論");
-            return ERROR;
+    private String writeJson(String json) {
+        try {
+            HttpServletResponse response = ServletActionContext.getResponse();
+            response.setContentType("application/json;charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.write(json);
+            out.flush();
+            out.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        CommentReport report = new CommentReport();
-        report.setComment(comment);
-        report.setReporter(member);
-        report.setReason(reason);
-        report.setReportTime(LocalDateTime.now());
-        report.setCommentTime(comment.getCommentTime());
-        report.setStatus(0); // 預設未處理
-
-        reportService.insert(report);
-        addActionMessage("檢舉成功，我們將儘快處理！");
-
-        return SUCCESS;
+        return null; // 不跳轉
     }
 
     // === Getter / Setter ===
