@@ -3,6 +3,8 @@ package com.eshop.member.service;
 import com.eshop.member.dao.MemberDAO;
 import com.eshop.member.model.Member;
 
+import java.util.List;
+
 public class MemberService {
 
     private MemberDAO memberDAO = new MemberDAO();
@@ -30,4 +32,16 @@ public class MemberService {
     public void update(Member member) {
         memberDAO.update(member);
     }
+
+    // 查詢所有會員
+    public List<Member> getAllMembers() {
+        return memberDAO.findAll();
+    }
+
+    // 依 ID 查詢單一會員
+    public Member getMemberById(Integer memberId) {
+        return memberDAO.findById(memberId);
+    }
+
+
 }

@@ -3,38 +3,24 @@
         "https://struts.apache.org/dtds/struts-2.5.dtd">
 
 <struts>
-    <!-- 開發模式：錯誤資訊詳細 -->
     <constant name="struts.devMode" value="true" />
 
-    <!-- 功能模組配置 -->
     <package name="default" extends="struts-default">
 
-        <interceptors>
-            <interceptor name="loginCheck" class="com.eshop.interceptor.LoginInterceptor"/>
-            <interceptor-stack name="authStack">
-                <interceptor-ref name="loginCheck"/>
-                <interceptor-ref name="defaultStack"/>
-            </interceptor-stack>
-        </interceptors>
-
-
-        <!-- 商品列表 -->
+        <!-- 商品功能 -->
         <action name="productList" class="com.eshop.product.ProductAction">
             <result name="success">/product/product_list.jsp</result>
         </action>
 
-        <!-- 商品詳情 -->
         <action name="productDetail" class="com.eshop.product.ProductAction" method="detail">
-            <result name="detail">/product/product_detail.jsp</result>
+            <result name="success">/product/product_detail.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
 
-        <!-- 顯示新增商品頁 -->
         <action name="showAddProduct" class="com.eshop.product.ProductAction" method="showAddForm">
-            <result name="success">/product/product_add.jsp</result> <!-- 路徑與檔名一致 -->
+            <result name="success">/product/product_add.jsp</result>
         </action>
 
-        <!-- 新增商品處理 -->
         <action name="addProduct" class="com.eshop.product.ProductAction" method="addProduct">
             <result name="success" type="redirectAction">productList</result>
             <result name="error">/product/product_add.jsp</result>
@@ -57,9 +43,9 @@
 
         <action name="addProductWithImage" class="com.eshop.product.AddProductWithImageAction">
             <interceptor-ref name="fileUpload">
-                <param name="maximumSize">2097152</param> <!-- 2MB -->
+                <param name="maximumSize">2097152</param>
             </interceptor-ref>
-            <interceptor-ref name="defaultStack" />
+            <interceptor-ref name="defaultStack"/>
             <result name="success" type="redirect">productList.action</result>
             <result name="error">/error.jsp</result>
         </action>
@@ -71,7 +57,7 @@
 
         <action name="updateProductWithImages" class="com.eshop.product.UpdateProductWithImagesAction">
             <interceptor-ref name="fileUpload">
-                <param name="maximumSize">5242880</param> <!-- 5MB -->
+                <param name="maximumSize">5242880</param>
                 <param name="allowedTypes">image/jpeg,image/png,image/gif</param>
             </interceptor-ref>
             <interceptor-ref name="defaultStack"/>
@@ -88,6 +74,7 @@
             <result name="error">/error.jsp</result>
         </action>
 
+        <!-- 會員 -->
         <action name="register" class="com.eshop.member.MemberAction" method="register">
             <result name="success">/member/login.jsp</result>
             <result name="input">/member/register.jsp</result>
@@ -107,25 +94,8 @@
             <result name="login" type="redirect">/login.jsp</result>
         </action>
 
-        <action name="addProductComment" class="com.eshop.product.AddProductCommentAction" method="execute">
-            <interceptor-ref name="authStack"/>
-            <result name="success" type="redirect">productDetail.action?productNo=${productNo}</result>
-            <result name="error">/error.jsp</result>
-        </action>
-
-        <action name="productDetail" class="com.eshop.product.ProductAction" method="detail">
-            <result name="success">/product/product_detail.jsp</result>
-            <result name="error">/error.jsp</result>
-        </action>
-
-
         <action name="memberRegister" class="com.eshop.member.MemberAction" method="showRegisterForm">
             <result>/member/register.jsp</result>
-        </action>
-
-        <action name="register" class="com.eshop.member.MemberAction" method="register">
-            <result name="success">/member/login.jsp</result>
-            <result name="input">/member/register.jsp</result>
         </action>
 
         <action name="memberProfile" class="com.eshop.member.MemberAction" method="profile">
@@ -134,22 +104,25 @@
         </action>
 
         <action name="updateMember" class="com.eshop.member.MemberAction" method="update">
-            <interceptor-ref name="authStack"/>
             <result name="success" type="redirect">productList.action</result>
             <result name="input">/memberProfile.jsp</result>
             <result name="login" type="redirect">login.action</result>
         </action>
 
-        <action name="reportComment" class="com.eshop.product.CommentReportAction" >
-
+        <!-- 評論 -->
+        <action name="reportComment" class="com.eshop.product.CommentReportAction" method="execute">
+            <result name="success">/product/product_detail.jsp</result>
         </action>
 
-        <action name="updateComment" class="com.eshop.product.ProductCommentAction" method="updateComment"/>
+        <action name="updateComment" class="com.eshop.product.ProductCommentAction" method="updateComment">
+            <result name="success">/product/product_detail.jsp</result>
+        </action>
 
         <action name="deleteComment" class="com.eshop.product.ProductCommentAction" method="deleteComment">
-
+            <result name="success">/product/product_detail.jsp</result>
         </action>
 
+        <!-- 購物車 -->
         <action name="addToCart" class="com.eshop.cartitem.AddToCartAction">
             <result name="success">/cartitem/cart.jsp</result>
         </action>
@@ -170,10 +143,11 @@
             <result name="success">/cartitem/cart.jsp</result>
         </action>
 
+        <!-- 結帳 -->
         <action name="checkout" class="com.eshop.orders.CheckoutAction">
             <result name="success">/ecpay/ecpay_submit.jsp</result>
             <result name="ecpay">/ecpay/ecpay_submit.jsp</result>
-            <result name="login">/member/login.jsp</result> <!-- <== 必須有 -->
+            <result name="login">/member/login.jsp</result>
             <result name="error">/cartitem/cart.jsp</result>
         </action>
 
@@ -181,9 +155,59 @@
             <result>/cartitem/checkoutForm.jsp</result>
         </action>
 
+        <!-- 優惠券 -->
+        <action name="addCoupon" class="com.eshop.coupon.CouponAction" method="create">
+            <result name="success">/coupon/add_success.jsp</result>
+            <result name="error">/coupon/addCoupon.jsp</result>
+        </action>
 
+        <action name="listCoupons" class="com.eshop.coupon.CouponAction" method="list">
+            <result name="success">/coupon/listCoupons.jsp</result>
+        </action>
 
+        <action name="back" >
+            <result>/back.jsp</result>
+        </action>
 
+        <action name="addCoupon" class="com.eshop.coupon.CouponAction" method="showAddForm">
+            <result name="success">/coupon/addCoupon.jsp</result>
+        </action>
+
+        <action name="createCoupon" class="com.eshop.coupon.CouponAction" method="create">
+            <result name="success">/coupon/addCoupon.jsp</result>
+            <result name="error">/coupon/addCoupon.jsp</result>
+            <result name="input">/coupon/addCoupon.jsp</result>
+        </action>
+
+        <!-- ✅ 顯示單一券資料給修改頁面 -->
+        <action name="editCoupon" class="com.eshop.coupon.CouponAction" method="find">
+            <result name="success">/coupon/editCoupon.jsp</result>
+            <result name="error">/coupon/editCoupon.jsp</result>
+        </action>
+
+        <!-- ✅ 修改處理 -->
+        <action name="updateCoupon" class="com.eshop.coupon.CouponAction" method="update">
+            <result name="success" type="redirectAction">listCoupons</result>
+            <result name="error">/coupon/editCoupon.jsp</result>
+        </action>
+
+        <action name="deleteCoupon" class="com.eshop.coupon.CouponAction" method="delete">
+            <result name="success" type="redirectAction">listCoupons</result>
+            <result name="error">/error.jsp</result>
+        </action>
+
+        <action name="assignCouponSelect" class="com.eshop.coupon.CouponAction" method="assignSelect">
+            <result>/coupon/assignCouponSelect.jsp</result>
+        </action>
+
+        <action name="showAssignForm" class="com.eshop.coupon.CouponAction" method="showAssignForm">
+            <result name="success">/coupon/assignCouponForm.jsp</result>
+        </action>
+
+        <action name="assignCoupon" class="com.eshop.coupon.CouponAction" method="assignCoupon">
+            <result name="success">/coupon/assignCouponForm.jsp</result>
+            <result name="error">/coupon/assignCouponForm.jsp</result>
+        </action>
 
 
     </package>

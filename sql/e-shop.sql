@@ -226,7 +226,7 @@ CREATE TABLE coupon_holder (
                                coupon_holder_id INT AUTO_INCREMENT PRIMARY KEY,
                                member_id INT,
                                coupon_id VARCHAR(50),
-                               coupon_code VARCHAR(50) UNIQUE,
+                               coupon_code VARCHAR(50) ,
                                assigned_time DATETIME DEFAULT CURRENT_TIMESTAMP,
                                used_status TINYINT CHECK (used_status IN (0, 1, 2, 3)),
                                used_time DATETIME,

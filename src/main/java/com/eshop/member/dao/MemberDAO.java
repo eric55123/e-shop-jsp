@@ -3,6 +3,7 @@ package com.eshop.member.dao;
 import com.eshop.member.model.Member;
 
 import javax.persistence.*;
+import java.util.List;
 
 public class MemberDAO {
 
@@ -62,4 +63,22 @@ public class MemberDAO {
             em.close();
         }
     }
+
+    public List<Member> findAll() {
+        EntityManager em = emf.createEntityManager();
+        List<Member> list = em.createQuery("FROM Member", Member.class).getResultList();
+        em.close();
+        return list;
+    }
+
+    public Member findById(Integer memberId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.find(Member.class, memberId);
+        } finally {
+            em.close();
+        }
+    }
+
+
 }
