@@ -12,28 +12,24 @@ import java.util.List;
 
 public class CouponAction extends ActionSupport {
 
-
-    private MemberService memberService = new MemberService();
     private CouponService couponService = new CouponService();
+    private MemberService memberService = new MemberService();
+
     private Coupon coupon;
     private List<Coupon> couponList;
-    private String message;
+    private List<Member> memberList;
     private Integer memberId;
+    private String message;
 
     // 👉 新增優惠券
     public String create() {
         try {
-            // 預設空值處理：沒勾選視為停用
             if (coupon.getIsEnabled() == null) {
                 coupon.setIsEnabled(0);
             }
-
-            // 清空空字串
             if (coupon.getDescription() != null && coupon.getDescription().trim().isEmpty()) {
                 coupon.setDescription(null);
             }
-
-            // 時間轉換（字串轉 java.sql.Timestamp）
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (coupon.getValidFromStr() != null)
                 coupon.setValidFrom(new java.sql.Timestamp(sdf.parse(coupon.getValidFromStr()).getTime()));
@@ -54,14 +50,11 @@ public class CouponAction extends ActionSupport {
     public String update() {
         try {
             if (coupon.getIsEnabled() == null) {
-                coupon.setIsEnabled(0); // 停用
+                coupon.setIsEnabled(0);
             }
-
             if (coupon.getDescription() != null && coupon.getDescription().trim().isEmpty()) {
                 coupon.setDescription(null);
             }
-
-            // 轉換日期格式
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (coupon.getValidFromStr() != null)
                 coupon.setValidFrom(new java.sql.Timestamp(sdf.parse(coupon.getValidFromStr()).getTime()));
@@ -78,6 +71,7 @@ public class CouponAction extends ActionSupport {
         }
     }
 
+    // 👉 刪除優惠券
     public String delete() {
         try {
             couponService.deleteCoupon(coupon.getCouponId());
@@ -87,59 +81,42 @@ public class CouponAction extends ActionSupport {
             addActionError("刪除失敗：" + e.getMessage());
             return ERROR;
         }
-
     }
-    public String assignSelect() {
-        couponList = couponService.getAllCoupons(); // 把所有優惠券帶給畫面
-        return SUCCESS;
-    }
-
 
     // 👉 查詢單一券
     public String find() {
         coupon = couponService.getCouponById(coupon.getCouponId());
-
-        // 顯示時預填日期欄位
         if (coupon.getValidFrom() != null) {
             coupon.setValidFromStr(new SimpleDateFormat("yyyy-MM-dd").format(coupon.getValidFrom()));
         }
         if (coupon.getValidTo() != null) {
             coupon.setValidToStr(new SimpleDateFormat("yyyy-MM-dd").format(coupon.getValidTo()));
         }
-
         return SUCCESS;
     }
 
+    // 👉 顯示全部優惠券
     public String list() {
         couponList = couponService.getAllCoupons();
         return SUCCESS;
     }
+
+    // 👉 顯示發放表單
     public String showAssignForm() {
-        // 可以取得 couponId 做查詢後預設處理
         if (coupon != null && coupon.getCouponId() != null) {
             coupon = couponService.getCouponById(coupon.getCouponId());
         }
-
         memberList = memberService.getAllMembers();
         return SUCCESS;
     }
 
-    private List<Member> memberList;
-
-    public List<Member> getMemberList() {
-        return memberList;
-    }
-
-    public void setMemberList(List<Member> memberList) {
-        this.memberList = memberList;
-    }
-
+    // 👉 發放優惠券給會員
     public String assignCoupon() {
         try {
+            memberList = memberService.getAllMembers();
             if (coupon != null && coupon.getCouponId() != null && memberId != null) {
                 Coupon selectedCoupon = couponService.getCouponById(coupon.getCouponId());
                 Member member = memberService.getMemberById(memberId);
-
                 couponService.assignCouponToMember(selectedCoupon, member);
                 message = "✅ 優惠券已成功發放給會員";
                 return SUCCESS;
@@ -152,27 +129,18 @@ public class CouponAction extends ActionSupport {
             return ERROR;
         }
     }
-
-    // ==== getter / setter for Struts2 表單資料綁定 ====
-
-    public MemberService getMemberService() {
-        return memberService;
-    }
-
-    public void setMemberService(MemberService memberService) {
-        this.memberService = memberService;
-    }
-
-    public CouponService getCouponService() {
-        return couponService;
-    }
-
-    public void setCouponService(CouponService couponService) {
-        this.couponService = couponService;
+    public String showAddForm() {
+        return SUCCESS;
     }
 
 
+    // 👉 顯示發放選擇清單
+    public String assignSelect() {
+        couponList = couponService.getAllCoupons();
+        return SUCCESS;
+    }
 
+    // ==== Getter / Setter ====
     public Coupon getCoupon() {
         return coupon;
     }
@@ -203,5 +171,29 @@ public class CouponAction extends ActionSupport {
 
     public void setMemberId(Integer memberId) {
         this.memberId = memberId;
+    }
+
+    public List<Member> getMemberList() {
+        return memberList;
+    }
+
+    public void setMemberList(List<Member> memberList) {
+        this.memberList = memberList;
+    }
+
+    public CouponService getCouponService() {
+        return couponService;
+    }
+
+    public void setCouponService(CouponService couponService) {
+        this.couponService = couponService;
+    }
+
+    public MemberService getMemberService() {
+        return memberService;
+    }
+
+    public void setMemberService(MemberService memberService) {
+        this.memberService = memberService;
     }
 }

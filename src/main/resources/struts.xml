@@ -155,20 +155,7 @@
             <result>/cartitem/checkoutForm.jsp</result>
         </action>
 
-        <!-- 優惠券 -->
-        <action name="addCoupon" class="com.eshop.coupon.CouponAction" method="create">
-            <result name="success">/coupon/add_success.jsp</result>
-            <result name="error">/coupon/addCoupon.jsp</result>
-        </action>
-
-        <action name="listCoupons" class="com.eshop.coupon.CouponAction" method="list">
-            <result name="success">/coupon/listCoupons.jsp</result>
-        </action>
-
-        <action name="back" >
-            <result>/back.jsp</result>
-        </action>
-
+        <!-- 優惠券功能 -->
         <action name="addCoupon" class="com.eshop.coupon.CouponAction" method="showAddForm">
             <result name="success">/coupon/addCoupon.jsp</result>
         </action>
@@ -179,13 +166,15 @@
             <result name="input">/coupon/addCoupon.jsp</result>
         </action>
 
-        <!-- ✅ 顯示單一券資料給修改頁面 -->
+        <action name="listCoupons" class="com.eshop.coupon.CouponAction" method="list">
+            <result name="success">/coupon/listCoupons.jsp</result>
+        </action>
+
         <action name="editCoupon" class="com.eshop.coupon.CouponAction" method="find">
             <result name="success">/coupon/editCoupon.jsp</result>
             <result name="error">/coupon/editCoupon.jsp</result>
         </action>
 
-        <!-- ✅ 修改處理 -->
         <action name="updateCoupon" class="com.eshop.coupon.CouponAction" method="update">
             <result name="success" type="redirectAction">listCoupons</result>
             <result name="error">/coupon/editCoupon.jsp</result>
@@ -209,6 +198,8 @@
             <result name="error">/coupon/assignCouponForm.jsp</result>
         </action>
 
-
+        <action name="back">
+            <result>/back.jsp</result>
+        </action>
     </package>
 </struts>
