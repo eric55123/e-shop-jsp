@@ -40,4 +40,68 @@ public class CouponUsedLog {
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    public Integer getUsedId() {
+        return usedId;
+    }
+
+    public void setUsedId(Integer usedId) {
+        this.usedId = usedId;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getAppliedTime() {
+        return appliedTime;
+    }
+
+    public void setAppliedTime(Timestamp appliedTime) {
+        this.appliedTime = appliedTime;
+    }
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(BigDecimal discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public CouponHolder getCouponHolder() {
+        return couponHolder;
+    }
+
+    public void setCouponHolder(CouponHolder couponHolder) {
+        this.couponHolder = couponHolder;
+    }
+
+    public Orders getOrder() {
+        return order;
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
+    }
 }

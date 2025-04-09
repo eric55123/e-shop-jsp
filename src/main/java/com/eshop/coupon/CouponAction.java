@@ -129,32 +129,39 @@ public class CouponAction extends ActionSupport {
         return SUCCESS;
     }
 
-    // ✅ 發放給單一會員
+    // ✅ 發放給單一或多選會員
     public String assignCoupon() {
         try {
             if (coupon != null && coupon.getCouponId() != null) {
                 Coupon selectedCoupon = couponService.getCouponById(coupon.getCouponId());
 
-                // 如果有多選名單，就逐一處理
+                int success = 0;
+                int skip = 0;
+
                 if (memberIds != null && !memberIds.isEmpty()) {
                     for (Integer id : memberIds) {
                         Member member = memberService.getMemberById(id);
-                        couponService.assignCouponToMember(selectedCoupon, member);
+                        if (!couponService.hasCoupon(member.getMemberId(), selectedCoupon.getCouponId())) {
+                            couponService.assignCouponToMember(selectedCoupon, member);
+                            success++;
+                        } else {
+                            skip++;
+                        }
                     }
-                    message = "✅ 已成功發放給勾選的會員";
-                }
-                // 如果只有單一會員 ID
-                else if (memberId != null) {
+                } else if (memberId != null) {
                     Member member = memberService.getMemberById(memberId);
-                    couponService.assignCouponToMember(selectedCoupon, member);
-                    message = "✅ 優惠券已成功發放給該會員";
-                }
-                // 如果都沒有
-                else {
+                    if (!couponService.hasCoupon(member.getMemberId(), selectedCoupon.getCouponId())) {
+                        couponService.assignCouponToMember(selectedCoupon, member);
+                        success++;
+                    } else {
+                        skip++;
+                    }
+                } else {
                     addActionError("⚠️ 請至少選擇一位會員發送！");
                     return ERROR;
                 }
 
+                message = String.format("✅ 發送完成：%d 位成功，%d 位略過（已擁有）", success, skip);
                 memberList = getFilteredMembers();
                 return SUCCESS;
             } else {
@@ -167,7 +174,6 @@ public class CouponAction extends ActionSupport {
         }
     }
 
-
     // ✅ 發放給全部會員（後端重新以篩選條件取得）
     public String assignSelectedCoupon() {
         try {
@@ -175,10 +181,18 @@ public class CouponAction extends ActionSupport {
                 Coupon selectedCoupon = couponService.getCouponById(coupon.getCouponId());
                 List<Member> targetMembers = getFilteredMembers();
 
+                int success = 0;
+                int skip = 0;
+
                 for (Member member : targetMembers) {
-                    couponService.assignCouponToMember(selectedCoupon, member);
+                    if (!couponService.hasCoupon(member.getMemberId(), selectedCoupon.getCouponId())) {
+                        couponService.assignCouponToMember(selectedCoupon, member);
+                        success++;
+                    } else {
+                        skip++;
+                    }
                 }
-                message = "✅ 已成功發放給篩選條件的會員";
+                message = String.format("✅ 發送完成：%d 位成功，%d 位略過（已擁有）", success, skip);
                 memberList = targetMembers;
                 return SUCCESS;
             } else {

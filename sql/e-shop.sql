@@ -122,6 +122,8 @@ CREATE TABLE orders (
                         member_id INT,
                         order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
                         total_amount DECIMAL(10,2),
+                        discount_amount DECIMAL(10,2) DEFAULT 0.00, -- 折扣金額（新增）
+                        applied_coupon_code VARCHAR(50),           -- 使用的優惠券代碼（新增）
                         payment_status TINYINT CHECK (payment_status IN (0, 1)),
                         shipping_status TINYINT CHECK (shipping_status IN (0, 1)),
                         receiver_name VARCHAR(50),
@@ -133,6 +135,7 @@ CREATE TABLE orders (
                         FOREIGN KEY (member_id) REFERENCES member(member_id)
                             ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
 
 -- 訂單明細表
 CREATE TABLE order_item (
@@ -328,12 +331,12 @@ VALUES
     (2, 'edit_product', 'product', 2, '修改商品描述', '127.0.0.2'),
     (3, 'review_comment', 'product_comment', 3, '審核留言', '127.0.0.3');
 
--- 訂單主表
-INSERT INTO orders (member_id, total_amount, payment_status, shipping_status, receiver_name, receiver_phone, receiver_address, note)
-VALUES
-    (1, 550, 1, 1, 'Alice', '0911000111', '台北市', '快速到貨'),
-    (2, 1200, 1, 0, 'Bob', '0922000222', '新竹市', ''),
-    (3, 350, 0, 0, 'Charlie', '0933000333', '高雄市', '加強包裝');
+-- 訂單主表 (含折扣金額與優惠券代碼)
+INSERT INTO orders (member_id, total_amount, discount_amount, applied_coupon_code, payment_status, shipping_status, receiver_name, receiver_phone, receiver_address, note
+) VALUES
+      (1, 550, 50, 'BIRTHDAY50', 1, 1, 'Alice', '0911000111', '台北市', '快速到貨'),
+      (2, 1200, 0, NULL, 1, 0, 'Bob', '0922000222', '新竹市', ''),
+      (3, 350, 30, 'WELCOME30', 0, 0, 'Charlie', '0933000333', '高雄市', '加強包裝');
 
 -- 訂單明細
 INSERT INTO order_item (order_id, product_no, quantity, unit_price, subtotal)

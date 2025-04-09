@@ -50,6 +50,13 @@ public class Orders {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "discount_amount")
+    private BigDecimal discountAmount;
+
+    @Column(name = "applied_coupon_code")
+    private String appliedCouponCode;
+
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
@@ -163,6 +170,22 @@ public class Orders {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public BigDecimal getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(BigDecimal discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public String getAppliedCouponCode() {
+        return appliedCouponCode;
+    }
+
+    public void setAppliedCouponCode(String appliedCouponCode) {
+        this.appliedCouponCode = appliedCouponCode;
     }
 }
 

@@ -124,6 +124,10 @@
 
         <!-- 購物車 -->
         <action name="addToCart" class="com.eshop.cartitem.AddToCartAction">
+            <result name="success" type="redirectAction">cart</result>
+        </action>
+
+        <action name="cart" class="com.eshop.cartitem.ShowCartAction">
             <result name="success">/cartitem/cart.jsp</result>
         </action>
 
@@ -136,10 +140,6 @@
         </action>
 
         <action name="clearCart" class="com.eshop.cartitem.ClearCartAction">
-            <result name="success">/cartitem/cart.jsp</result>
-        </action>
-
-        <action name="cart" class="com.eshop.cartitem.ShowCartAction">
             <result name="success">/cartitem/cart.jsp</result>
         </action>
 
@@ -208,6 +208,12 @@
         <result name="success">/coupon/assignCouponForm.jsp</result>
             <result name="error">/coupon/assignCouponForm.jsp</result>
         </action>
+
+        <action name="applyCoupon" class="com.eshop.cartitem.ApplyCouponAction">
+            <result name="success">/cartitem/cart.jsp</result>
+            <result name="error">/cartitem/cart.jsp</result>
+        </action>
+
 
 
         <action name="back">

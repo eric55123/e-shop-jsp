@@ -3,19 +3,30 @@
 <%@ page import="com.eshop.product.model.ProductComment" %>
 <%@ page import="com.eshop.member.model.Member" %>
 <%@ page import="java.util.*" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+
+<%!
+    public static String escapeHtml(String input) {
+        if (input == null) return "";
+        return input.replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll("\"", "&quot;");
+    }
+%>
 
 <%
     Product product = (Product) request.getAttribute("product");
     List<ProductComment> comments = (List<ProductComment>) request.getAttribute("comments");
     Member loginMember = (Member) session.getAttribute("loginMember");
     Set<Integer> reportedCommentIds = (Set<Integer>) request.getAttribute("reportedCommentIds");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 %>
 
 <html>
 <head>
     <title>商品詳情</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
     <script>
         function reportComment(commentId, form) {
             const reason = $(form).find("select[name='reason']").val();
@@ -60,7 +71,7 @@
             }).done(function () {
                 $div.html(
                     "⭐ " + rating + " 顆星 - <strong>" + username + "</strong>：<br>" +
-                    text + "<br>" +
+                    escapeHtml(text) + "<br>" +
                     "<small>🕓 剛剛</small><br>" +
                     '<button onclick="showEditForm(' + commentId + ')">編輯</button>' +
                     '<button onclick="deleteComment(' + commentId + ', ' + productNo + ')">刪除</button>'
@@ -87,6 +98,14 @@
                 alert("刪除失敗，請稍後再試");
             });
         }
+
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
     </script>
 </head>
 <body>
@@ -95,7 +114,7 @@
 <% if (product != null) { %>
 <p><strong>商品名稱：</strong> <%= product.getProductName() %></p>
 <p><strong>價格：</strong> $<%= product.getProductPrice() %></p>
-<p><strong>描述：</strong> <%= product.getProductDesc() != null ? product.getProductDesc() : "無" %></p>
+<p><strong>描述：</strong> <%= escapeHtml(product.getProductDesc()) %></p>
 <p><strong>剩餘庫存：</strong> <%= product.getRemainingQty() %></p>
 <p><strong>狀態：</strong> <%= product.getProductStatus() == 1 ? "上架中" : "已下架" %></p>
 
@@ -106,7 +125,6 @@
     <button type="submit">加入購物車</button>
 </form>
 
-
 <hr>
 <h3>評論區</h3>
 
@@ -115,8 +133,13 @@
     <% for (ProductComment comment : comments) {
         int cid = comment.getCommentId();
         int status = comment.getStatus();
-        boolean isOwner = loginMember != null && comment.getMember().getMemberId().equals(loginMember.getMemberId());
-        String displayName = comment.getMember().getUsername() != null ? comment.getMember().getUsername() : comment.getMember().getName();
+        boolean isOwner = loginMember != null &&
+                comment.getMember() != null &&
+                comment.getMember().getMemberId().equals(loginMember.getMemberId());
+        String displayName = (comment.getMember() != null && comment.getMember().getUsername() != null)
+                ? comment.getMember().getUsername()
+                : (comment.getMember() != null ? comment.getMember().getName() : "匿名");
+        String safeText = escapeHtml(comment.getCommentText());
     %>
     <li>
         <div id="commentDisplay_<%= cid %>" data-username="<%= displayName %>">
@@ -125,14 +148,9 @@
             <% } else if (status == -1) { %>
             <span style="color:gray; font-style:italic;">此留言為不當言論</span>
             <% } else { %>
-            ⭐ <%= comment.getRating() %> 顆星 -
-            <strong><%= displayName %></strong>：
-            <%= comment.getCommentText() %><br>
-            <%
-                java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
-            %>
+            ⭐ <%= comment.getRating() %> 顆星 - <strong><%= displayName %></strong>：<br>
+            <%= safeText %><br>
             <small>🕓 <%= comment.getCommentTime().format(formatter) %></small><br>
-
 
             <% if (isOwner) { %>
             <button onclick="showEditForm(<%= cid %>)">編輯</button>
@@ -140,7 +158,7 @@
             <% } else if (loginMember != null) {
                 boolean alreadyReported = reportedCommentIds != null && reportedCommentIds.contains(cid);
                 if (!alreadyReported) { %>
-            <form onsubmit="return reportComment(<%= cid %>, this)" style="display:inline; margin-left: 10px;">
+            <form method="post" onsubmit="return reportComment(<%= cid %>, this)" style="display:inline; margin-left: 10px;">
                 <select name="reason" required>
                     <option value="">檢舉原因</option>
                     <option value="辱罵">辱罵</option>
@@ -157,16 +175,15 @@
             <% } %>
         </div>
 
-        <!-- 隱藏的編輯表單 -->
         <% if (status == 1 && isOwner) { %>
         <div id="commentEdit_<%= cid %>" style="display:none;">
-            <form onsubmit="return submitEdit(<%= cid %>, <%= product.getProductNo() %>)">
+            <form method="post" onsubmit="return submitEdit(<%= cid %>, <%= product.getProductNo() %>)">
                 <select id="rating_<%= cid %>" required>
                     <% for (int i = 5; i >= 1; i--) { %>
                     <option value="<%= i %>" <%= (i == comment.getRating()) ? "selected" : "" %>><%= i %> 顆星</option>
                     <% } %>
                 </select><br>
-                <textarea id="text_<%= cid %>" rows="3" cols="40" required><%= comment.getCommentText() %></textarea><br>
+                <textarea id="text_<%= cid %>" rows="3" cols="40" required><%= safeText %></textarea><br>
                 <button type="submit">儲存</button>
                 <button type="button" onclick="cancelEdit(<%= cid %>)">取消</button>
             </form>

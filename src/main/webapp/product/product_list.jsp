@@ -18,12 +18,12 @@
             <s:property value="#session.loginMember.name" />
         </s:else>
         </strong>！
-        <a href="<%= request.getContextPath() %>/cartitem/cart.jsp">🛒 查看購物車</a>
+        <a href="<%= request.getContextPath() %>/cart.action">前往購物車</a>
         <a href="memberProfile.action">會員資料</a> |
         <a href="logout.action">登出</a>
     </s:if>
     <s:else>
-        <a href="<%= request.getContextPath() %>/cartitem/cart.jsp">🛒 查看購物車</a>
+        <a href="<%= request.getContextPath() %>/cart.action">前往購物車</a>
         <a href="login.action">會員登入</a> |
         <a href="memberRegister.action">註冊</a>
     </s:else>

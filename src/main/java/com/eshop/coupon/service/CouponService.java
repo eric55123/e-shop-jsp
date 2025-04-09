@@ -6,8 +6,10 @@ import com.eshop.coupon.model.Coupon;
 import com.eshop.coupon.model.CouponHolder;
 import com.eshop.member.model.Member;
 
+import javax.persistence.EntityManager;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CouponService {
 
@@ -84,6 +86,25 @@ public class CouponService {
         holder.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
         couponHolderDAO.insert(holder);
+    }
+
+    public CouponHolder findValidCouponHolder(String couponCode, Integer memberId) {
+        CouponHolder holder = couponHolderDAO.findByCodeAndMember(couponCode, memberId);
+
+        if (holder == null) return null;
+
+        boolean isValid = holder.getUsedStatus() == 0 &&
+                (holder.getExpiredTime() == null || holder.getExpiredTime().after(new java.util.Date()));
+
+        return isValid ? holder : null;
+    }
+
+    public List<CouponHolder> findValidCouponHolderList(Integer memberId) {
+        return couponHolderDAO.findValidByMemberId(memberId);
+    }
+
+    public boolean hasCoupon(Integer memberId, String couponId) {
+        return couponHolderDAO.hasCoupon(memberId, couponId);
     }
 
 }

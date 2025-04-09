@@ -39,9 +39,7 @@ public class AddToCartAction extends ActionSupport {
 
         session.setAttribute("cart", cart);
 
-        // 重點：使用 redirect 避免表單重送
-        ServletActionContext.getResponse().sendRedirect("cartitem/cart.jsp");
-        return null;
+        return SUCCESS;
     }
 
 
