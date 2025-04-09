@@ -80,5 +80,18 @@ public class MemberDAO {
         }
     }
 
+    public List<Member> findByNameOrUsernameLike(String keyword) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Member> query = em.createQuery(
+                    "FROM Member WHERE LOWER(name) LIKE :kw OR LOWER(username) LIKE :kw", Member.class);
+            query.setParameter("kw", "%" + keyword.toLowerCase() + "%");
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+
 
 }

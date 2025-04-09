@@ -193,10 +193,22 @@
             <result name="success">/coupon/assignCouponForm.jsp</result>
         </action>
 
+        <action name="assignSelectedCoupon" class="com.eshop.coupon.CouponAction" method="assignSelectedCoupon">
+            <result name="success">/coupon/assignCouponForm.jsp</result>
+            <result name="error">/coupon/assignCouponForm.jsp</result>
+        </action>
+
+
         <action name="assignCoupon" class="com.eshop.coupon.CouponAction" method="assignCoupon">
             <result name="success">/coupon/assignCouponForm.jsp</result>
             <result name="error">/coupon/assignCouponForm.jsp</result>
         </action>
+
+        <action name="assignCouponToAll" class="com.eshop.coupon.CouponAction" method="assignSelectedCoupon">
+        <result name="success">/coupon/assignCouponForm.jsp</result>
+            <result name="error">/coupon/assignCouponForm.jsp</result>
+        </action>
+
 
         <action name="back">
             <result>/back.jsp</result>
