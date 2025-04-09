@@ -148,7 +148,6 @@
 
 <% } %> <!-- 關閉 cart != null 的 else 區塊 -->
 
-<br>
 <a href="<%= request.getContextPath() %>/productList.action">← 回商品列表</a>
 </body>
 </html>
