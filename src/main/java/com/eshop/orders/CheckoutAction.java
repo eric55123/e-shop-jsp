@@ -10,11 +10,15 @@ import com.eshop.orders.model.OrderItem;
 import com.eshop.product.model.Product;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
+import ecpay.payment.integration.AllInOne;
+import ecpay.payment.integration.domain.AioCheckOutALL;
 
 import javax.persistence.*;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -23,7 +27,7 @@ public class CheckoutAction extends ActionSupport {
     private String receiverPhone;
     private String receiverAddress;
     private String note;
-    private String saveAddress; // 對應 checkbox 傳回的值（null 或 "true"）
+    private String saveAddress;
 
     public String execute() {
         HttpSession session = ServletActionContext.getRequest().getSession();
@@ -71,7 +75,6 @@ public class CheckoutAction extends ActionSupport {
                 total = total.add(subtotal);
             }
 
-            // 折扣處理
             if (discount != null && discount.compareTo(BigDecimal.ZERO) > 0) {
                 total = total.subtract(discount);
                 if (total.compareTo(BigDecimal.ZERO) < 0) total = BigDecimal.ZERO;
@@ -83,7 +86,6 @@ public class CheckoutAction extends ActionSupport {
             orders.setTotalAmount(total);
             em.persist(orders);
 
-            // 儲存使用紀錄 + 更新優惠券狀態
             if (appliedCouponCode != null && discount != null && discount.compareTo(BigDecimal.ZERO) > 0) {
                 try {
                     CouponHolder holder = em.createQuery(
@@ -93,12 +95,10 @@ public class CheckoutAction extends ActionSupport {
                             .setParameter("memberId", member.getMemberId())
                             .getSingleResult();
 
-                    // 更新優惠券為已使用
                     holder.setUsedStatus(1);
                     holder.setUsedTime(new Timestamp(System.currentTimeMillis()));
                     em.merge(holder);
 
-                    // 建立使用紀錄
                     CouponUsedLog log = new CouponUsedLog();
                     log.setOrder(orders);
                     log.setCouponHolder(holder);
@@ -113,23 +113,22 @@ public class CheckoutAction extends ActionSupport {
                     System.err.println("⚠ 無法找到對應的 CouponHolder");
                 }
             }
+
             if ("true".equals(saveAddress)) {
                 try {
                     MemberAddress addr;
                     try {
-                        addr = em.createQuery(
-                                        "FROM MemberAddress WHERE memberId = :memberId", MemberAddress.class)
+                        addr = em.createQuery("FROM MemberAddress WHERE memberId = :memberId", MemberAddress.class)
                                 .setParameter("memberId", member.getMemberId())
                                 .setMaxResults(1)
                                 .getSingleResult();
-                        // 更新原有地址
+
                         addr.setRecipientName(receiverName);
                         addr.setRecipientPhone(receiverPhone);
                         addr.setAddress(receiverAddress);
                         addr.setUpdatedAt(LocalDateTime.now());
                         em.merge(addr);
                     } catch (NoResultException e) {
-                        // 新增一筆地址
                         addr = new MemberAddress();
                         addr.setMemberId(member.getMemberId());
                         addr.setRecipientName(receiverName);
@@ -146,12 +145,35 @@ public class CheckoutAction extends ActionSupport {
 
             tx.commit();
 
-            // 清除 session 資料
+            // 清除 session
             session.removeAttribute("cart");
             session.removeAttribute("discount");
             session.removeAttribute("appliedCouponCode");
 
-            return SUCCESS;
+// 🧩 綠界串接
+            AioCheckOutALL obj = new AioCheckOutALL();
+            obj.setMerchantTradeNo("ESHOP" + orders.getOrderId());
+            obj.setMerchantTradeDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new java.util.Date()));
+            obj.setTotalAmount(String.valueOf(total.intValue()));
+            obj.setTradeDesc("E-shop 訂單");
+            obj.setItemName("商品共 " + orders.getItems().size() + " 項");
+            obj.setReturnURL("http://localhost:8080/ecpay/return");
+            obj.setOrderResultURL("http://localhost:8080/ecpay/result.jsp");
+            obj.setNeedExtraPaidInfo("N");
+
+            String configPath = this.getClass().getClassLoader().getResource("payment_conf.xml").getPath();
+
+            AllInOne all = new AllInOne(configPath);
+
+            String htmlForm = all.aioCheckOut(obj, null);
+
+            HttpServletResponse response = ServletActionContext.getResponse();
+            response.setContentType("text/html;charset=UTF-8");
+            response.getWriter().write(htmlForm);
+            response.getWriter().flush();
+
+            return NONE;
+
 
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
@@ -165,44 +187,18 @@ public class CheckoutAction extends ActionSupport {
     }
 
     // Getters and Setters
+    public String getReceiverName() { return receiverName; }
+    public void setReceiverName(String receiverName) { this.receiverName = receiverName; }
 
-    public String getReceiverName() {
-        return receiverName;
-    }
+    public String getReceiverPhone() { return receiverPhone; }
+    public void setReceiverPhone(String receiverPhone) { this.receiverPhone = receiverPhone; }
 
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
-    }
+    public String getReceiverAddress() { return receiverAddress; }
+    public void setReceiverAddress(String receiverAddress) { this.receiverAddress = receiverAddress; }
 
-    public String getReceiverPhone() {
-        return receiverPhone;
-    }
+    public String getNote() { return note; }
+    public void setNote(String note) { this.note = note; }
 
-    public void setReceiverPhone(String receiverPhone) {
-        this.receiverPhone = receiverPhone;
-    }
-
-    public String getReceiverAddress() {
-        return receiverAddress;
-    }
-
-    public void setReceiverAddress(String receiverAddress) {
-        this.receiverAddress = receiverAddress;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public String getSaveAddress() {
-        return saveAddress;
-    }
-
-    public void setSaveAddress(String saveAddress) {
-        this.saveAddress = saveAddress;
-    }
+    public String getSaveAddress() { return saveAddress; }
+    public void setSaveAddress(String saveAddress) { this.saveAddress = saveAddress; }
 }
