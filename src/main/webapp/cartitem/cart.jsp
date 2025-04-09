@@ -2,12 +2,15 @@
 <%@ page import="java.util.*, java.math.BigDecimal" %>
 <%@ page import="com.eshop.product.model.Product" %>
 <%@ page import="com.eshop.cartitem.model.CartItem" %>
+<%@ page import="com.eshop.member.model.Member" %>
+<%@ page import="com.eshop.member.model.MemberAddress" %>
 
 <%
     Map<Integer, CartItem> cart = (Map<Integer, CartItem>) session.getAttribute("cart");
-
     BigDecimal discount = (BigDecimal) session.getAttribute("discount");
     String appliedCouponCode = (String) session.getAttribute("appliedCouponCode");
+    Member loggedInMember = (Member) session.getAttribute("loginMember");
+    MemberAddress addr = (MemberAddress) session.getAttribute("memberAddress");
 %>
 
 <html>
@@ -100,29 +103,50 @@
 </form>
 <% } %>
 
+<!-- 收件資訊區塊 -->
 <hr>
+<% if (loggedInMember != null) { %>
 <h3>填寫收件資訊</h3>
+<p>👋 歡迎，<strong><%= loggedInMember.getName() %></strong>！請填寫收件資訊以完成訂單。</p>
 
 <form action="<%= request.getContextPath() %>/checkout.action" method="post">
     <label>收件人姓名：</label><br>
-    <input type="text" name="receiverName" required><br><br>
+    <input type="text" name="receiverName"
+           value="<%= addr != null ? addr.getRecipientName() : loggedInMember.getName() %>" required><br><br>
 
     <label>收件人電話：</label><br>
-    <input type="text" name="receiverPhone" required><br><br>
+    <input type="text" name="receiverPhone"
+           value="<%= addr != null ? addr.getRecipientPhone() : loggedInMember.getPhone() %>" required><br><br>
 
     <label>收件人地址：</label><br>
-    <input type="text" name="receiverAddress" required><br><br>
+    <input type="text" name="receiverAddress"
+           value="<%= addr != null ? addr.getAddress() : "" %>" required><br><br>
 
     <label>備註：</label><br>
     <textarea name="note" rows="4" cols="40"></textarea><br><br>
 
+    <!-- ✅ 勾選記住地址 -->
+    <label>
+        <input type="checkbox" name="saveAddress" value="true" <%= addr != null ? "checked" : "" %>>
+        📌 記住此地址（儲存至我的地址簿）
+    </label><br><br>
+
     <button type="submit">✅ 確認送出訂單</button>
 </form>
+<% } else { %>
+<h3>🔒 尚未登入</h3>
+<p style="color:red;">請先登入才能填寫收件資訊並完成結帳。</p>
+<a href="<%= request.getContextPath() %>/login.action">
+    <button type="button">前往登入</button>
+</a>
+<% } %>
 
+<!-- 清空購物車 -->
 <form action="<%= request.getContextPath() %>/clearCart.action" method="post" onsubmit="return doubleConfirmClear();">
     <button type="submit">🗑 清空購物車</button>
 </form>
-<% } %>
+
+<% } %> <!-- 關閉 cart != null 的 else 區塊 -->
 
 <br>
 <a href="<%= request.getContextPath() %>/productList.action">← 回商品列表</a>

@@ -1,4 +1,4 @@
--- -DROP DATABASE e_shop;
+# DROP DATABASE e_shop;
 -- 適用於 MySQL + InnoDB + utf8mb4
 
 CREATE DATABASE IF NOT EXISTS e_shop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
@@ -176,7 +176,6 @@ CREATE TABLE member_address (
                                 recipient_name VARCHAR(50),
                                 recipient_phone VARCHAR(20),
                                 address VARCHAR(255),
-                                is_default TINYINT CHECK (is_default IN (0, 1)),
                                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                                 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                                 FOREIGN KEY (member_id) REFERENCES member(member_id)
@@ -353,11 +352,11 @@ VALUES
     (3, 'T0003', 'TN0003', 'LINEPay', 0, 0.00, '0', '未付款');
 
 -- 會員地址
-INSERT INTO member_address (member_id, recipient_name, recipient_phone, address, is_default)
+INSERT INTO member_address (member_id, recipient_name, recipient_phone, address)
 VALUES
-    (1, 'Alice', '0911000111', '台北市中正區', 1),
-    (2, 'Bob', '0922000222', '新竹市東區', 1),
-    (3, 'Charlie', '0933000333', '高雄市鹽埕區', 0);
+    (1, 'Alice', '0911000111', '台北市中正區'),
+    (2, 'Bob', '0922000222', '新竹市東區'),
+    (3, 'Charlie', '0933000333', '高雄市鹽埕區');
 
 -- 登入紀錄
 INSERT INTO login_log (member_id, ip_address, login_type, status, user_agent)

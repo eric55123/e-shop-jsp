@@ -3,9 +3,11 @@ package com.eshop.cartitem;
 import com.eshop.coupon.model.CouponHolder;
 import com.eshop.coupon.service.CouponService;
 import com.eshop.member.model.Member;
+import com.eshop.member.model.MemberAddress;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
+import javax.persistence.*;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class ShowCartAction extends ActionSupport {
         if (member != null) {
             System.out.println("[ShowCartAction] 會員已登入，會員ID：" + member.getMemberId());
 
+            // ✅ 取得優惠券清單
             List<CouponHolder> availableCoupons = couponService.findValidCouponHolderList(member.getMemberId());
             session.setAttribute("availableCoupons", availableCoupons);
 
@@ -33,8 +36,29 @@ public class ShowCartAction extends ActionSupport {
                             "｜使用狀態：" + ch.getUsedStatus());
                 }
             }
+
+            // ✅ 取得會員唯一地址（自動帶入表單）
+            EntityManagerFactory emf = Persistence.createEntityManagerFactory("eShopPU");
+            EntityManager em = emf.createEntityManager();
+            try {
+                MemberAddress address = em.createQuery(
+                                "FROM MemberAddress WHERE memberId = :memberId", MemberAddress.class)
+                        .setParameter("memberId", member.getMemberId())
+                        .setMaxResults(1)
+                        .getSingleResult();
+
+                session.setAttribute("memberAddress", address);
+                System.out.println("[ShowCartAction] 已載入會員地址：" + address.getAddress());
+            } catch (NoResultException e) {
+                session.setAttribute("memberAddress", null);
+                System.out.println("[ShowCartAction] 尚無會員地址記錄");
+            } finally {
+                em.close();
+                emf.close();
+            }
+
         } else {
-            System.out.println("[ShowCartAction] 尚未登入，無法載入優惠券");
+            System.out.println("[ShowCartAction] 尚未登入，無法載入優惠券或地址");
         }
 
         return SUCCESS;

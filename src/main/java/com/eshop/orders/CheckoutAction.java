@@ -4,6 +4,7 @@ import com.eshop.cartitem.model.CartItem;
 import com.eshop.coupon.model.CouponHolder;
 import com.eshop.coupon.model.CouponUsedLog;
 import com.eshop.member.model.Member;
+import com.eshop.member.model.MemberAddress;
 import com.eshop.orders.model.Orders;
 import com.eshop.orders.model.OrderItem;
 import com.eshop.product.model.Product;
@@ -14,6 +15,7 @@ import javax.persistence.*;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 public class CheckoutAction extends ActionSupport {
@@ -21,6 +23,7 @@ public class CheckoutAction extends ActionSupport {
     private String receiverPhone;
     private String receiverAddress;
     private String note;
+    private String saveAddress; // 對應 checkbox 傳回的值（null 或 "true"）
 
     public String execute() {
         HttpSession session = ServletActionContext.getRequest().getSession();
@@ -110,6 +113,36 @@ public class CheckoutAction extends ActionSupport {
                     System.err.println("⚠ 無法找到對應的 CouponHolder");
                 }
             }
+            if ("true".equals(saveAddress)) {
+                try {
+                    MemberAddress addr;
+                    try {
+                        addr = em.createQuery(
+                                        "FROM MemberAddress WHERE memberId = :memberId", MemberAddress.class)
+                                .setParameter("memberId", member.getMemberId())
+                                .setMaxResults(1)
+                                .getSingleResult();
+                        // 更新原有地址
+                        addr.setRecipientName(receiverName);
+                        addr.setRecipientPhone(receiverPhone);
+                        addr.setAddress(receiverAddress);
+                        addr.setUpdatedAt(LocalDateTime.now());
+                        em.merge(addr);
+                    } catch (NoResultException e) {
+                        // 新增一筆地址
+                        addr = new MemberAddress();
+                        addr.setMemberId(member.getMemberId());
+                        addr.setRecipientName(receiverName);
+                        addr.setRecipientPhone(receiverPhone);
+                        addr.setAddress(receiverAddress);
+                        addr.setCreatedAt(LocalDateTime.now());
+                        addr.setUpdatedAt(LocalDateTime.now());
+                        em.persist(addr);
+                    }
+                } catch (Exception e) {
+                    System.err.println("⚠ 儲存地址失敗：" + e.getMessage());
+                }
+            }
 
             tx.commit();
 
@@ -163,5 +196,13 @@ public class CheckoutAction extends ActionSupport {
 
     public void setNote(String note) {
         this.note = note;
+    }
+
+    public String getSaveAddress() {
+        return saveAddress;
+    }
+
+    public void setSaveAddress(String saveAddress) {
+        this.saveAddress = saveAddress;
     }
 }
