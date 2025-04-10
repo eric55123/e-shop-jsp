@@ -25,9 +25,6 @@ public class UpdateProductWithImagesAction extends ActionSupport {
     @Override
     public String execute() {
         try {
-            System.out.println("\uD83D\uDEA7 執行 UpdateProductWithImagesAction");
-            System.out.println("\uD83D\uDD27 商品編號：" + product.getProductNo());
-
             // 查出原本的 product（含圖片）
             Product dbProduct = productService.getProductById(product.getProductNo());
             dbProduct.setProductName(product.getProductName());

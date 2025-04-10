@@ -587,7 +587,7 @@ public class AioCheckOutALL {
 	public void setPaymentInfoURL(String paymentInfoURL) {
 		PaymentInfoURL = paymentInfoURL;
 	}
-	/**
+	/**請確認你在 aioC
 	 * 取得ClientRedirectURL Client端回傳付款相關資訊
 	 * @return ClientRedirectURL
 	 */

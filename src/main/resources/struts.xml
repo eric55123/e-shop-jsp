@@ -214,6 +214,7 @@
             <result name="error">/cartitem/cart.jsp</result>
         </action>
 
+        <action name="ecpayReturn" class="com.eshop.ecpay.ECPayReturnAction" />
 
 
         <action name="back">
