@@ -216,6 +216,13 @@
 
         <action name="ecpayReturn" class="com.eshop.ecpay.ECPayReturnAction" />
 
+        <action name="googleLoginCallback" class="com.eshop.member.GoogleLoginCallbackAction">
+            <result name="success">/index.jsp</result>
+            <result name="error">/login.jsp</result>
+        </action>
+
+
+
 
         <action name="back">
             <result>/back.jsp</result>

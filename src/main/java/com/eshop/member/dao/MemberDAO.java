@@ -64,6 +64,7 @@ public class MemberDAO {
         }
     }
 
+    // 查詢所有會員
     public List<Member> findAll() {
         EntityManager em = emf.createEntityManager();
         List<Member> list = em.createQuery("FROM Member", Member.class).getResultList();
@@ -71,15 +72,23 @@ public class MemberDAO {
         return list;
     }
 
-    public Member findById(Integer memberId) {
-        EntityManager em = emf.createEntityManager();
+    // 根據 Email 和 Google Sub 查詢會員
+    public Member findByEmailAndGoogleSub(String email, String googleSub) {
+        EntityManager em = emf.createEntityManager(); // 使用 entityManager
         try {
-            return em.find(Member.class, memberId);
+            TypedQuery<Member> query = em.createQuery(
+                    "FROM Member m WHERE m.email = :email AND m.googleSub = :googleSub", Member.class);
+            query.setParameter("email", email);
+            query.setParameter("googleSub", googleSub);
+            return query.getSingleResult();  // 若查無結果，會丟出 NoResultException
+        } catch (NoResultException e) {
+            return null;  // 如果查無資料，回傳 null
         } finally {
             em.close();
         }
     }
 
+    // 根據姓名或帳號模糊查詢
     public List<Member> findByNameOrUsernameLike(String keyword) {
         EntityManager em = emf.createEntityManager();
         try {
@@ -92,6 +101,18 @@ public class MemberDAO {
         }
     }
 
-
-
+    public void save(Member member) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.persist(member);  // 使用 JPA 的 persist 方法來儲存資料
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();  // 出現錯誤時回滾
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
 }

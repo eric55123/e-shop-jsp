@@ -14,7 +14,6 @@ import org.apache.struts2.ServletActionContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Map;
 
 public class CheckoutAction extends ActionSupport {

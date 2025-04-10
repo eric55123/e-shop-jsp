@@ -12,6 +12,9 @@ target/
 *.iml
 *.ipr
 
+### 個人金鑰設定 ###
+config.properties
+
 ### Eclipse ###
 .apt_generated
 .classpath

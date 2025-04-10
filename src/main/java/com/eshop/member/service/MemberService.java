@@ -98,4 +98,14 @@ public class MemberService {
         return result;
     }
 
+    public Member findByEmailAndGoogleSub(String email, String googleSub) {
+        return memberDAO.findByEmailAndGoogleSub(email, googleSub);
+    }
+
+    // 儲存新會員
+    public void save(Member member) {
+        memberDAO.save(member);  // 呼叫 DAO 層來儲存會員
+    }
+
+
 }

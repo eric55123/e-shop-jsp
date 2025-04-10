@@ -11,11 +11,11 @@
 <div style="text-align:right;">
     <s:if test="#session.loginMember != null">
         歡迎，<strong>
-        <s:if test="#session.loginMember.loginType == 'local'">
-            <s:property value="#session.loginMember.username" />
+        <s:if test="#session.loginMember.name != null && #session.loginMember.name.trim() != ''">
+            <s:property value="#session.loginMember.name" />
         </s:if>
         <s:else>
-            <s:property value="#session.loginMember.name" />
+            <s:property value="#session.loginMember.username" />
         </s:else>
         </strong>！
         <a href="<%= request.getContextPath() %>/cart.action">前往購物車</a>
@@ -28,6 +28,7 @@
         <a href="memberRegister.action">註冊</a>
     </s:else>
 </div>
+
 
 
 <h2>商品清單</h2>

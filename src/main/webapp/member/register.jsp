@@ -53,19 +53,29 @@
 
 <h2>註冊會員</h2>
 
+<!-- ✅ Google 註冊按鈕區塊 -->
+<a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=29437975110-qsl4fd1s8pvo1ph8upkttca39hs3e65f.apps.googleusercontent.com&redirect_uri=http://localhost:8080/googleLoginCallback.action&response_type=code&scope=openid%20email%20profile">
+    <button style="background-color:#4285F4; color:white; padding:8px 16px; border:none; border-radius:4px; font-size:16px;">
+        使用 Google 登入
+    </button>
+</a>
+
+
+<br/><br/>
+
+<!-- ✅ 本地註冊表單 -->
 <s:form action="register" method="post" onsubmit="return validateForm()">
     <s:textfield name="member.email" label="電子郵件" required="true"/>
     <s:textfield name="member.username" label="帳號" required="true"/>
     <s:password name="member.password" label="密碼" required="true"/>
+    <s:textfield name="member.phone" label="手機號碼"/>
 
-    <tr>
-        <td colspan="2">
-            <label>生日</label><br/>
-            <input type="date" name="member.birthday"/>
-        </td>
-    </tr>
+    <div>
+        <label>生日</label><br/>
+        <input type="date" name="member.birthday"/>
+    </div>
 
-    <s:textfield name="member.phone" label="手機"/>
+    <br/>
     <s:submit value="註冊"/>
 </s:form>
 
