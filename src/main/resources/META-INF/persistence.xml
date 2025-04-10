@@ -15,7 +15,7 @@
         <class>com.eshop.product.model.ProductComment</class>
         <class>com.eshop.member.model.Member</class>
         <class>com.eshop.orders.model.Orders</class>
-        <class>com.eshop.orders.model.OrderItem</class>
+        <class>com.eshop.orders.model.OrdersItem</class>
 
 
         <properties>

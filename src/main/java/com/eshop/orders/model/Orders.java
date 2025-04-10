@@ -58,7 +58,7 @@ public class Orders {
 
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> items = new ArrayList<>();
+    private List<OrdersItem> items = new ArrayList<>();
 
     public Orders() {
         this.orderDate = LocalDateTime.now();
@@ -76,11 +76,11 @@ public class Orders {
         this.orderId = orderId;
     }
 
-    public List<OrderItem> getItems() {
+    public List<OrdersItem> getItems() {
         return items;
     }
 
-    public void setItems(List<OrderItem> items) {
+    public void setItems(List<OrdersItem> items) {
         this.items = items;
     }
 
