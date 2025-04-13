@@ -1,4 +1,4 @@
-package com.eshop.cartitem;
+package com.eshop.cartitem.action;
 
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;

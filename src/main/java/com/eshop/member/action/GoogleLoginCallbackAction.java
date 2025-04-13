@@ -1,4 +1,4 @@
-package com.eshop.member;
+package com.eshop.member.action;
 
 import com.eshop.member.model.Member;
 import com.eshop.member.service.MemberService;
@@ -48,7 +48,7 @@ public class GoogleLoginCallbackAction extends ActionSupport {
             return ERROR;
         }
 
-        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
         String response = in.lines().reduce("", String::concat);
         JSONObject tokenJson = new JSONObject(response);
         String accessToken = tokenJson.getString("access_token");
@@ -56,7 +56,7 @@ public class GoogleLoginCallbackAction extends ActionSupport {
         // 2. 拿 user 資料
         URL userinfoUrl = new URL("https://www.googleapis.com/oauth2/v3/userinfo?access_token=" + accessToken);
         HttpURLConnection userConn = (HttpURLConnection) userinfoUrl.openConnection();
-        BufferedReader userReader = new BufferedReader(new InputStreamReader(userConn.getInputStream()));
+        BufferedReader userReader = new BufferedReader(new InputStreamReader(userConn.getInputStream(), StandardCharsets.UTF_8));
         String userInfoJson = userReader.lines().reduce("", String::concat);
         JSONObject userJson = new JSONObject(userInfoJson);
 

@@ -3,6 +3,7 @@ package com.eshop.product.dao;
 
 
 import com.eshop.product.model.CommentReport;
+import com.eshop.util.HibernateUtil;
 
 import javax.persistence.*;
 import java.util.List;
@@ -79,5 +80,15 @@ public class CommentReportDAO {
             em.close(); //
         }
     }
-
+    public List<CommentReport> findPendingReports() {
+        EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
+        List<CommentReport> list = em.createQuery(
+                "SELECT r FROM CommentReport r " +
+                        "JOIN FETCH r.comment c " +
+                        "JOIN FETCH r.reporter m " +
+                        "WHERE r.status = 0", CommentReport.class
+        ).getResultList();
+        em.close();
+        return list;
+    }
 }

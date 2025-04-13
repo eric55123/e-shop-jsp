@@ -1,27 +1,29 @@
 package com.eshop.util;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 public class HibernateUtil {
 
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static final EntityManagerFactory emf = buildEntityManagerFactory();
 
-    private static SessionFactory buildSessionFactory() {
+    private static EntityManagerFactory buildEntityManagerFactory() {
         try {
-            // 會讀取 src/main/resources 下的 hibernate.cfg.xml
-            return new Configuration().configure().buildSessionFactory();
+            // 會讀取 src/main/resources/META-INF/persistence.xml
+            return Persistence.createEntityManagerFactory("eShopPU"); // 這個名稱要和 persistence.xml 中的一致
         } catch (Throwable ex) {
-            System.err.println("SessionFactory 建立失敗：" + ex);
+            System.err.println("EntityManagerFactory 建立失敗：" + ex);
             throw new ExceptionInInitializerError(ex);
         }
     }
 
-    public static SessionFactory getSessionFactory() {
-        return sessionFactory;
+    public static EntityManagerFactory getEntityManagerFactory() {
+        return emf;
     }
 
     public static void shutdown() {
-        getSessionFactory().close();
+        if (emf != null && emf.isOpen()) {
+            emf.close();
+        }
     }
 }

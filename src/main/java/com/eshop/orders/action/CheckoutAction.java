@@ -1,4 +1,4 @@
-package com.eshop.orders;
+package com.eshop.orders.action;
 
 import com.eshop.cartitem.model.CartItem;
 import com.eshop.coupon.service.CouponUsedLogService;

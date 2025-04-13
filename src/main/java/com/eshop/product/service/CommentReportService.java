@@ -46,4 +46,9 @@ public class CommentReportService {
     public List<Integer> getReportedCommentIdsByMember(int memberId) {
         return reportDAO.findReportedCommentIdsByMember(memberId);
     }
+
+    public List<CommentReport> findPendingReports() {
+        return reportDAO.findPendingReports();
+    }
+
 }

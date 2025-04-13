@@ -1,4 +1,4 @@
-package com.eshop.product;
+package com.eshop.product.action.product;
 
 
 

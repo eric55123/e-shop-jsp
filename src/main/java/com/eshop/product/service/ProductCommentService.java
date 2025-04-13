@@ -19,7 +19,7 @@ public class ProductCommentService {
         comment.setMember(member);
         comment.setRating(rating);
         comment.setCommentText(text);
-        comment.setCommentTime(LocalDateTime.now());
+        comment.setCommentTime(LocalDateTime.now().withNano(0));
         comment.setStatus(1); // 預設為顯示狀態
         commentDAO.insert(comment);
     }
@@ -31,7 +31,6 @@ public class ProductCommentService {
 
     // 使用者自刪評論（狀態設為 0）
     public boolean deleteComment(int commentId) {
-        System.out.println("➡ 呼叫 ProductCommentService.deleteComment(), commentId = " + commentId);
         try {
             commentDAO.updateStatus(commentId, 0); // status 0 = 使用者刪除
             return true;
@@ -53,7 +52,7 @@ public class ProductCommentService {
 
     // 編輯更新留言內容與評分
     public void updateComment(ProductComment comment) {
-        comment.setCommentTime(LocalDateTime.now()); // 可選：更新留言時間
+        comment.setCommentTime(LocalDateTime.now().withNano(0));
         commentDAO.update(comment);
     }
 }

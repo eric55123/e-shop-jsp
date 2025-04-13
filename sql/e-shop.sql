@@ -60,7 +60,10 @@ CREATE TABLE member
     CONSTRAINT email_unique UNIQUE (email),                                    -- 確保 email 唯一
     CONSTRAINT google_sub_unique UNIQUE (google_sub),                          -- 確保 google_sub 唯一
     CONSTRAINT username_unique UNIQUE (username)                               -- 確保 username 唯一
-) ENGINE = InnoDB;
+) ENGINE = InnoDB
+  DEFAULT CHARSET=utf8mb4
+  COLLATE=utf8mb4_general_ci;
+
 
 
 -- 商品評論表

@@ -1,4 +1,4 @@
-package com.eshop.product;
+package com.eshop.product.action.product;
 
 import com.eshop.product.service.ProductImgService;
 import com.eshop.product.model.ProductImg;

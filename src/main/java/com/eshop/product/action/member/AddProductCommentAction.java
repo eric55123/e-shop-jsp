@@ -1,4 +1,4 @@
-package com.eshop.product;
+package com.eshop.product.action.member;
 
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductComment;

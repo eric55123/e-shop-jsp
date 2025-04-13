@@ -1,7 +1,9 @@
 package com.eshop.product.dao;
 
+import com.eshop.product.model.CommentReport;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductComment;
+import com.eshop.util.HibernateUtil;
 
 import javax.persistence.*;
 import java.util.List;
@@ -53,7 +55,7 @@ public class ProductCommentDAO {
 
     // 更新評論狀態（0: 使用者刪除，-1: 管理員封鎖）
     public void updateStatus(int commentId, int newStatus) {
-        System.out.println("🧪 DAO: 使用 JPQL 更新狀態 commentId=" + commentId + ", newStatus=" + newStatus);
+
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
@@ -65,7 +67,7 @@ public class ProductCommentDAO {
                     .executeUpdate();
             tx.commit();
 
-            System.out.println("📝 JPQL 更新完成，受影響筆數：" + updatedCount);
+
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();

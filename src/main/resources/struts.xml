@@ -8,40 +8,40 @@
     <package name="default" extends="struts-default">
 
         <!-- 商品功能 -->
-        <action name="productList" class="com.eshop.product.ProductAction">
+        <action name="productList" class="com.eshop.product.action.product.ProductAction">
             <result name="success">/product/product_list.jsp</result>
         </action>
 
-        <action name="productDetail" class="com.eshop.product.ProductAction" method="detail">
+        <action name="productDetail" class="com.eshop.product.action.product.ProductAction" method="detail">
             <result name="success">/product/product_detail.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="showAddProduct" class="com.eshop.product.ProductAction" method="showAddForm">
+        <action name="showAddProduct" class="com.eshop.product.action.product.ProductAction" method="showAddForm">
             <result name="success">/product/product_add.jsp</result>
         </action>
 
-        <action name="addProduct" class="com.eshop.product.ProductAction" method="addProduct">
+        <action name="addProduct" class="com.eshop.product.action.product.ProductAction" method="addProduct">
             <result name="success" type="redirectAction">productList</result>
             <result name="error">/product/product_add.jsp</result>
         </action>
 
-        <action name="editProduct" class="com.eshop.product.ProductAction" method="editProduct">
+        <action name="editProduct" class="com.eshop.product.action.product.ProductAction" method="editProduct">
             <result name="edit">/product/product_edit.jsp</result>
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="updateProduct" class="com.eshop.product.ProductAction" method="updateProduct">
+        <action name="updateProduct" class="com.eshop.product.action.product.ProductAction" method="updateProduct">
             <result name="success" type="redirectAction">productList</result>
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="deleteProduct" class="com.eshop.product.ProductAction" method="deleteProduct">
+        <action name="deleteProduct" class="com.eshop.product.action.product.ProductAction" method="deleteProduct">
             <result name="success" type="redirectAction">productList</result>
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="addProductWithImage" class="com.eshop.product.AddProductWithImageAction">
+        <action name="addProductWithImage" class="com.eshop.product.action.product.AddProductWithImageAction">
             <interceptor-ref name="fileUpload">
                 <param name="maximumSize">2097152</param>
             </interceptor-ref>
@@ -50,12 +50,12 @@
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="deleteProductImg" class="com.eshop.product.DeleteProductImgAction">
+        <action name="deleteProductImg" class="com.eshop.product.action.product.DeleteProductImgAction">
             <result name="success" type="redirect">editProduct.action?productNo=${productNo}</result>
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="updateProductWithImages" class="com.eshop.product.UpdateProductWithImagesAction">
+        <action name="updateProductWithImages" class="com.eshop.product.action.product.UpdateProductWithImagesAction">
             <interceptor-ref name="fileUpload">
                 <param name="maximumSize">5242880</param>
                 <param name="allowedTypes">image/jpeg,image/png,image/gif</param>
@@ -65,7 +65,7 @@
             <result name="error">/product/product_edit.jsp</result>
         </action>
 
-        <action name="addProductComment" class="com.eshop.product.AddProductCommentAction">
+        <action name="addProductComment" class="com.eshop.product.action.member.AddProductCommentAction">
             <result name="success" type="redirectAction">
                 <param name="actionName">productDetail</param>
                 <param name="productNo">${productNo}</param>
@@ -75,76 +75,76 @@
         </action>
 
         <!-- 會員 -->
-        <action name="register" class="com.eshop.member.MemberAction" method="register">
+        <action name="register" class="com.eshop.member.action.MemberAction" method="register">
             <result name="success">/member/login.jsp</result>
             <result name="input">/member/register.jsp</result>
         </action>
 
-        <action name="login" class="com.eshop.member.MemberAction" method="login">
+        <action name="login" class="com.eshop.member.action.MemberAction" method="login">
             <result name="success" type="redirect">/productList.action</result>
             <result name="input">/member/login.jsp</result>
         </action>
 
-        <action name="logout" class="com.eshop.member.MemberAction" method="logout">
+        <action name="logout" class="com.eshop.member.action.MemberAction" method="logout">
             <result name="success" type="redirect">/productList.action</result>
         </action>
 
-        <action name="profile" class="com.eshop.member.MemberAction" method="profile">
+        <action name="profile" class="com.eshop.member.action.MemberAction" method="profile">
             <result name="success">/member/profile.jsp</result>
             <result name="login" type="redirect">/login.jsp</result>
         </action>
 
-        <action name="memberRegister" class="com.eshop.member.MemberAction" method="showRegisterForm">
+        <action name="memberRegister" class="com.eshop.member.action.MemberAction" method="showRegisterForm">
             <result>/member/register.jsp</result>
         </action>
 
-        <action name="memberProfile" class="com.eshop.member.MemberAction" method="profile">
+        <action name="memberProfile" class="com.eshop.member.action.MemberAction" method="profile">
             <result name="success">/member/profile.jsp</result>
             <result name="login">/login.jsp</result>
         </action>
 
-        <action name="updateMember" class="com.eshop.member.MemberAction" method="update">
+        <action name="updateMember" class="com.eshop.member.action.MemberAction" method="update">
             <result name="success" type="redirect">productList.action</result>
             <result name="input">/memberProfile.jsp</result>
             <result name="login" type="redirect">login.action</result>
         </action>
 
         <!-- 評論 -->
-        <action name="reportComment" class="com.eshop.product.CommentReportAction" method="execute">
+        <action name="reportComment" class="com.eshop.product.action.member.CommentReportAction" method="execute">
             <result name="success">/product/product_detail.jsp</result>
         </action>
 
-        <action name="updateComment" class="com.eshop.product.ProductCommentAction" method="updateComment">
+        <action name="updateComment" class="com.eshop.product.action.product.ProductCommentAction" method="updateComment">
             <result name="success">/product/product_detail.jsp</result>
         </action>
 
-        <action name="deleteComment" class="com.eshop.product.ProductCommentAction" method="deleteComment">
+        <action name="deleteComment" class="com.eshop.product.action.product.ProductCommentAction" method="deleteComment">
             <result name="success">/product/product_detail.jsp</result>
         </action>
 
         <!-- 購物車 -->
-        <action name="addToCart" class="com.eshop.cartitem.AddToCartAction">
+        <action name="addToCart" class="com.eshop.cartitem.action.AddToCartAction">
             <result name="success" type="redirectAction">cart</result>
         </action>
 
-        <action name="cart" class="com.eshop.cartitem.ShowCartAction">
+        <action name="cart" class="com.eshop.cartitem.action.ShowCartAction">
             <result name="success">/cartitem/cart.jsp</result>
         </action>
 
-        <action name="updateCart" class="com.eshop.cartitem.UpdateCartAction">
+        <action name="updateCart" class="com.eshop.cartitem.action.UpdateCartAction">
             <result name="success">/cartitem/cart.jsp</result>
         </action>
 
-        <action name="removeFromCart" class="com.eshop.cartitem.RemoveFromCartAction">
+        <action name="removeFromCart" class="com.eshop.cartitem.action.RemoveFromCartAction">
             <result name="success">/cartitem/cart.jsp</result>
         </action>
 
-        <action name="clearCart" class="com.eshop.cartitem.ClearCartAction">
+        <action name="clearCart" class="com.eshop.cartitem.action.ClearCartAction">
             <result name="success">/cartitem/cart.jsp</result>
         </action>
 
         <!-- 結帳 -->
-        <action name="checkout" class="com.eshop.orders.CheckoutAction">
+        <action name="checkout" class="com.eshop.orders.action.CheckoutAction">
             <result name="success">/ecpay/ecpay_submit.jsp</result>
             <result name="ecpay">/ecpay/ecpay_submit.jsp</result>
             <result name="login">/member/login.jsp</result>
@@ -156,72 +156,116 @@
         </action>
 
         <!-- 優惠券功能 -->
-        <action name="addCoupon" class="com.eshop.coupon.CouponAction" method="showAddForm">
+        <action name="addCoupon" class="com.eshop.coupon.action.CouponAction" method="showAddForm">
             <result name="success">/coupon/addCoupon.jsp</result>
         </action>
 
-        <action name="createCoupon" class="com.eshop.coupon.CouponAction" method="create">
+        <action name="createCoupon" class="com.eshop.coupon.action.CouponAction" method="create">
             <result name="success">/coupon/addCoupon.jsp</result>
             <result name="error">/coupon/addCoupon.jsp</result>
             <result name="input">/coupon/addCoupon.jsp</result>
         </action>
 
-        <action name="listCoupons" class="com.eshop.coupon.CouponAction" method="list">
+        <action name="listCoupons" class="com.eshop.coupon.action.CouponAction" method="list">
             <result name="success">/coupon/listCoupons.jsp</result>
         </action>
 
-        <action name="editCoupon" class="com.eshop.coupon.CouponAction" method="find">
+        <action name="editCoupon" class="com.eshop.coupon.action.CouponAction" method="find">
             <result name="success">/coupon/editCoupon.jsp</result>
             <result name="error">/coupon/editCoupon.jsp</result>
         </action>
 
-        <action name="updateCoupon" class="com.eshop.coupon.CouponAction" method="update">
+        <action name="updateCoupon" class="com.eshop.coupon.action.CouponAction" method="update">
             <result name="success" type="redirectAction">listCoupons</result>
             <result name="error">/coupon/editCoupon.jsp</result>
         </action>
 
-        <action name="deleteCoupon" class="com.eshop.coupon.CouponAction" method="delete">
+        <action name="deleteCoupon" class="com.eshop.coupon.action.CouponAction" method="delete">
             <result name="success" type="redirectAction">listCoupons</result>
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="assignCouponSelect" class="com.eshop.coupon.CouponAction" method="assignSelect">
+        <action name="assignCouponSelect" class="com.eshop.coupon.action.CouponAction" method="assignSelect">
             <result>/coupon/assignCouponSelect.jsp</result>
         </action>
 
-        <action name="showAssignForm" class="com.eshop.coupon.CouponAction" method="showAssignForm">
+        <action name="showAssignForm" class="com.eshop.coupon.action.CouponAction" method="showAssignForm">
             <result name="success">/coupon/assignCouponForm.jsp</result>
         </action>
 
-        <action name="assignSelectedCoupon" class="com.eshop.coupon.CouponAction" method="assignSelectedCoupon">
-            <result name="success">/coupon/assignCouponForm.jsp</result>
-            <result name="error">/coupon/assignCouponForm.jsp</result>
-        </action>
-
-
-        <action name="assignCoupon" class="com.eshop.coupon.CouponAction" method="assignCoupon">
+        <action name="assignSelectedCoupon" class="com.eshop.coupon.action.CouponAction" method="assignSelectedCoupon">
             <result name="success">/coupon/assignCouponForm.jsp</result>
             <result name="error">/coupon/assignCouponForm.jsp</result>
         </action>
 
-        <action name="assignCouponToAll" class="com.eshop.coupon.CouponAction" method="assignSelectedCoupon">
+
+        <action name="assignCoupon" class="com.eshop.coupon.action.CouponAction" method="assignCoupon">
+            <result name="success">/coupon/assignCouponForm.jsp</result>
+            <result name="error">/coupon/assignCouponForm.jsp</result>
+        </action>
+
+        <action name="assignCouponToAll" class="com.eshop.coupon.action.CouponAction" method="assignSelectedCoupon">
         <result name="success">/coupon/assignCouponForm.jsp</result>
             <result name="error">/coupon/assignCouponForm.jsp</result>
         </action>
 
-        <action name="applyCoupon" class="com.eshop.cartitem.ApplyCouponAction">
+        <action name="applyCoupon" class="com.eshop.cartitem.action.ApplyCouponAction">
             <result name="success">/cartitem/cart.jsp</result>
             <result name="error">/cartitem/cart.jsp</result>
         </action>
 
         <action name="ecpayReturn" class="com.eshop.ecpay.ECPayReturnAction" />
 
-        <action name="googleLoginCallback" class="com.eshop.member.GoogleLoginCallbackAction">
+        <action name="googleLoginCallback" class="com.eshop.member.action.GoogleLoginCallbackAction">
             <result name="success">/index.jsp</result>
             <result name="error">/login.jsp</result>
         </action>
 
+        <!-- 登入 -->
+        <action name="adminLogin" class="com.eshop.admin.action.AdminLoginAction" method="execute">
+            <result name="success" type="redirect">/back</result>
+            <result name="input">/admin/adminLogin.jsp</result>
+        </action>
 
+        <!-- 登出 -->
+        <action name="adminLogout" class="com.eshop.admin.action.AdminLoginAction" method="logout">
+            <result name="success" type="redirect">/admin/adminLogin.jsp</result>
+        </action>
+
+        <action name="adminCommentReport" class="com.eshop.product.action.admin.AdminCommentReportAction">
+            <result name="success">/admin/commentReport.jsp</result>
+            <result name="login" type="redirect">/admin/adminLogin.jsp</result>
+        </action>
+
+        <action name="updateCommentReportStatus" class="com.eshop.product.action.admin.UpdateCommentReportStatusAction" method="execute">
+            <result name="success" type="redirectAction">adminCommentReport</result>
+            <result name="login" type="redirect">/admin/adminLogin.jsp</result>
+            <result name="error">/admin/commentReport.jsp</result>
+        </action>
+
+        <action name="faqAdminList" class="com.eshop.faq.action.FaqAction" method="adminList">
+            <result name="admin">/faq/faq_list_admin.jsp</result>
+        </action>
+
+        <action name="faqEdit" class="com.eshop.faq.action.FaqAction" method="edit">
+            <result name="admin">/faq/faq_list_admin.jsp</result>
+        </action>
+
+        <action name="faqAddSubmit" class="com.eshop.faq.action.FaqAction" method="add">
+            <result name="admin">/faq/faq_list_admin.jsp</result>
+        </action>
+
+        <action name="faqUpdate" class="com.eshop.faq.action.FaqAction" method="update">
+            <result name="admin">/faq/faq_list_admin.jsp</result>
+        </action>
+
+        <action name="faqDelete" class="com.eshop.faq.action.FaqAction" method="delete">
+            <result name="admin">/faq/faq_list_admin.jsp</result>
+        </action>
+
+        <action name="faqList" class="com.eshop.faq.action.FaqAction" method="list">
+            <result name="success">/faq/faq_front.jsp</result>
+        </action>
 
 
         <action name="back">

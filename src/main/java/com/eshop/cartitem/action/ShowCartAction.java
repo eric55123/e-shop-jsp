@@ -1,4 +1,4 @@
-package com.eshop.cartitem;
+package com.eshop.cartitem.action;
 
 import com.eshop.coupon.model.CouponHolder;
 import com.eshop.coupon.service.CouponService;

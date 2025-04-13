@@ -1,4 +1,4 @@
-package com.eshop.coupon;
+package com.eshop.coupon.action;
 
 import com.eshop.coupon.model.Coupon;
 import com.eshop.coupon.service.CouponService;

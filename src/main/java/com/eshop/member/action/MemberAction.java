@@ -1,4 +1,4 @@
-package com.eshop.member;
+package com.eshop.member.action;
 
 import com.eshop.member.model.Member;
 import com.eshop.member.service.MemberService;
