@@ -34,8 +34,10 @@
 <h2>商品清單</h2>
 
 <!-- 新增商品按鈕放最上面 -->
-<p><a href="showAddProduct.action">➕ 新增商品</a></p>
-
+<p>
+    <a href="showAddProduct.action">➕ 新增商品</a> |
+    <a href="faqList.action" target="_blank">❓ 常見問題</a>
+</p>
 <table border="1">
     <tr>
         <th>編號</th>
