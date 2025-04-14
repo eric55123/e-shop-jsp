@@ -28,7 +28,7 @@ public class CouponAction extends ActionSupport {
     public String create() {
         try {
             if (coupon.getIsEnabled() == null) {
-                coupon.setIsEnabled(0);
+                coupon.setIsEnabled((byte) 0); // 原始型別轉型
             }
             if (coupon.getDescription() != null && coupon.getDescription().trim().isEmpty()) {
                 coupon.setDescription(null);
@@ -62,7 +62,7 @@ public class CouponAction extends ActionSupport {
     public String update() {
         try {
             if (coupon.getIsEnabled() == null) {
-                coupon.setIsEnabled(0);
+                coupon.setIsEnabled((byte) 0); // 原始型別轉型
             }
             if (coupon.getDescription() != null && coupon.getDescription().trim().isEmpty()) {
                 coupon.setDescription(null);

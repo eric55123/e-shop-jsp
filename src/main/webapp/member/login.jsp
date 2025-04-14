@@ -46,6 +46,12 @@
     <s:submit value="登入"/>
 </s:form>
 
+<!-- ✅ Google 註冊按鈕區塊 -->
+<a href="https://accounts.google.com/o/oauth2/v2/auth?client_id=29437975110-6rosalgpp5a2ncocs3cfgoqshiq182dt.apps.googleusercontent.com&redirect_uri=http://localhost:8080/googleLoginCallback.action&response_type=code&scope=openid%20email%20profile">
+    <button style="background-color:#4285F4; color:white; padding:8px 16px; border:none; border-radius:4px; font-size:16px;">
+        使用 Google 登入
+    </button>
+</a>
 <p><a href="memberRegister.action">還沒註冊？馬上註冊</a></p>
 
 </body>

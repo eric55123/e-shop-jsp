@@ -101,7 +101,7 @@ public class OrdersService {
                     .setParameter("memberId", member.getMemberId())
                     .getSingleResult();
 
-            holder.setUsedStatus(1);
+            holder.setUsedStatus((byte)1);
             holder.setUsedTime(new Timestamp(System.currentTimeMillis()));
             em.merge(holder);
 

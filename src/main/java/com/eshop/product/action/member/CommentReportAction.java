@@ -43,7 +43,7 @@ public class CommentReportAction extends ActionSupport {
             report.setReason(reason);
             report.setReportTime(LocalDateTime.now());
             report.setCommentTime(comment.getCommentTime());
-            report.setStatus(0); // 預設未處理
+            report.setStatus((byte) 0);// 預設未處理
 
             reportService.insert(report);
 

@@ -27,10 +27,10 @@ public class Orders {
     private BigDecimal totalAmount;
 
     @Column(name = "payment_status")
-    private Integer paymentStatus;
+    private Byte paymentStatus;
 
     @Column(name = "shipping_status")
-    private Integer shippingStatus;
+    private Byte shippingStatus;
 
     @Column(name = "receiver_name")
     private String receiverName;
@@ -132,20 +132,20 @@ public class Orders {
         this.receiverName = receiverName;
     }
 
-    public Integer getShippingStatus() {
-        return shippingStatus;
-    }
-
-    public void setShippingStatus(Integer shippingStatus) {
-        this.shippingStatus = shippingStatus;
-    }
-
-    public Integer getPaymentStatus() {
+    public Byte getPaymentStatus() {
         return paymentStatus;
     }
 
-    public void setPaymentStatus(Integer paymentStatus) {
+    public void setPaymentStatus(Byte paymentStatus) {
         this.paymentStatus = paymentStatus;
+    }
+
+    public Byte getShippingStatus() {
+        return shippingStatus;
+    }
+
+    public void setShippingStatus(Byte shippingStatus) {
+        this.shippingStatus = shippingStatus;
     }
 
     public BigDecimal getTotalAmount() {

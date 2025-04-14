@@ -27,7 +27,7 @@ public class AdminService {
         if (adminDAO.findByUsername(admin.getUsername()) != null) {
             return false; // 帳號已存在
         }
-        admin.setStatus(1); // 預設啟用
+        admin.setStatus((byte) 1);// 預設啟用
         adminDAO.insert(admin);
         return true;
     }

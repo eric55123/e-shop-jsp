@@ -35,7 +35,7 @@ public class Member {
     private String phone;
 
     @Column(name = "status")
-    private Integer status = 1;
+    private Byte status = 1;
 
     @Column(name = "created_at", columnDefinition = "DATETIME DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -80,11 +80,11 @@ public class Member {
         this.createdAt = createdAt;
     }
 
-    public Integer getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 

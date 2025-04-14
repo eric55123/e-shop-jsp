@@ -56,7 +56,7 @@ CREATE TABLE member
     status     TINYINT  DEFAULT 1 CHECK (status IN (0, 1)),                    -- 狀態欄位：1 = 啟用，0 = 停用
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,                             -- 註冊時間
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 更新時間
-    birthday   DATETIME            NULL,                                       -- 生日（可以為 NULL）
+    birthday   DATE                NULL,                                       -- 生日（可以為 NULL）
     CONSTRAINT email_unique UNIQUE (email),                                    -- 確保 email 唯一
     CONSTRAINT google_sub_unique UNIQUE (google_sub),                          -- 確保 google_sub 唯一
     CONSTRAINT username_unique UNIQUE (username)                               -- 確保 username 唯一
@@ -99,22 +99,27 @@ CREATE TABLE admin
 -- 商品留言檢舉表
 CREATE TABLE comment_report
 (
-    report_id   INT AUTO_INCREMENT PRIMARY KEY,
-    comment_id  INT,
-    member_id   INT,
-    reason      VARCHAR(100) NOT NULL,
-    report_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    status      TINYINT CHECK (status IN (0, 1, 2)),
-    admin_id    INT,
-    handle_time DATETIME,
-    reply       VARCHAR(255),
+    report_id    INT AUTO_INCREMENT PRIMARY KEY,
+    comment_id   INT,
+    member_id    INT,
+    reason       VARCHAR(100) NOT NULL,
+    report_time  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    comment_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status       TINYINT CHECK (status IN (0, 1, 2)),
+    admin_id     INT,
+    handle_time  DATETIME,
+    reply        VARCHAR(255),
+
     FOREIGN KEY (comment_id) REFERENCES product_comment (comment_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (member_id) REFERENCES member (member_id)
         ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (admin_id) REFERENCES admin (admin_id)
         ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE = InnoDB;
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
+
 
 -- 管理員操作紀錄表
 CREATE TABLE admin_log
@@ -411,3 +416,33 @@ INSERT INTO coupon_used_log (order_id, coupon_holder_id, discount_amount, member
 VALUES (1, 1, 50.00, 1, NOW()),
        (2, 2, 120.00, 2, NOW()),
        (3, 3, 60.00, 3, NOW());
+
+-- ✅ 開啟事件排程器（只需執行一次）
+SET GLOBAL event_scheduler = ON;
+
+-- ✅ 每天清除 7 天前的 admin_log
+CREATE EVENT IF NOT EXISTS delete_old_admin_log
+    ON SCHEDULE EVERY 1 DAY
+        STARTS CURRENT_TIMESTAMP
+    DO
+    DELETE
+    FROM admin_log
+    WHERE created_at < NOW() - INTERVAL 7 DAY;
+
+-- ✅ 每天清除 7 天前的 login_log
+CREATE EVENT IF NOT EXISTS delete_old_login_log
+    ON SCHEDULE EVERY 1 DAY
+        STARTS CURRENT_TIMESTAMP
+    DO
+    DELETE
+    FROM login_log
+    WHERE login_time < NOW() - INTERVAL 7 DAY;
+
+-- ✅ 每天清除 7 天前的 coupon_used_log
+CREATE EVENT IF NOT EXISTS delete_old_coupon_used_log
+    ON SCHEDULE EVERY 1 DAY
+        STARTS CURRENT_TIMESTAMP
+    DO
+    DELETE
+    FROM coupon_used_log
+    WHERE applied_time < NOW() - INTERVAL 7 DAY;

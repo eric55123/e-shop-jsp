@@ -1,8 +1,11 @@
 package com.eshop.member.action;
 
+import com.eshop.member.model.LoginLog;
 import com.eshop.member.model.Member;
+import com.eshop.member.service.LoginLogService;
 import com.eshop.member.service.MemberService;
 import com.eshop.util.PropertiesUtil;
+import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 import org.json.JSONObject;
@@ -75,12 +78,23 @@ public class GoogleLoginCallbackAction extends ActionSupport {
             member.setGoogleSub(sub);
             member.setLoginType("google");
             member.setCreatedAt(LocalDateTime.now());
-            member.setStatus(1);
+            member.setStatus((byte)1);
             memberService.save(member);
         }
 
         Map<String, Object> session = ActionContext.getContext().getSession();
         session.put("loginMember", member);
+
+        // ✅ 寫入登入紀錄
+        LoginLog log = new LoginLog();
+        log.setMemberId(member.getMemberId());
+        log.setLoginTime(LocalDateTime.now());
+        log.setLoginType("google");
+        log.setStatus((byte)1);
+        log.setIpAddress(RequestUtil.getClientIp());
+        log.setUserAgent(RequestUtil.getRequest().getHeader("User-Agent"));
+
+        new LoginLogService().save(log);
 
         return SUCCESS;
     }

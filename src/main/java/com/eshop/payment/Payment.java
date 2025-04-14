@@ -29,7 +29,7 @@ public class Payment {
     private String paymentType;
 
     @Column(name = "payment_status", nullable = false)
-    private Integer paymentStatus; // 0 = 未付款, 1 = 已付款, 2 = 退款
+    private Byte paymentStatus; // 0 = 未付款, 1 = 已付款, 2 = 退款
 
     @Column(name = "paid_at")
     private Timestamp paidAt;
@@ -105,11 +105,11 @@ public class Payment {
         this.paymentType = paymentType;
     }
 
-    public Integer getPaymentStatus() {
+    public Byte getPaymentStatus() {
         return paymentStatus;
     }
 
-    public void setPaymentStatus(Integer paymentStatus) {
+    public void setPaymentStatus(Byte paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 

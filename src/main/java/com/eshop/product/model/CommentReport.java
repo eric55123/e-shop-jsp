@@ -32,7 +32,7 @@ public class CommentReport {
     private LocalDateTime commentTime;
 
     @Column(name = "status")
-    private Integer status = 0; // 0=未處理, 1=刪除留言, 2=駁回
+    private Byte status = 0; // 0=未處理, 1=刪除留言, 2=駁回
 
     @Column(name = "admin_id")
     private Integer adminId; // 可為 null
@@ -92,11 +92,11 @@ public class CommentReport {
         this.commentTime = commentTime;
     }
 
-    public Integer getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 

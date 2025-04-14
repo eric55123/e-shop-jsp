@@ -50,7 +50,7 @@ public class ECPayReturnAction extends ActionSupport implements ServletRequestAw
             System.out.println("🔍 找到的訂單: " + order);
 
             if (order != null && "1".equals(rtnCode)) {
-                order.setPaymentStatus(1);
+                order.setPaymentStatus((byte)1);
                 em.merge(order);
 
                 Payment payment = new Payment();
@@ -58,7 +58,7 @@ public class ECPayReturnAction extends ActionSupport implements ServletRequestAw
                 payment.setMerchantTradeNo(merchantTradeNo);
                 payment.setTradeNo(tradeNo);
                 payment.setPaymentType(paymentType);
-                payment.setPaymentStatus(1);
+                payment.setPaymentStatus((byte)1);
 
                 if (paymentDateStr != null) {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");

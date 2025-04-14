@@ -27,16 +27,16 @@ public class Coupon {
     @Column(name = "min_spend", precision = 10, scale = 2)
     private BigDecimal minSpend;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_from")
     private Date validFrom;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_to")
     private Date validTo;
 
     @Column(name = "is_enabled")
-    private Integer isEnabled; // 1 = 啟用, 0 = 停用
+    private Byte isEnabled; // 1 = 啟用, 0 = 停用
 
     @Column(name = "description")
     private String description;
@@ -103,11 +103,11 @@ public class Coupon {
         this.description = description;
     }
 
-    public Integer getIsEnabled() {
+    public Byte getIsEnabled() {
         return isEnabled;
     }
 
-    public void setIsEnabled(Integer isEnabled) {
+    public void setIsEnabled(Byte isEnabled) {
         this.isEnabled = isEnabled;
     }
 

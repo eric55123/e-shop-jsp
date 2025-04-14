@@ -28,7 +28,7 @@ public class CouponHolderService {
         holder.setMember(member);
         holder.setCouponCode(coupon.getCouponCode());
         holder.setAssignedTime(new Timestamp(System.currentTimeMillis()));
-        holder.setUsedStatus(0);
+        holder.setUsedStatus((byte)0);
         holder.setExpiredTime(new Timestamp(coupon.getValidTo().getTime()));
         holder.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 
@@ -79,7 +79,7 @@ public class CouponHolderService {
                     .setParameter("memberId", memberId)
                     .getSingleResult();
 
-            holder.setUsedStatus(1);
+            holder.setUsedStatus((byte) 1);
             holder.setUsedTime(new Timestamp(System.currentTimeMillis()));
 
             em.merge(holder);

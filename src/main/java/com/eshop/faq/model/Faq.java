@@ -22,7 +22,7 @@ public class Faq {
     private String category;
 
     @Column(name = "is_enabled")
-    private Integer isEnabled;
+    private Byte isEnabled;
 
     @Column(name = "sort_order")
     private Integer sortOrder;
@@ -75,11 +75,11 @@ public class Faq {
         this.sortOrder = sortOrder;
     }
 
-    public Integer getIsEnabled() {
+    public Byte getIsEnabled() {
         return isEnabled;
     }
 
-    public void setIsEnabled(Integer isEnabled) {
+    public void setIsEnabled(Byte isEnabled) {
         this.isEnabled = isEnabled;
     }
 

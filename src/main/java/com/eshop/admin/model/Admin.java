@@ -28,7 +28,7 @@ public class Admin {
     private String role;
 
     @Column(name = "status")
-    private Integer status;
+    private Byte status;
 
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
@@ -100,11 +100,11 @@ public class Admin {
         this.role = role;
     }
 
-    public Integer getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 

@@ -1,7 +1,10 @@
 package com.eshop.member.action;
 
+import com.eshop.member.model.LoginLog;
 import com.eshop.member.model.Member;
+import com.eshop.member.service.LoginLogService;
 import com.eshop.member.service.MemberService;
+import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.struts2.ServletActionContext;
@@ -32,7 +35,7 @@ public class MemberAction extends ActionSupport {
             }
 
             // ✅ Local 註冊初始化欄位
-            member.setStatus(1); // 啟用中
+            member.setStatus((byte)1); // 啟用中
             member.setCreatedAt(LocalDateTime.now());
             member.setLoginType("local");
 
@@ -54,12 +57,24 @@ public class MemberAction extends ActionSupport {
             HttpSession session = ServletActionContext.getRequest().getSession();
             session.setAttribute("loginMember", found);
             addActionMessage("登入成功！");
+
+            // ✅ 正確紀錄登入
+            LoginLog log = new LoginLog();
+            log.setMemberId(found.getMemberId());
+            log.setLoginTime(LocalDateTime.now());
+            log.setLoginType("local"); // 或 google 等，這裡用 member.getLoginType() 也可以
+            log.setStatus((byte)1); // 成功
+            log.setIpAddress(RequestUtil.getClientIp());
+            log.setUserAgent(RequestUtil.getRequest().getHeader("User-Agent"));
+            new LoginLogService().save(log);
+
             return SUCCESS;
         } else {
             addActionError("帳號或密碼錯誤！");
             return INPUT;
         }
     }
+
     public String update() {
         HttpSession session = ServletActionContext.getRequest().getSession();
         Member sessionMember = (Member) session.getAttribute("loginMember");

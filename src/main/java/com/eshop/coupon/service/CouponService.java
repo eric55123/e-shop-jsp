@@ -81,7 +81,7 @@ public class CouponService {
         holder.setMember(member);
         holder.setCouponCode(coupon.getCouponCode());
         holder.setAssignedTime(new Timestamp(System.currentTimeMillis()));
-        holder.setUsedStatus(0);
+        holder.setUsedStatus((byte)0);
         holder.setExpiredTime(new Timestamp(coupon.getValidTo().getTime()));
         holder.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 

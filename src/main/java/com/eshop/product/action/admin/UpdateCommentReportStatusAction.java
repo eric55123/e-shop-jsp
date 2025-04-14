@@ -36,7 +36,7 @@ public class UpdateCommentReportStatusAction extends ActionSupport {
         }
 
         // ✅ 更新檢舉狀態
-        report.setStatus(status);
+        report.setStatus((byte) status);
         report.setAdminId(admin.getAdminId());
         report.setHandleTime(LocalDateTime.now());
         report.setReply(reply);
@@ -46,7 +46,7 @@ public class UpdateCommentReportStatusAction extends ActionSupport {
         if (status == 2 && report.getComment() != null) {
             int commentId = report.getComment().getCommentId();
             ProductComment comment = commentService.getCommentById(commentId);
-            comment.setStatus(-1);
+            comment.setStatus((byte)-1);
             commentService.updateComment(comment);
         }
 

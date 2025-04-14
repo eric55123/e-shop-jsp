@@ -17,10 +17,10 @@ public class ProductCommentService {
         ProductComment comment = new ProductComment();
         comment.setProduct(product);
         comment.setMember(member);
-        comment.setRating(rating);
+        comment.setRating((byte)rating);
         comment.setCommentText(text);
         comment.setCommentTime(LocalDateTime.now().withNano(0));
-        comment.setStatus(1); // 預設為顯示狀態
+        comment.setStatus((byte)1); // 預設為顯示狀態
         commentDAO.insert(comment);
     }
 

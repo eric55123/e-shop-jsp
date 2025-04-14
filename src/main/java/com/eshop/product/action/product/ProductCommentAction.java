@@ -103,7 +103,7 @@ public class ProductCommentAction extends ActionSupport {
     public String updateComment() {
         ProductComment comment = commentService.getCommentById(commentId);
         if (comment != null) {
-            comment.setRating(rating);
+            comment.setRating((byte)rating);
             comment.setCommentText(commentText);
             commentService.updateComment(comment);
             return writeJson("{\"message\":\"success\"}");

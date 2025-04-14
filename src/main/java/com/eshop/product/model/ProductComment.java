@@ -23,7 +23,7 @@ public class ProductComment {
     private Member member;
 
     @Column(name = "rating", nullable = false)
-    private Integer rating;
+    private Byte rating;
 
     @Column(name = "comment_text", columnDefinition = "TEXT")
     private String commentText;
@@ -32,7 +32,7 @@ public class ProductComment {
     private LocalDateTime commentTime;
 
     @Column(name = "status")
-    private Integer status;
+    private Byte status;
 
     // ===== Getter / Setter =====
     public Integer getCommentId() {
@@ -59,11 +59,11 @@ public class ProductComment {
         this.member = member;
     }
 
-    public Integer getRating() {
+    public Byte getRating() {
         return rating;
     }
 
-    public void setRating(Integer rating) {
+    public void setRating(Byte rating) {
         this.rating = rating;
     }
 
@@ -83,11 +83,11 @@ public class ProductComment {
         this.commentTime = commentTime;
     }
 
-    public Integer getStatus() {
+    public Byte getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(Byte status) {
         this.status = status;
     }
 }

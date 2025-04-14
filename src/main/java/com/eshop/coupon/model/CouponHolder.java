@@ -28,7 +28,7 @@ public class CouponHolder {
     private Timestamp assignedTime;
 
     @Column(name = "used_status")
-    private Integer usedStatus;
+    private Byte usedStatus;
 
     @Column(name = "used_time")
     private Timestamp usedTime;
@@ -82,11 +82,11 @@ public class CouponHolder {
         this.usedTime = usedTime;
     }
 
-    public Integer getUsedStatus() {
+    public Byte getUsedStatus() {
         return usedStatus;
     }
 
-    public void setUsedStatus(Integer usedStatus) {
+    public void setUsedStatus(Byte usedStatus) {
         this.usedStatus = usedStatus;
     }
 

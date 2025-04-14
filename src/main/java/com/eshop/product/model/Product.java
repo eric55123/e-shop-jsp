@@ -17,7 +17,7 @@ public class Product {
     @Column(name = "product_name", length = 32, nullable = false, unique = true)
     private String productName;
 
-    @Column(name = "product_desc")
+    @Column(name = "product_desc", columnDefinition = "TEXT")
     private String productDesc;
 
     @Column(name = "product_add_qty")
@@ -33,7 +33,7 @@ public class Product {
     private LocalDateTime productRemoveTime;
 
     @Column(name = "product_status")
-    private Integer productStatus;
+    private Byte productStatus;
 
     @Column(name = "product_price", precision = 10, scale = 2)
     private BigDecimal productPrice;
@@ -111,11 +111,11 @@ public class Product {
         this.productRemoveTime = productRemoveTime;
     }
 
-    public Integer getProductStatus() {
+    public Byte getProductStatus() {
         return productStatus;
     }
 
-    public void setProductStatus(Integer productStatus) {
+    public void setProductStatus(Byte productStatus) {
         this.productStatus = productStatus;
     }
 
