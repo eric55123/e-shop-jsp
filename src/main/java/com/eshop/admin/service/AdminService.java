@@ -3,6 +3,8 @@ package com.eshop.admin.service;
 import com.eshop.admin.dao.AdminDAO;
 import com.eshop.admin.model.Admin;
 
+import java.util.List;
+
 public class AdminService {
 
     private AdminDAO adminDAO = new AdminDAO();
@@ -22,23 +24,38 @@ public class AdminService {
         return null;
     }
 
-    // 註冊/新增管理員（可擴充）
+    // 新增註冊
     public boolean register(Admin admin) {
         if (adminDAO.findByUsername(admin.getUsername()) != null) {
-            return false; // 帳號已存在
+            return false;
         }
-        admin.setStatus((byte) 1);// 預設啟用
+        admin.setStatus((byte) 1);
         adminDAO.insert(admin);
         return true;
     }
 
-    // 修改個人資料
+    // 修改管理員
     public void updateAdmin(Admin admin) {
         adminDAO.update(admin);
     }
 
-    // 查詢管理員（未來可用於列表）
+    // 查詢單一管理員
     public Admin findById(int adminId) {
         return adminDAO.findById(adminId);
+    }
+
+    // 查詢所有管理員（給 adminList 用）
+    public List<Admin> findAll() {
+        return adminDAO.findAll();
+    }
+
+    // 刪除管理員
+    public void deleteById(int adminId) {
+        adminDAO.deleteById(adminId);
+    }
+
+    // 單純儲存（可選）
+    public void save(Admin admin) {
+        adminDAO.insert(admin);
     }
 }

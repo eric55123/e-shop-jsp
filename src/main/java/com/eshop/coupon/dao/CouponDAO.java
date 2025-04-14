@@ -85,8 +85,10 @@ public class CouponDAO {
 
     public List<Coupon> findEnabled() {
         EntityManager em = emf.createEntityManager();
-        List<Coupon> list = em.createQuery("FROM Coupon WHERE isEnabled = true", Coupon.class).getResultList();
-        em.close();
-        return list;
+        try {
+            return em.createQuery("FROM Coupon WHERE isEnabled = 1", Coupon.class).getResultList();
+        } finally {
+            em.close();
+        }
     }
 }

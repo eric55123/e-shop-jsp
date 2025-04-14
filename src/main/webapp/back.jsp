@@ -14,6 +14,7 @@
         return;
     }
 
+    boolean isSuper = "super".equalsIgnoreCase(loggedInAdmin.getRole());
 %>
 
 <h2>管理後台</h2>
@@ -29,6 +30,10 @@
     <li><a href="assignCouponSelect.action">🎁 發放優惠券</a></li>
     <li><a href="adminCommentReport.action">🛡️ 評論檢舉審核</a></li>
     <li><a href="faqAdminList.action">❓ 常見問題管理</a></li>
+
+    <% if (isSuper) { %>
+    <li><a href="adminCreate.action">👑 新增管理員</a></li>
+    <% } %>
 </ul>
 
 </body>

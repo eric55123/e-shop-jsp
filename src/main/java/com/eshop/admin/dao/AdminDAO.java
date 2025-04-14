@@ -74,7 +74,7 @@ public class AdminDAO {
     }
 
     // 刪除
-    public void delete(int adminId) {
+    public void deleteById(int adminId) {
         EntityManager em = HibernateUtil.getEntityManagerFactory().createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
