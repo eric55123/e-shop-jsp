@@ -1,14 +1,14 @@
 package com.eshop.product.action.admin;
 
 import com.eshop.admin.model.Admin;
+import com.eshop.admin.service.AdminLogService;
 import com.eshop.product.model.CommentReport;
 import com.eshop.product.model.ProductComment;
 import com.eshop.product.service.CommentReportService;
 import com.eshop.product.service.ProductCommentService;
+import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.struts2.ServletActionContext;
 
-import javax.servlet.http.HttpSession;
 import java.time.LocalDateTime;
 
 public class UpdateCommentReportStatusAction extends ActionSupport {
@@ -19,40 +19,59 @@ public class UpdateCommentReportStatusAction extends ActionSupport {
 
     private CommentReportService reportService = new CommentReportService();
     private ProductCommentService commentService = new ProductCommentService();
+    private AdminLogService adminLogService = new AdminLogService(); // ✅ 新增 log 服務
 
     @Override
     public String execute() {
-        // 取得登入管理員
-        HttpSession session = ServletActionContext.getRequest().getSession(false);
-        Admin admin = (Admin) session.getAttribute("loggedInAdmin");
+        Admin admin = RequestUtil.getLoggedInAdmin();
+
         if (admin == null) {
             return "login";
         }
 
-        // 查找檢舉紀錄
         CommentReport report = reportService.getReportById(reportId);
         if (report == null) {
             addActionError("找不到該檢舉紀錄！");
             return ERROR;
         }
 
-        // 更新檢舉狀態與回覆
+        // ✅ 更新檢舉狀態
         report.setStatus(status);
         report.setAdminId(admin.getAdminId());
         report.setHandleTime(LocalDateTime.now());
         report.setReply(reply);
         reportService.updateReport(report);
 
-        // 如果是封鎖，將評論狀態設為 -1
+        // ✅ 若封鎖則更新留言狀態
         if (status == 2 && report.getComment() != null) {
             int commentId = report.getComment().getCommentId();
-            ProductComment comment = commentService.getCommentById(commentId); // 安全重新查一次
+            ProductComment comment = commentService.getCommentById(commentId);
             comment.setStatus(-1);
             commentService.updateComment(comment);
         }
 
+        // ✅ 寫入 admin log
+        String actionType = "review_comment";
+        String targetTable = "product_comment";
+        Integer targetId = (report.getComment() != null) ? report.getComment().getCommentId() : null;
+        String desc = (status == 1)
+                ? "駁回檢舉（ID: " + reportId + "）"
+                : "封鎖評論為不當言論（ID: " + reportId + "）";
+        String ip = RequestUtil.getClientIp();
+
+
+        adminLogService.log(
+                admin.getAdminId(),
+                actionType,
+                targetTable,
+                targetId,
+                desc,
+                ip
+        );
+
         return SUCCESS;
     }
+
 
     // Getter / Setter
     public int getReportId() {

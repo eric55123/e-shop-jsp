@@ -61,9 +61,8 @@ CREATE TABLE member
     CONSTRAINT google_sub_unique UNIQUE (google_sub),                          -- 確保 google_sub 唯一
     CONSTRAINT username_unique UNIQUE (username)                               -- 確保 username 唯一
 ) ENGINE = InnoDB
-  DEFAULT CHARSET=utf8mb4
-  COLLATE=utf8mb4_general_ci;
-
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci;
 
 
 -- 商品評論表
@@ -120,17 +119,26 @@ CREATE TABLE comment_report
 -- 管理員操作紀錄表
 CREATE TABLE admin_log
 (
-    log_id       INT AUTO_INCREMENT PRIMARY KEY,
-    admin_id     INT,
-    action_type  VARCHAR(50) NOT NULL,
-    target_table VARCHAR(50),
-    target_id    INT,
-    action_desc  VARCHAR(255),
-    ip_address   VARCHAR(50),
-    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (admin_id) REFERENCES admin (admin_id)
-        ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE = InnoDB;
+    log_id       INT AUTO_INCREMENT PRIMARY KEY,     -- 主鍵，Hibernate 對應 logId
+    admin_id     INT          NULL,                  -- 外鍵：管理員 ID
+    action_type  VARCHAR(50)  NOT NULL,              -- 操作類型：login, edit_product, review_comment 等
+    target_table VARCHAR(50)  NULL,                  -- 被操作的資料表，如 product, coupon
+    target_id    INT          NULL,                  -- 被操作資料主鍵 ID
+    action_desc  VARCHAR(255) NULL,                  -- 操作說明：例如「封鎖不當留言」
+    ip_address   VARCHAR(50)  NULL,                  -- 操作來源 IP 位址
+    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP, -- 建立時間（自動帶入）
+
+    -- 外鍵約束
+    CONSTRAINT fk_admin_log_admin
+        FOREIGN KEY (admin_id) REFERENCES admin (admin_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
+);
+
+-- 🔍 建議的索引（提升查詢效率）
+CREATE INDEX idx_admin_id ON admin_log (admin_id);
+CREATE INDEX idx_action_type ON admin_log (action_type);
+CREATE INDEX idx_target_table ON admin_log (target_table);
 
 -- 訂單主表
 CREATE TABLE orders
