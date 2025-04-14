@@ -16,6 +16,7 @@ public class CouponAssignAction extends ActionSupport {
     private CouponService couponService = new CouponService();
     private MemberService memberService = new MemberService();
 
+    private List<Coupon> couponList;
     private Coupon coupon;
     private List<Member> memberList;
     private Integer memberId;
@@ -30,6 +31,7 @@ public class CouponAssignAction extends ActionSupport {
 
     // 顯示發放選擇券列表
     public String assignSelect() {
+        this.couponList = couponService.getAllCoupons();
         return SUCCESS;
     }
 
@@ -141,6 +143,8 @@ public class CouponAssignAction extends ActionSupport {
     // Getter / Setter
     public Coupon getCoupon() { return coupon; }
     public void setCoupon(Coupon coupon) { this.coupon = coupon; }
+    public List<Coupon> getCouponList() { return couponList; }
+    public void setCouponList(List<Coupon> couponList) { this.couponList = couponList; }
     public List<Member> getMemberList() { return memberList; }
     public void setMemberList(List<Member> memberList) { this.memberList = memberList; }
     public Integer getMemberId() { return memberId; }

@@ -5,11 +5,13 @@ import com.eshop.coupon.service.CouponService;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class CouponAction extends ActionSupport {
 
     private CouponService couponService = new CouponService();
 
+    private List<Coupon> couponList;
     private Coupon coupon;
     private String message;
 
@@ -92,7 +94,21 @@ public class CouponAction extends ActionSupport {
         return SUCCESS;
     }
 
+    public String list() {
+        couponList = couponService.getAllCoupons();
+        return SUCCESS;
+    }
+
     // ==== Getter / Setter ====
+
+    public List<Coupon> getCouponList() {
+        return couponList;
+    }
+
+    public void setCouponList(List<Coupon> couponList) {
+        this.couponList = couponList;
+    }
+
     public Coupon getCoupon() { return coupon; }
     public void setCoupon(Coupon coupon) { this.coupon = coupon; }
     public String getMessage() { return message; }

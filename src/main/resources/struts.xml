@@ -166,7 +166,7 @@
             <result name="input">/coupon/addCoupon.jsp</result>
         </action>
 
-        <action name="listCoupons" class="com.eshop.coupon.action.CouponAssignAction" method="list">
+        <action name="listCoupons" class="com.eshop.coupon.action.CouponAction" method="list">
             <result name="success">/coupon/listCoupons.jsp</result>
         </action>
 
