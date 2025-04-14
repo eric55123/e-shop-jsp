@@ -166,7 +166,7 @@
             <result name="input">/coupon/addCoupon.jsp</result>
         </action>
 
-        <action name="listCoupons" class="com.eshop.coupon.action.CouponAction" method="list">
+        <action name="listCoupons" class="com.eshop.coupon.action.CouponAssignAction" method="list">
             <result name="success">/coupon/listCoupons.jsp</result>
         </action>
 
@@ -185,26 +185,26 @@
             <result name="error">/error.jsp</result>
         </action>
 
-        <action name="assignCouponSelect" class="com.eshop.coupon.action.CouponAction" method="assignSelect">
+        <action name="assignCouponSelect" class="com.eshop.coupon.action.CouponAssignAction" method="assignSelect">
             <result>/coupon/assignCouponSelect.jsp</result>
         </action>
 
-        <action name="showAssignForm" class="com.eshop.coupon.action.CouponAction" method="showAssignForm">
+        <action name="showAssignForm" class="com.eshop.coupon.action.CouponAssignAction" method="showAssignForm">
             <result name="success">/coupon/assignCouponForm.jsp</result>
         </action>
 
-        <action name="assignSelectedCoupon" class="com.eshop.coupon.action.CouponAction" method="assignSelectedCoupon">
-            <result name="success">/coupon/assignCouponForm.jsp</result>
-            <result name="error">/coupon/assignCouponForm.jsp</result>
-        </action>
-
-
-        <action name="assignCoupon" class="com.eshop.coupon.action.CouponAction" method="assignCoupon">
+        <action name="assignSelectedCoupon" class="com.eshop.coupon.action.CouponAssignAction" method="assignSelectedCoupon">
             <result name="success">/coupon/assignCouponForm.jsp</result>
             <result name="error">/coupon/assignCouponForm.jsp</result>
         </action>
 
-        <action name="assignCouponToAll" class="com.eshop.coupon.action.CouponAction" method="assignSelectedCoupon">
+
+        <action name="assignCoupon" class="com.eshop.coupon.action.CouponAssignAction" method="assignCoupon">
+            <result name="success">/coupon/assignCouponForm.jsp</result>
+            <result name="error">/coupon/assignCouponForm.jsp</result>
+        </action>
+
+        <action name="assignCouponToAll" class="com.eshop.coupon.action.CouponAssignAction" method="assignSelectedCoupon">
         <result name="success">/coupon/assignCouponForm.jsp</result>
             <result name="error">/coupon/assignCouponForm.jsp</result>
         </action>
