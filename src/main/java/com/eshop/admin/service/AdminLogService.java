@@ -12,9 +12,7 @@ import java.time.LocalDateTime;
 public class AdminLogService {
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("eShopPU");
 
-    public void log(Integer adminId, String actionType, String targetTable,
-                    Integer targetId, String actionDesc, String ipAddress) {
-
+    public void log(Integer adminId, String actionType, String targetTable, String targetId, String actionDesc, String ip) {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
 
@@ -25,14 +23,13 @@ public class AdminLogService {
             log.setAdminId(adminId);
             log.setActionType(actionType);
             log.setTargetTable(targetTable);
-            log.setTargetId(targetId);
+            log.setTargetId(targetId);  // 改為 String
             log.setActionDesc(actionDesc);
-            log.setIpAddress(ipAddress);
+            log.setIpAddress(ip);
             log.setCreatedAt(LocalDateTime.now());
 
             em.persist(log);
             tx.commit();
-
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
             e.printStackTrace();
@@ -40,4 +37,5 @@ public class AdminLogService {
             em.close();
         }
     }
+
 }

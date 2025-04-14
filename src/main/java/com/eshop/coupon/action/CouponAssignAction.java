@@ -1,9 +1,11 @@
 package com.eshop.coupon.action;
 
+import com.eshop.admin.service.AdminLogService;
 import com.eshop.coupon.model.Coupon;
 import com.eshop.coupon.service.CouponService;
 import com.eshop.member.model.Member;
 import com.eshop.member.service.MemberService;
+import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.time.LocalDateTime;
@@ -13,6 +15,7 @@ import java.util.List;
 
 public class CouponAssignAction extends ActionSupport {
 
+    private AdminLogService adminLogService = new AdminLogService();
     private CouponService couponService = new CouponService();
     private MemberService memberService = new MemberService();
 
@@ -78,6 +81,15 @@ public class CouponAssignAction extends ActionSupport {
 
                 message = String.format("成功發放 %d 位，略過 %d 位（已擁有）", success, skip);
                 memberList = getFilteredMembers();
+
+                adminLogService.log(
+                        RequestUtil.getLoggedInAdmin().getAdminId(),
+                        "assign_coupon",
+                        "coupon",
+                        coupon.getCouponId(),
+                        String.format("發放優惠券「%s」給 %d 位會員（略過 %d 位）", selectedCoupon.getName(), success, skip),
+                        RequestUtil.getClientIp()
+                );
                 return SUCCESS;
             } else {
                 addActionError("發放資料不完整");
@@ -109,6 +121,17 @@ public class CouponAssignAction extends ActionSupport {
                 }
                 message = String.format("成功發放 %d 位，略過 %d 位（已擁有）", success, skip);
                 memberList = targetMembers;
+
+                // 發放完成後記錄 log
+                adminLogService.log(
+                        RequestUtil.getLoggedInAdmin().getAdminId(),
+                        "assign_coupon_all",
+                        "coupon",
+                        coupon.getCouponId(),
+                        String.format("批次發放優惠券「%s」給 %d 位會員（略過 %d 位）", selectedCoupon.getName(), success, skip),
+                        RequestUtil.getClientIp()
+                );
+
                 return SUCCESS;
             } else {
                 addActionError("發放資料不完整");

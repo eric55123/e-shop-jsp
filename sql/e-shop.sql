@@ -123,7 +123,7 @@ CREATE TABLE admin_log
     admin_id     INT          NULL,                  -- 外鍵：管理員 ID
     action_type  VARCHAR(50)  NOT NULL,              -- 操作類型：login, edit_product, review_comment 等
     target_table VARCHAR(50)  NULL,                  -- 被操作的資料表，如 product, coupon
-    target_id    INT          NULL,                  -- 被操作資料主鍵 ID
+    target_id    VARCHAR(50)  NULL,                  -- 被操作資料主鍵 ID
     action_desc  VARCHAR(255) NULL,                  -- 操作說明：例如「封鎖不當留言」
     ip_address   VARCHAR(50)  NULL,                  -- 操作來源 IP 位址
     created_at   DATETIME DEFAULT CURRENT_TIMESTAMP, -- 建立時間（自動帶入）

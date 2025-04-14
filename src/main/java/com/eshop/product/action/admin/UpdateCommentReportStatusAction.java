@@ -64,7 +64,7 @@ public class UpdateCommentReportStatusAction extends ActionSupport {
                 admin.getAdminId(),
                 actionType,
                 targetTable,
-                targetId,
+                targetId != null ? String.valueOf(targetId) : null,
                 desc,
                 ip
         );

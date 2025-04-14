@@ -1,7 +1,9 @@
 package com.eshop.admin.action;
 
 import com.eshop.admin.model.Admin;
+import com.eshop.admin.service.AdminLogService;
 import com.eshop.admin.service.AdminService;
+import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
@@ -13,6 +15,7 @@ public class AdminLoginAction extends ActionSupport {
     private String username;
     private String password;
 
+    private AdminLogService adminLogService = new AdminLogService();
     private AdminService adminService = new AdminService();
 
     // 登入
@@ -21,12 +24,15 @@ public class AdminLoginAction extends ActionSupport {
         Admin admin = adminService.login(username, password);
 
         if (admin != null) {
-            // 登入成功，存入 session
             HttpSession session = ServletActionContext.getRequest().getSession();
             session.setAttribute("loggedInAdmin", admin);
+
+            // ✅ 登入成功紀錄 log
+            String ip = RequestUtil.getClientIp();
+            adminLogService.log(admin.getAdminId(), "login", null, null, "管理員登入成功", ip);
+
             return SUCCESS;
         } else {
-            // 登入失敗
             addActionError("帳號或密碼錯誤，或帳號已停用！");
             return INPUT;
         }
@@ -35,8 +41,16 @@ public class AdminLoginAction extends ActionSupport {
     // 登出
     public String logout() {
         HttpServletRequest request = ServletActionContext.getRequest();
-        HttpSession session = request.getSession(false); // false 表示如果沒有 session 就不建立
+        HttpSession session = request.getSession(false);
         if (session != null) {
+            Admin admin = (Admin) session.getAttribute("loggedInAdmin");
+
+            // ✅ 登出 log
+            if (admin != null) {
+                String ip = RequestUtil.getClientIp();
+                adminLogService.log(admin.getAdminId(), "logout", null, null, "管理員登出", ip);
+            }
+
             session.invalidate();
         }
         return SUCCESS;

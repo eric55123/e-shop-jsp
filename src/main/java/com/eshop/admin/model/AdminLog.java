@@ -21,7 +21,7 @@ public class AdminLog {
     private String targetTable;
 
     @Column(name = "target_id")
-    private Integer targetId;
+    private String targetId;
 
     @Column(name = "action_desc")
     private String actionDesc;
@@ -71,11 +71,11 @@ public class AdminLog {
         this.targetTable = targetTable;
     }
 
-    public Integer getTargetId() {
+    public String getTargetId() {
         return targetId;
     }
 
-    public void setTargetId(Integer targetId) {
+    public void setTargetId(String targetId) {
         this.targetId = targetId;
     }
 
