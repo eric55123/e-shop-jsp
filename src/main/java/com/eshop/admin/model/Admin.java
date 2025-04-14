@@ -24,7 +24,7 @@ public class Admin {
     @Column(name = "email", length = 100)
     private String email;
 
-    @Column(name = "role", length = 20)
+    @Column(name = "role", length = 30)
     private String role;
 
     @Column(name = "status")

@@ -273,20 +273,30 @@
             <result name="input">/admin/admin_create.jsp</result>
         </action>
 
+        <action name="adminCreateForm">
+            <result>/admin/admin_create.jsp</result>
+        </action>
+
+        <action name="adminCreate" class="com.eshop.admin.action.AdminCreateAction">
+            <result name="success">/admin/admin_create.jsp</result>
+            <result name="unauthorized">/admin/admin_create.jsp</result>
+            <result name="input">/admin/admin_create.jsp</result>
+        </action>
+
+        <action name="adminManage" class="com.eshop.admin.action.AdminManageAction">
+            <result name="success">/admin/admin_manage.jsp</result>
+        </action>
+
         <action name="updateAdmin" class="com.eshop.admin.action.UpdateAdminAction">
-            <result name="success" type="redirectAction">adminCreate</result>
-            <result name="error">/admin/admin_create.jsp</result>
+            <result name="success" type="redirectAction">adminManage</result>
+            <result name="error">/admin/admin_manage.jsp</result>
         </action>
 
         <action name="deleteAdmin" class="com.eshop.admin.action.DeleteAdminAction">
-            <result name="success" type="redirectAction">adminCreate</result>
-            <result name="error">/admin/admin_create.jsp</result>
+            <result name="success" type="redirectAction">adminManage</result>
+            <result name="error">/admin/admin_manage.jsp</result>
         </action>
 
-        <action name="updateAdmin" class="com.eshop.admin.action.UpdateAdminAction">
-            <result name="success" type="redirectAction">adminCreate</result>
-            <result name="error">/admin/admin_create.jsp</result>
-        </action>
 
         <action name="back">
             <result>/back.jsp</result>

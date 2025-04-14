@@ -1,7 +1,9 @@
 package com.eshop.admin.action;
 
 import com.eshop.admin.model.Admin;
+import com.eshop.admin.service.AdminLogService;
 import com.eshop.admin.service.AdminService;
+import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
@@ -14,6 +16,7 @@ public class DeleteAdminAction extends ActionSupport {
     private List<Admin> adminList;
 
     private AdminService adminService = new AdminService();
+    private AdminLogService adminLogService = new AdminLogService(); // ✅ 新增
 
     @Override
     public String execute() {
@@ -38,11 +41,26 @@ public class DeleteAdminAction extends ActionSupport {
             return ERROR;
         }
 
+        // ✅ 執行刪除
         adminService.deleteById(adminId);
+
+        // ✅ Log 紀錄
+        if (loggedInAdmin != null) {
+            adminLogService.log(
+                    loggedInAdmin.getAdminId(),
+                    "delete_admin",
+                    "admin",
+                    String.valueOf(adminId),
+                    "刪除管理員帳號：" + target.getUsername(),
+                    RequestUtil.getClientIp()
+            );
+        }
+
         addActionMessage("刪除成功！");
         return SUCCESS;
     }
 
+    // Getter / Setter
     public int getAdminId() {
         return adminId;
     }

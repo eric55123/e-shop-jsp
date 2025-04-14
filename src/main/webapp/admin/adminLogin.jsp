@@ -27,6 +27,15 @@
             margin-bottom: 10px;
             text-align: center;
         }
+        .test-accounts {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #333;
+            background-color: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #aaa;
+        }
     </style>
 </head>
 <body>
@@ -45,6 +54,14 @@
         <s:password name="password" label="密碼" required="true" />
         <s:submit value="登入" />
     </s:form>
+
+    <!-- ✅ 測試帳號提示區塊 -->
+    <div class="test-accounts">
+        <strong>🔑 測試帳號資訊：</strong><br>
+        超管：<code>admin1</code>　密碼：<code>adminpwd1</code><br>
+        其他：<code>admin2</code>　密碼：<code>adminpwd2</code><br>
+        其他：<code>admin3</code>　密碼：<code>adminpwd3</code>
+    </div>
 </div>
 
 </body>
