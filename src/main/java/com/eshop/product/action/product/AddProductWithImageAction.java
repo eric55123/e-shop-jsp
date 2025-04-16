@@ -1,14 +1,12 @@
 package com.eshop.product.action.product;
 
+import com.eshop.product.model.Product;
 import com.eshop.product.service.ProductImgService;
 import com.eshop.product.service.ProductService;
-import com.eshop.product.model.Product;
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 
 import java.io.File;
-import java.util.UUID;
 
 public class AddProductWithImageAction extends ActionSupport {
 
@@ -45,7 +43,7 @@ public class AddProductWithImageAction extends ActionSupport {
                 return ERROR;
             }
 
-            System.out.println("🚀 執行新增商品");
+            System.out.println("\uD83D\uDE80 執行新增商品");
 
             // ✅ 商品新增
             productService.addProduct(product);
@@ -57,7 +55,7 @@ public class AddProductWithImageAction extends ActionSupport {
                             .getSession().getAttribute("loggedInAdmin");
 
             if (loggedInAdmin != null && product.getProductNo() != null) {
-                System.out.println("📝 寫入商品新增 log 中...");
+                System.out.println("\uD83D\uDCDD 寫入商品新增 log 中...");
                 new com.eshop.admin.service.AdminLogService().log(
                         loggedInAdmin.getAdminId(),
                         "add",
@@ -68,32 +66,20 @@ public class AddProductWithImageAction extends ActionSupport {
                 );
             }
 
-            // ✅ 處理圖片上傳
+            // ✅ 圖片上傳至 Google Drive
             if (uploadFile != null && uploadFile.length > 0) {
-                String uploadPath = ServletActionContext.getServletContext().getRealPath("/uploads");
-                System.out.println("📁 圖片儲存目錄：" + uploadPath);
-
-                File saveDir = new File(uploadPath);
-                if (!saveDir.exists()) saveDir.mkdirs();
-
                 int nextOrder = imgService.getNextImageOrder(product);
 
                 for (int i = 0; i < uploadFile.length && i < 5; i++) {
                     File file = uploadFile[i];
-                    String originalName = uploadFileFileName[i];
-                    String ext = originalName.substring(originalName.lastIndexOf("."));
-                    String uuidName = UUID.randomUUID().toString() + ext;
 
-                    String savePath = uploadPath + File.separator + uuidName;
-                    System.out.println("📝 儲存圖片：" + savePath);
+                    // ✅ 呼叫 GoogleDriveUploader 上傳並取得網址
+                    String imageUrl = com.eshop.util.GoogleDriveUploader.uploadImage(file);
 
-                    File destFile = new File(savePath);
-                    FileUtils.copyFile(file, destFile);
-
-                    String imageUrl = "uploads/" + uuidName;
+                    // ✅ 存進資料庫
                     imgService.uploadImage(imageUrl, nextOrder++, product);
 
-                    System.out.println("🌐 圖片資料寫入成功：" + imageUrl + " | 排序：" + (nextOrder - 1));
+                    System.out.println("\u2601\uFE0F 已上傳圖片至 Google Drive：" + imageUrl + " | 排序：" + (nextOrder - 1));
                 }
             } else {
                 System.out.println("⚠️ 沒有選擇任何圖片");

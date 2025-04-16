@@ -3,6 +3,7 @@ package com.eshop.product.service;
 import com.eshop.product.dao.ProductImgDAO;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductImg;
+import com.eshop.util.GoogleDriveUploader; // ⬅️ 你剛剛那個 uploader 工具類別
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -15,14 +16,34 @@ public class ProductImgService {
         return dao.findByProduct(product);
     }
 
+    // ✅ 改為自動上傳到 Google Drive 並取得連結
+    public void uploadImage(File imageFile, int imgOrder, Product product) {
+        try {
+            // ⬇️ 使用 Google Drive API 上傳圖片，取得雲端圖片連結
+            String imageUrl = GoogleDriveUploader.uploadImage(imageFile);
+
+            ProductImg img = new ProductImg();
+            img.setProduct(product);
+            img.setProductImgUrl(imageUrl); // 存 Google Drive 網址
+            img.setImgOrder(imgOrder);
+            img.setCreatedAt(LocalDateTime.now());
+            dao.insert(img);
+
+        } catch (Exception e) {
+            System.err.println("❌ 上傳圖片到 Google Drive 失敗：" + e.getMessage());
+        }
+    }
     public void uploadImage(String imageUrl, int imgOrder, Product product) {
         ProductImg img = new ProductImg();
         img.setProduct(product);
         img.setProductImgUrl(imageUrl);
         img.setImgOrder(imgOrder);
-        img.setCreatedAt(LocalDateTime.now());
+        img.setCreatedAt(java.time.LocalDateTime.now());
         dao.insert(img);
     }
+
+
+
 
     public void deleteImg(int imgNo) {
         dao.deleteById(imgNo);
@@ -48,27 +69,12 @@ public class ProductImgService {
         return dao.findById(imgNo);
     }
 
-    // ✅ 將圖片資料 + 實體圖片一起刪除
+    // ✅ 之後可改為刪除 Google Drive 上的圖片
     public void deleteAllImagesWithFilesByProduct(Product product) {
         List<ProductImg> imgs = getImagesByProduct(product);
-        String uploadBasePath = "/opt/tomcat/webapps/ROOT/uploads/";
 
         for (ProductImg img : imgs) {
-            String imgUrl = img.getProductImgUrl();
-            String fileNameOnly = new File(imgUrl).getName();
-            String fullPath = uploadBasePath + fileNameOnly;
-
-            File file = new File(fullPath);
-            if (file.exists()) {
-                if (file.delete()) {
-                    System.out.println("✅ 實體圖片已刪除：" + fullPath);
-                } else {
-                    System.out.println("❌ 無法刪除圖片檔案：" + fullPath);
-                }
-            } else {
-                System.out.println("⚠️ 找不到圖片檔案：" + fullPath);
-            }
-
+            // 這裡暫時只刪資料庫，還沒整合刪 Google Drive
             deleteImg(img.getProductImgNo());
             System.out.println("🗑️ 已刪除資料庫圖片記錄：imgNo = " + img.getProductImgNo());
         }

@@ -35,7 +35,7 @@ CREATE TABLE product_img
 (
     product_img_no  INT AUTO_INCREMENT PRIMARY KEY,
     product_no      INT,
-    product_img_url VARCHAR(255) NOT NULL,
+    product_img_url VARCHAR(500) NOT NULL,
     img_order       INT,
     created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_no) REFERENCES product (product_no)

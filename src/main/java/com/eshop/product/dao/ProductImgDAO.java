@@ -10,11 +10,13 @@ public class ProductImgDAO {
 
     private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("eShopPU");
 
+    // ✅ 查詢：找出某個商品的所有圖片（依順序）
     public List<ProductImg> findByProduct(Product product) {
         EntityManager em = emf.createEntityManager();
         try {
             return em.createQuery(
-                            "FROM ProductImg WHERE product = :product ORDER BY imgOrder", ProductImg.class)
+                            "SELECT p FROM ProductImg p WHERE p.product = :product ORDER BY p.imgOrder",
+                            ProductImg.class)
                     .setParameter("product", product)
                     .getResultList();
         } finally {
@@ -22,6 +24,7 @@ public class ProductImgDAO {
         }
     }
 
+    // ✅ 新增圖片記錄
     public void insert(ProductImg img) {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -30,13 +33,14 @@ public class ProductImgDAO {
             em.persist(img);
             tx.commit();
         } catch (Exception e) {
-            tx.rollback();
+            if (tx.isActive()) tx.rollback();
             e.printStackTrace();
         } finally {
             em.close();
         }
     }
 
+    // ✅ 刪除圖片（by 主鍵）
     public void deleteById(int imgNo) {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
@@ -48,19 +52,20 @@ public class ProductImgDAO {
             }
             tx.commit();
         } catch (Exception e) {
-            tx.rollback();
+            if (tx.isActive()) tx.rollback();
             e.printStackTrace();
         } finally {
             em.close();
         }
     }
+
+    // ✅ 查單一圖片（by 主鍵）
     public ProductImg findById(int imgNo) {
         EntityManager em = emf.createEntityManager();
         try {
-            return em.find(ProductImg.class, imgNo); // 透過主鍵查詢
+            return em.find(ProductImg.class, imgNo);
         } finally {
             em.close();
         }
     }
-
 }
