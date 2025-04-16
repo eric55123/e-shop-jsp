@@ -1,9 +1,12 @@
 package com.eshop.product.action.product;
 
+import com.eshop.admin.model.Admin;
+import com.eshop.admin.service.AdminLogService;
 import com.eshop.product.service.ProductImgService;
 import com.eshop.product.service.ProductService;
 import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductImg;
+import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
@@ -25,6 +28,7 @@ public class UpdateProductWithImagesAction extends ActionSupport {
     @Override
     public String execute() {
         try {
+            Admin loggedInAdmin = RequestUtil.getLoggedInAdmin();
             // 查出原本的 product（含圖片）
             Product dbProduct = productService.getProductById(product.getProductNo());
             dbProduct.setProductName(product.getProductName());
@@ -67,6 +71,19 @@ public class UpdateProductWithImagesAction extends ActionSupport {
 
             // 更新商品
             productService.updateProduct(dbProduct);
+
+            // ✅ 寫入操作紀錄
+            if (loggedInAdmin != null) {
+                new AdminLogService().log(
+                        loggedInAdmin.getAdminId(),
+                        "edit",
+                        "product",
+                        String.valueOf(dbProduct.getProductNo()),
+                        "修改商品（含圖片）: " + dbProduct.getProductName(),
+                        RequestUtil.getClientIp()
+                );
+            }
+
             return SUCCESS;
 
         } catch (Exception e) {

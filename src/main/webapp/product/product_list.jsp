@@ -33,9 +33,7 @@
 
 <h2>商品清單</h2>
 
-<!-- 新增商品按鈕放最上面 -->
 <p>
-    <a href="showAddProduct.action">➕ 新增商品</a> |
     <a href="faqList.action" target="_blank">❓ 常見問題</a>
 </p>
 <table border="1">
@@ -55,23 +53,17 @@
             <td><s:property value="remainingQty" /></td>
             <td>
                 <s:if test="productStatus == 1">上架</s:if>
-                <s:if test="productStatus == 0">下架</s:if>
+                <s:else>下架</s:else>
             </td>
             <td>
                 <a href="<s:url action='productDetail'>
                     <s:param name='productNo' value='productNo'/>
-                </s:url>">查看</a> |
-                <a href="<s:url action='editProduct'>
-                    <s:param name='productNo' value='productNo'/>
-                </s:url>">修改</a> |
-                <a href="<s:url action='deleteProduct'>
-                    <s:param name='productNo' value='productNo'/>
-                </s:url>"
-                   onclick="return confirm('確定要刪除這筆商品嗎？')">刪除</a>
+                </s:url>">查看</a>
             </td>
         </tr>
     </s:iterator>
 </table>
+
 <a href="/back">🔙 回後台首頁</a>
 </body>
 </html>

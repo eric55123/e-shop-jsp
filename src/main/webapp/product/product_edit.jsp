@@ -1,6 +1,18 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
+<%@ page import="com.eshop.admin.model.Admin" %>
+<%
+    Admin loggedInAdmin = (Admin) session.getAttribute("loggedInAdmin");
+    if (loggedInAdmin == null) {
+        response.sendRedirect(request.getContextPath() + "/adminLogin.action");
+        return;
+    }
+%>
 
+<div style="text-align:right;">
+    👤 歡迎，<strong><%= loggedInAdmin.getName() %></strong>（帳號：<%= loggedInAdmin.getUsername() %>）
+    | <a href="adminLogout.action">登出</a>
+</div>
 <html>
 <head>
     <title>修改商品</title>
@@ -105,7 +117,7 @@
     </table>
 </s:form>
 
-<p><a href="productList.action">← 回商品列表</a></p>
+<a href="/back">🔙 回後台首頁</a>
 
 <script>
     function validateForm() {

@@ -1,19 +1,17 @@
 package com.eshop.admin.service;
 
 import com.eshop.admin.model.AdminLog;
+import com.eshop.util.JPAUtil;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 public class AdminLogService {
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("eShopPU");
 
     public void log(Integer adminId, String actionType, String targetTable, String targetId, String actionDesc, String ip) {
-        EntityManager em = emf.createEntityManager();
+        System.out.println("📝 Log 寫入中：adminId=" + adminId + ", action=" + actionType + ", targetId=" + targetId);
+        EntityManager em = JPAUtil.getEntityManager(); // ✅ 統一使用共用 EntityManager
         EntityTransaction tx = em.getTransaction();
 
         try {
@@ -23,7 +21,7 @@ public class AdminLogService {
             log.setAdminId(adminId);
             log.setActionType(actionType);
             log.setTargetTable(targetTable);
-            log.setTargetId(targetId);  // 改為 String
+            log.setTargetId(targetId);
             log.setActionDesc(actionDesc);
             log.setIpAddress(ip);
             log.setCreatedAt(LocalDateTime.now());
@@ -37,5 +35,4 @@ public class AdminLogService {
             em.close();
         }
     }
-
 }
