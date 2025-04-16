@@ -44,36 +44,61 @@ public class ECPayReturnAction extends ActionSupport implements ServletRequestAw
         try {
             tx.begin();
 
-            int orderId = Integer.parseInt(merchantTradeNo.replace("ESHOP", ""));
-            Orders order = em.find(Orders.class, orderId);
+            // ✅ 安全解析 orderId：從 ESHOP20Txxx 拆出 20
+            Integer orderId = null;
+            if (merchantTradeNo != null && merchantTradeNo.startsWith("ES")) {
+                try {
+                    String idPart = merchantTradeNo.replace("ES", "").split("T")[0]; // 拿出 23
+                    orderId = Integer.parseInt(idPart);
+                } catch (Exception e) {
+                    System.err.println("❌ 無法解析訂單 ID，MerchantTradeNo: " + merchantTradeNo);
+                }
+            }
+
+
+            Orders order = (orderId != null) ? em.find(Orders.class, orderId) : null;
             System.out.println("🔍 解析後 orderId: " + orderId);
             System.out.println("🔍 找到的訂單: " + order);
 
             if (order != null && "1".equals(rtnCode)) {
-                order.setPaymentStatus((byte)1);
+                // ✅ 更新訂單狀態
+                order.setPaymentStatus((byte) 1);
                 em.merge(order);
 
+                // ✅ 建立付款紀錄
                 Payment payment = new Payment();
                 payment.setOrder(order);
                 payment.setMerchantTradeNo(merchantTradeNo);
                 payment.setTradeNo(tradeNo);
                 payment.setPaymentType(paymentType);
-                payment.setPaymentStatus((byte)1);
+                payment.setPaymentStatus((byte) 1);
 
+                // 付款時間處理
                 if (paymentDateStr != null) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-                    LocalDateTime paidAt = LocalDateTime.parse(paymentDateStr, formatter);
-                    payment.setPaidAt(Timestamp.valueOf(paidAt));
+                    try {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                        LocalDateTime paidAt = LocalDateTime.parse(paymentDateStr, formatter);
+                        payment.setPaidAt(Timestamp.valueOf(paidAt));
+                    } catch (Exception e) {
+                        System.err.println("❌ 付款時間格式錯誤: " + paymentDateStr);
+                    }
                 }
 
+                // 金額處理
                 if (amountStr != null) {
-                    payment.setAmount(new BigDecimal(amountStr));
+                    try {
+                        payment.setAmount(new BigDecimal(amountStr));
+                    } catch (NumberFormatException e) {
+                        System.err.println("❌ 金額格式錯誤: " + amountStr);
+                    }
                 }
 
                 payment.setReturnCode(rtnCode);
                 payment.setReturnMsg(rtnMsg);
 
                 em.persist(payment);
+            } else {
+                System.err.println("❗ 未找到訂單或 rtnCode ≠ 1，訂單未更新！");
             }
 
             tx.commit();
@@ -87,6 +112,7 @@ public class ECPayReturnAction extends ActionSupport implements ServletRequestAw
 
         // ✅ 回傳給綠界固定格式
         try {
+            response.setContentType("text/plain");
             PrintWriter out = response.getWriter();
             out.print("1|OK");
             out.flush();
@@ -94,7 +120,7 @@ public class ECPayReturnAction extends ActionSupport implements ServletRequestAw
             e.printStackTrace();
         }
 
-        return NONE; // 不跳轉頁面
+        return NONE;
     }
 
     @Override

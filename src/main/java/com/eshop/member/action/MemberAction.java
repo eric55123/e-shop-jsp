@@ -20,7 +20,7 @@ public class MemberAction extends ActionSupport {
 
     private MemberService memberService = new MemberService();
 
-    // ✅ 顯示註冊頁面
+    // 顯示註冊頁面
     public String showRegisterForm() {
         return SUCCESS;
     }
@@ -58,7 +58,7 @@ public class MemberAction extends ActionSupport {
             session.setAttribute("loginMember", found);
             addActionMessage("登入成功！");
 
-            // ✅ 正確紀錄登入
+            // 正確紀錄登入
             LoginLog log = new LoginLog();
             log.setMemberId(found.getMemberId());
             log.setLoginTime(LocalDateTime.now());

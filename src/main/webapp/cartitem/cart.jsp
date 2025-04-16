@@ -107,12 +107,21 @@
 <hr>
 <% if (loggedInMember != null) { %>
 <h3>填寫收件資訊</h3>
-<p>👋 歡迎，<strong><%= loggedInMember.getName() %></strong>！請填寫收件資訊以完成訂單。</p>
+<p>👋 歡迎，<strong>
+    <%= (loggedInMember.getName() != null && !loggedInMember.getName().trim().isEmpty())
+            ? loggedInMember.getName()
+            : loggedInMember.getUsername()
+    %>
+</strong>！請填寫收件資訊以完成訂單。</p>
+
 
 <form action="<%= request.getContextPath() %>/checkout.action" method="post">
     <label>收件人姓名：</label><br>
     <input type="text" name="receiverName"
-           value="<%= addr != null ? addr.getRecipientName() : loggedInMember.getName() %>" required><br><br>
+           value="<%= addr != null ? addr.getRecipientName() :
+                (loggedInMember.getName() != null && !loggedInMember.getName().trim().isEmpty()
+                 ? loggedInMember.getName()
+                 : loggedInMember.getUsername()) %>" required><br><br>
 
     <label>收件人電話：</label><br>
     <input type="text" name="receiverPhone"

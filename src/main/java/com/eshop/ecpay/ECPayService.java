@@ -20,20 +20,30 @@ public class ECPayService {
      * 產生綠界付款 HTML 表單
      */
     public String generateCheckoutForm(Orders order) {
-        AioCheckOutALL obj = new AioCheckOutALL();
-        obj.setMerchantTradeNo("ESHOP" + order.getOrderId());
-        obj.setMerchantTradeDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
-        obj.setTotalAmount(String.valueOf(order.getTotalAmount().intValue()));
-        obj.setTradeDesc("E-shop 訂單");
-        obj.setItemName("商品共 " + order.getItems().size() + " 項");
+        try {
+            AioCheckOutALL obj = new AioCheckOutALL();
 
-        // ✅ 記得改為 ngrok 或正式部署網址
-        obj.setReturnURL("https://5987-36-227-210-125.ngrok-free.app/ecpayReturn.action");
-        obj.setOrderResultURL("https://5987-36-227-210-125.ngrok-free.app/ecpay/result.jsp");
+            // ✅ 產生符合規範的唯一交易編號（最多20字）
+            String tradeNo = "ES" + order.getOrderId() + "T" + System.currentTimeMillis();
+            obj.setMerchantTradeNo(tradeNo);
+            System.out.println("✅ 傳送給綠界的 MerchantTradeNo: " + tradeNo);
 
+            obj.setMerchantTradeDate(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date()));
+            obj.setTotalAmount(String.valueOf(order.getTotalAmount().intValue()));
+            obj.setTradeDesc("E-shop 訂單");
+            obj.setItemName("商品共 " + order.getItems().size() + " 項");
 
-        obj.setNeedExtraPaidInfo("N");
+            // ✅ 使用你的 ngrok 測試網址
+            obj.setReturnURL("https://56a5-36-227-210-125.ngrok-free.app/ecpayReturn.action");
+            obj.setOrderResultURL("https://56a5-36-227-210-125.ngrok-free.app/ecpay/result.jsp");
 
-        return allInOne.aioCheckOut(obj, null);
+            obj.setNeedExtraPaidInfo("N");
+
+            return allInOne.aioCheckOut(obj, null);
+        } catch (Exception e) {
+            System.err.println("❌ 綠界結帳發生錯誤：" + e.getMessage());
+            e.printStackTrace();
+            return "<h3 style='color:red;'>發生錯誤：綠界付款失敗，請聯絡客服</h3>";
+        }
     }
 }

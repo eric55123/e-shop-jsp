@@ -61,7 +61,7 @@
 <!-- ✅ 本地註冊表單 -->
 <s:form action="register" method="post" onsubmit="return validateForm()">
     <s:textfield name="member.email" label="電子郵件" required="true"/>
-    <s:textfield name="member.username" label="帳號" required="true"/>
+    <s:textfield name="member.username" label="暱稱" required="true"/>
     <s:password name="member.password" label="密碼" required="true"/>
     <s:textfield name="member.phone" label="手機號碼"/>
 

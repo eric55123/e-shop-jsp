@@ -50,7 +50,7 @@
 <!-- ✅ 加入驗證事件 -->
 <s:form action="updateMember" method="post" onsubmit="return validateMemberForm()">
     <s:textfield name="member.email" label="Email" disabled="true"/>
-    <s:textfield name="member.username" label="帳號"/>
+    <s:textfield name="member.username" label="暱稱"/>
     <s:textfield name="member.phone" label="手機"/>
     <s:textfield name="member.birthday" label="生日 (yyyy-MM-dd)" />
     <s:submit value="更新" />
