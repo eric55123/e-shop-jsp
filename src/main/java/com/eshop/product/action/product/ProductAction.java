@@ -28,6 +28,7 @@ public class ProductAction extends ActionSupport {
     private List<ProductCategory> categoryList;
     private Map<String, String> statusOptions = new LinkedHashMap<>();
     private List<ProductComment> comments;
+    private Integer selectedCategoryId;
 
     private ProductService productService = new ProductService();
     private ProductImgService imgService = new ProductImgService();
@@ -36,6 +37,7 @@ public class ProductAction extends ActionSupport {
     // 商品列表
     public String execute() {
         productList = productService.getAllProducts();
+        categoryList = new ProductCategoryDAO().findAll();
         for (Product p : productList) {
             if (p.getProductImgs() != null && !p.getProductImgs().isEmpty()) {
                 p.setCoverImageUrl(p.getProductImgs().get(0).getProductImgUrl());
@@ -153,6 +155,25 @@ public class ProductAction extends ActionSupport {
             return ERROR;
         }
     }
+    // 查詢特定分類的商品
+    public String listByCategory() {
+        categoryList = new ProductCategoryDAO().findAll(); // ⬅️ 一律先載入分類清單
+
+        if (product != null && product.getProductCategory() != null &&
+                product.getProductCategory().getProductCategoryId() != null) {
+
+            Integer categoryId = product.getProductCategory().getProductCategoryId();
+            System.out.println("📂 篩選分類 ID: " + categoryId); // ✅ Debug 確認有傳入
+
+            productList = productService.getProductsByCategoryId(categoryId);
+        } else {
+            addActionError("未選擇商品分類");
+            productList = productService.getAllProducts(); // ⬅️ 不然畫面會是空的
+        }
+
+        return SUCCESS;
+    }
+
 
     // 刪除商品（包含圖片與實體圖片檔案）
     public String deleteProduct() {
@@ -216,5 +237,9 @@ public class ProductAction extends ActionSupport {
 
     public List<ProductComment> getComments() {
         return comments;
+    }
+
+    public void setCategoryList(List<ProductCategory> categoryList) {
+        this.categoryList = categoryList;
     }
 }

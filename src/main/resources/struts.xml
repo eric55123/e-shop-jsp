@@ -79,6 +79,12 @@
             <result name="error">/error.jsp</result>
         </action>
 
+        <action name="listByCategory" class="com.eshop.product.action.product.ProductAction" method="listByCategory">
+            <result name="success">/product/product_list.jsp</result>
+            <result name="error">/product/product_list.jsp</result>
+        </action>
+
+
         <!-- 會員 -->
         <action name="register" class="com.eshop.member.action.MemberAction" method="register">
             <result name="success">/member/login.jsp</result>
@@ -302,9 +308,66 @@
             <result name="error">/admin/admin_manage.jsp</result>
         </action>
 
-
         <action name="back">
             <result>/back.jsp</result>
         </action>
+
+<!--       ========================================================== 模板===================================== -->
+
+<!--        index.jsp	http://localhost:8080/index.action-->
+<!--        about.jsp	http://localhost:8080/about.action-->
+<!--        contact.jsp	http://localhost:8080/contact.action-->
+<!--        login.jsp	http://localhost:8080/login.action-->
+<!--        register.jsp	http://localhost:8080/register.action-->
+<!--        basket.jsp	http://localhost:8080/basket.action-->
+<!--        men.jsp	http://localhost:8080/men.action-->
+<!--        women.jsp	http://localhost:8080/women.action-->
+<!--        single.jsp	http://localhost:8080/single.action-->
+
+        <!-- 首頁 -->
+        <action name="index">
+            <result>/template/index.jsp</result>
+        </action>
+
+        <!-- 關於我們 -->
+        <action name="about">
+            <result>/template/about.jsp</result>
+        </action>
+
+        <!-- 購物車 -->
+        <action name="basket">
+            <result>/template/basket.jsp</result>
+        </action>
+
+        <!-- 聯絡我們 -->
+        <action name="contact">
+            <result>/template/contact.jsp</result>
+        </action>
+
+        <!-- 會員登入 -->
+        <action name="login">
+            <result>/template/login.jsp</result>
+        </action>
+
+        <!-- 會員註冊 -->
+        <action name="register">
+            <result>/template/register.jsp</result>
+        </action>
+
+        <!-- 商品頁（男裝） -->
+        <action name="men">
+            <result>/template/men.jsp</result>
+        </action>
+
+        <!-- 商品頁（女裝） -->
+        <action name="women">
+            <result>/template/women.jsp</result>
+        </action>
+
+        <!-- 商品詳情頁（靜態版） -->
+        <action name="single">
+            <result>/template/single.jsp</result>
+        </action>
+
     </package>
 </struts>

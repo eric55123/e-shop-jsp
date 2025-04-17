@@ -30,6 +30,19 @@ public class ProductService {
         return list;
     }
 
+    // ✅ 查詢某分類下商品，並補上主圖
+    public List<Product> getProductsByCategoryId(Integer categoryId) {
+        List<Product> list = dao.findByCategoryId(categoryId);
+        for (Product p : list) {
+            List<ProductImg> imgs = imgDAO.findByProduct(p);
+            p.setProductImgs(imgs);
+            if (imgs != null && !imgs.isEmpty()) {
+                p.setCoverImageUrl(imgs.get(0).getProductImgUrl());
+            }
+        }
+        return list;
+    }
+
     // 查詢單一商品
     public Product getProductById(int id) {
         return dao.findById(id);
@@ -88,7 +101,6 @@ public class ProductService {
         dao.delete(id);
         return true;
     }
-
 
     // 依主鍵查詢
     public Product findById(int productNo) {

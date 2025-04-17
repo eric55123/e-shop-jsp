@@ -36,6 +36,17 @@
 </div>
 
 <h2>商品清單</h2>
+<form action="listByCategory.action" method="post">
+    <select name="product.productCategory.productCategoryId" onchange="this.form.submit()">
+        <option value="">📂 全部分類</option>
+        <c:forEach var="cat" items="${categoryList}">
+            <option value="${cat.productCategoryId}"
+                    <c:if test="${product.productCategory.productCategoryId == cat.productCategoryId}">selected</c:if>>
+                    ${cat.productCategoryName}
+            </option>
+        </c:forEach>
+    </select>
+</form>
 
 <p>
     <a href="faqList.action" target="_blank">❓ 常見問題</a>

@@ -7,6 +7,8 @@ import javax.persistence.*;
 import java.util.List;
 
 public class ProductDAO {
+    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("eShopPU");
+
 
     public List<Product> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
@@ -97,4 +99,14 @@ public class ProductDAO {
         }
     }
 
+    public List<Product> findByCategoryId(Integer categoryId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("FROM Product WHERE productCategory.productCategoryId = :categoryId", Product.class)
+                    .setParameter("categoryId", categoryId)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }
