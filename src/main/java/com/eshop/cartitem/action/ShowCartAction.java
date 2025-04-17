@@ -1,19 +1,24 @@
 package com.eshop.cartitem.action;
 
+import com.eshop.cartitem.model.CartItem;
 import com.eshop.coupon.model.CouponHolder;
 import com.eshop.coupon.service.CouponService;
 import com.eshop.member.model.Member;
 import com.eshop.member.model.MemberAddress;
+import com.eshop.product.model.Product;
+import com.eshop.product.model.ProductImg;
+import com.eshop.product.service.ProductImgService;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
 import javax.persistence.*;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 public class ShowCartAction extends ActionSupport {
 
-    private CouponService couponService = new CouponService(); // 或用 setter 注入
+    private CouponService couponService = new CouponService();
 
     @Override
     public String execute() {
@@ -27,17 +32,7 @@ public class ShowCartAction extends ActionSupport {
             List<CouponHolder> availableCoupons = couponService.findValidCouponHolderList(member.getMemberId());
             session.setAttribute("availableCoupons", availableCoupons);
 
-            System.out.println("[ShowCartAction] 找到 " + (availableCoupons != null ? availableCoupons.size() : "0") + " 張可用優惠券");
-
-            if (availableCoupons != null) {
-                for (CouponHolder ch : availableCoupons) {
-                    System.out.println("　→ 優惠券代碼：" + ch.getCouponCode() +
-                            "｜名稱：" + (ch.getCoupon() != null ? ch.getCoupon().getName() : "無名稱") +
-                            "｜使用狀態：" + ch.getUsedStatus());
-                }
-            }
-
-            // ✅ 取得會員唯一地址（自動帶入表單）
+            // ✅ 取得會員唯一地址
             EntityManagerFactory emf = Persistence.createEntityManagerFactory("eShopPU");
             EntityManager em = emf.createEntityManager();
             try {
@@ -48,17 +43,25 @@ public class ShowCartAction extends ActionSupport {
                         .getSingleResult();
 
                 session.setAttribute("memberAddress", address);
-                System.out.println("[ShowCartAction] 已載入會員地址：" + address.getAddress());
             } catch (NoResultException e) {
                 session.setAttribute("memberAddress", null);
-                System.out.println("[ShowCartAction] 尚無會員地址記錄");
             } finally {
                 em.close();
                 emf.close();
             }
+        }
 
-        } else {
-            System.out.println("[ShowCartAction] 尚未登入，無法載入優惠券或地址");
+        // ✅ 額外補上：幫每個商品設置主圖
+        Map<Integer, CartItem> cart = (Map<Integer, CartItem>) session.getAttribute("cart");
+        if (cart != null && !cart.isEmpty()) {
+            ProductImgService imgService = new ProductImgService();
+            for (CartItem item : cart.values()) {
+                Product product = item.getProduct();
+                List<ProductImg> imgs = imgService.getImagesByProduct(product);
+                if (imgs != null && !imgs.isEmpty()) {
+                    product.setCoverImageUrl(imgs.get(0).getProductImgUrl());
+                }
+            }
         }
 
         return SUCCESS;

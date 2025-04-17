@@ -33,6 +33,7 @@
 <% } else { %>
 <table border="1">
     <tr>
+        <th>圖片</th>
         <th>商品名稱</th>
         <th>單價</th>
         <th>數量</th>
@@ -47,6 +48,14 @@
             total = total.add(subtotal);
     %>
     <tr>
+        <td>
+            <% if (p.getCoverImageUrl() != null && p.getCoverImageUrl().contains("id=")) { %>
+            <img src="https://drive.google.com/thumbnail?id=<%= p.getCoverImageUrl().split("id=")[1] %>"
+                 width="80" style="border:1px solid #ccc; padding:2px;" />
+            <% } else { %>
+            <span style="color: gray;">無圖片</span>
+            <% } %>
+        </td>
         <td><%= p.getProductName() %></td>
         <td>$<%= p.getProductPrice() %></td>
         <td>
@@ -64,7 +73,7 @@
     </tr>
     <% } %>
     <tr>
-        <td colspan="3" align="right"><strong>總計：</strong></td>
+        <td colspan="4" align="right"><strong>總計：</strong></td>
         <td>$<%= total %></td>
     </tr>
 </table>
@@ -114,7 +123,6 @@
     %>
 </strong>！請填寫收件資訊以完成訂單。</p>
 
-
 <form action="<%= request.getContextPath() %>/checkout.action" method="post">
     <label>收件人姓名：</label><br>
     <input type="text" name="receiverName"
@@ -134,7 +142,6 @@
     <label>備註：</label><br>
     <textarea name="note" rows="4" cols="40"></textarea><br><br>
 
-    <!-- ✅ 勾選記住地址 -->
     <label>
         <input type="checkbox" name="saveAddress" value="true" <%= addr != null ? "checked" : "" %>>
         📌 記住此地址（儲存至我的地址簿）
@@ -154,8 +161,7 @@
 <form action="<%= request.getContextPath() %>/clearCart.action" method="post" onsubmit="return doubleConfirmClear();">
     <button type="submit">🗑 清空購物車</button>
 </form>
-
-<% } %> <!-- 關閉 cart != null 的 else 區塊 -->
+<% } %>
 
 <a href="<%= request.getContextPath() %>/productList.action">← 回商品列表</a>
 </body>
