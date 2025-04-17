@@ -61,6 +61,7 @@ public class GoogleDriveUploader {
         String mimeType = "image/jpeg";
         if (ext.equals(".png")) mimeType = "image/png";
         else if (ext.equals(".gif")) mimeType = "image/gif";
+        else if (ext.equals(".webp")) mimeType = "image/webp";
 
         FileContent mediaContent = new FileContent(mimeType, imageFile);
         File uploadedFile = service.files().create(fileMetadata, mediaContent)

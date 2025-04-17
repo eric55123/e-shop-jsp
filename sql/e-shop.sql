@@ -302,14 +302,42 @@ CREATE TABLE coupon_used_log
 INSERT INTO product_category (product_category_name)
 VALUES ('書籍'),
        ('電子產品'),
-       ('生活用品');
+       ('生活用品'),
+       ('居家用品');
 
--- 插入商品
-INSERT INTO product (product_name, product_desc, product_add_qty, remaining_qty, product_status, product_category_id,
-                     product_price)
-VALUES ('Java入門書', '適合初學者的Java書籍', 50, 50, 1, 1, 580.00),
-       ('藍牙耳機', '高音質藍牙耳機', 30, 30, 1, 2, 1200.00),
-       ('不鏽鋼保溫瓶', '保溫效果佳，方便攜帶', 100, 100, 1, 3, 350.00);
+-- 插入商品資料（共30筆）
+INSERT INTO product (product_name, product_desc, product_add_qty, remaining_qty, product_status, product_category_id, product_price)
+VALUES
+    ('Java入門書', '適合初學者的Java書籍', 50, 50, 1, 1, 580.00),
+    ('藍牙耳機', '高音質藍牙耳機', 30, 30, 1, 2, 1200.00),
+    ('不鏽鋼保溫瓶', '保溫效果佳，方便攜帶', 100, 100, 1, 3, 350.00),
+    ('電競滑鼠', 'RGB燈效，靈敏度高', 40, 40, 1, 2, 980.00),
+    ('Java高階實戰', '提升進階技巧必備', 35, 35, 1, 1, 760.00),
+    ('機械式鍵盤', '手感極佳，支援多媒體快捷鍵', 20, 20, 1, 2, 1800.00),
+    ('旅行登機箱', '20吋輕量拉桿箱', 25, 25, 1, 4, 1290.00),
+    ('Python教學書', '圖解教學易懂', 45, 45, 1, 1, 620.00),
+    ('人體工學椅', '長時間工作舒適支撐', 15, 15, 1, 4, 3200.00),
+    ('無線滑鼠', '簡約設計、輕巧便攜', 50, 50, 1, 2, 490.00),
+    ('有線耳機', '音質清晰，通話穩定', 60, 60, 1, 2, 390.00),
+    ('C++實作範例書', '搭配案例快速上手', 40, 40, 1, 1, 550.00),
+    ('筆電支架', '可調高度，改善坐姿', 45, 45, 1, 4, 680.00),
+    ('掃地機器人', '智慧感應、自動清掃', 12, 12, 1, 4, 5200.00),
+    ('手沖咖啡壺', '精緻生活小物', 30, 30, 1, 3, 850.00),
+    ('日式便當盒', '雙層設計、可微波', 70, 70, 1, 3, 290.00),
+    ('智慧手錶', '健康監測、訊息提醒', 28, 28, 1, 2, 2280.00),
+    ('HDMI線', '支援4K解析度', 90, 90, 1, 2, 250.00),
+    ('Kotlin入門書', '學習Android開發推薦', 38, 38, 1, 1, 540.00),
+    ('旅行頸枕', 'U型記憶棉設計', 40, 40, 1, 4, 420.00),
+    ('筆電內袋', '適合13-15吋筆電使用', 65, 65, 1, 4, 310.00),
+    ('USB充電線', 'Type-C快充線', 80, 80, 1, 2, 180.00),
+    ('桌面小風扇', 'USB供電三段風速', 35, 35, 1, 4, 399.00),
+    ('洗衣袋組', '三入網狀保護袋', 55, 55, 1, 4, 150.00),
+    ('React實戰開發書', '完整專案範例', 30, 30, 1, 1, 620.00),
+    ('保冷保溫袋', '外出野餐好幫手', 45, 45, 1, 3, 270.00),
+    ('無線充電板', '支援快充與多設備', 22, 22, 1, 2, 980.00),
+    ('行動電源', '20000mAh大容量', 18, 18, 1, 2, 1350.00),
+    ('Android開發書', '掌握現代App開發技術', 25, 25, 1, 1, 650.00),
+    ('桌面閱讀燈', '三段亮度可調，護眼設計', 33, 33, 1, 4, 860.00); -- ✅ 第30筆
 
 -- 插入會員
 INSERT INTO member (username, password, email, login_type, name, phone, status, birthday)
@@ -328,12 +356,6 @@ INSERT INTO member (username, password, email, login_type, google_sub, name, pho
 VALUES ('alice', 'pass1', 'alice@example.com', 'local', NULL, 'Alice', '0911000111', 1, '1990-01-01'),
        ('bob', NULL, 'bob@example.com', 'google', 'google-sub-id-bob', 'Bob', '0922000222', 1, '1992-02-02'),
        ('charlie', 'pass3', 'charlie@example.com', 'local', NULL, 'Charlie', '0933000333', 1, '1993-03-03');
-
--- 商品圖片
-INSERT INTO product_img (product_no, product_img_url, img_order)
-VALUES (1, 'https://example.com/java.jpg', 1),
-       (2, 'https://example.com/earbuds.jpg', 1),
-       (3, 'https://example.com/bottle.jpg', 1);
 
 -- 商品評論
 INSERT INTO product_comment (product_no, member_id, rating, comment_text, status)
