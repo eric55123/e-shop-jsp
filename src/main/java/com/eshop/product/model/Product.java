@@ -43,7 +43,14 @@ public class Product {
     private ProductCategory productCategory;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OrderBy("imgOrder ASC")
     private List<ProductImg> productImgs;
+
+    @Transient
+    private String coverImageUrl; // ✅ 商品主圖（清單頁用）
+
+    @Transient
+    private String coverImageThumbnailUrl;
 
     // ===== Getter / Setter =====
 
@@ -133,5 +140,21 @@ public class Product {
 
     public void setProductCategory(ProductCategory productCategory) {
         this.productCategory = productCategory;
+    }
+
+    public String getCoverImageUrl() {
+        return coverImageUrl;
+    }
+
+    public void setCoverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
+    }
+
+    public String getCoverImageThumbnailUrl() {
+        if (coverImageUrl != null && coverImageUrl.contains("id=")) {
+            String id = coverImageUrl.substring(coverImageUrl.indexOf("id=") + 3);
+            return "https://drive.google.com/thumbnail?id=" + id;
+        }
+        return null;
     }
 }

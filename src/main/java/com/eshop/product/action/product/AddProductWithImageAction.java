@@ -1,19 +1,25 @@
 package com.eshop.product.action.product;
 
-import com.eshop.product.model.Product;
+import com.eshop.admin.model.Admin;
+import com.eshop.admin.service.AdminLogService;
 import com.eshop.product.service.ProductImgService;
 import com.eshop.product.service.ProductService;
+import com.eshop.product.model.Product;
+import com.eshop.product.model.ProductImg;
+import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
 import java.io.File;
+import java.util.List;
 
 public class AddProductWithImageAction extends ActionSupport {
 
     private Product product;
-    private File[] uploadFile;
-    private String[] uploadFileFileName;
-    private String[] uploadFileContentType;
+    private File[] uploadFiles;
+    private String[] uploadFilesFileName;
+    private String[] uploadFilesContentType;
+    private Integer mainImageIndex; // ✅ 前端指定的主圖索引
 
     private ProductService productService = new ProductService();
     private ProductImgService imgService = new ProductImgService();
@@ -43,43 +49,30 @@ public class AddProductWithImageAction extends ActionSupport {
                 return ERROR;
             }
 
-            System.out.println("\uD83D\uDE80 執行新增商品");
-
-            // ✅ 商品新增
+            // ✅ 新增商品
             productService.addProduct(product);
             System.out.println("✅ 商品已新增，商品編號：" + product.getProductNo());
 
             // ✅ 管理員操作紀錄
-            com.eshop.admin.model.Admin loggedInAdmin =
-                    (com.eshop.admin.model.Admin) ServletActionContext.getRequest()
-                            .getSession().getAttribute("loggedInAdmin");
-
+            Admin loggedInAdmin = RequestUtil.getLoggedInAdmin();
             if (loggedInAdmin != null && product.getProductNo() != null) {
-                System.out.println("\uD83D\uDCDD 寫入商品新增 log 中...");
-                new com.eshop.admin.service.AdminLogService().log(
+                new AdminLogService().log(
                         loggedInAdmin.getAdminId(),
                         "add",
                         "product",
                         String.valueOf(product.getProductNo()),
                         "新增商品: " + product.getProductName(),
-                        com.eshop.util.RequestUtil.getClientIp()
+                        RequestUtil.getClientIp()
                 );
             }
 
-            // ✅ 圖片上傳至 Google Drive
-            if (uploadFile != null && uploadFile.length > 0) {
-                int nextOrder = imgService.getNextImageOrder(product);
-
-                for (int i = 0; i < uploadFile.length && i < 5; i++) {
-                    File file = uploadFile[i];
-
-                    // ✅ 呼叫 GoogleDriveUploader 上傳並取得網址
-                    String imageUrl = com.eshop.util.GoogleDriveUploader.uploadImage(file);
-
-                    // ✅ 存進資料庫
-                    imgService.uploadImage(imageUrl, nextOrder++, product);
-
-                    System.out.println("\u2601\uFE0F 已上傳圖片至 Google Drive：" + imageUrl + " | 排序：" + (nextOrder - 1));
+            // ✅ 上傳圖片（Google Drive）
+            if (uploadFiles != null && uploadFiles.length > 0) {
+                int order = 1;
+                for (int i = 0; i < uploadFiles.length && i < 5; i++) {
+                    File file = uploadFiles[i];
+                    int imgOrder = (mainImageIndex != null && mainImageIndex == i) ? 0 : order++;
+                    imgService.uploadImage(file, imgOrder, product);
                 }
             } else {
                 System.out.println("⚠️ 沒有選擇任何圖片");
@@ -88,15 +81,13 @@ public class AddProductWithImageAction extends ActionSupport {
             return SUCCESS;
 
         } catch (Exception e) {
-            System.out.println("❌ 上傳過程中發生例外錯誤");
             e.printStackTrace();
-            addActionError("上傳失敗：" + e.getMessage());
+            addActionError("新增失敗：" + e.getMessage());
             return ERROR;
         }
     }
 
     // ===== Getter / Setter =====
-
     public Product getProduct() {
         return product;
     }
@@ -105,27 +96,35 @@ public class AddProductWithImageAction extends ActionSupport {
         this.product = product;
     }
 
-    public File[] getUploadFile() {
-        return uploadFile;
+    public File[] getUploadFiles() {
+        return uploadFiles;
     }
 
-    public void setUploadFile(File[] uploadFile) {
-        this.uploadFile = uploadFile;
+    public void setUploadFiles(File[] uploadFiles) {
+        this.uploadFiles = uploadFiles;
     }
 
-    public String[] getUploadFileFileName() {
-        return uploadFileFileName;
+    public String[] getUploadFilesFileName() {
+        return uploadFilesFileName;
     }
 
-    public void setUploadFileFileName(String[] uploadFileFileName) {
-        this.uploadFileFileName = uploadFileFileName;
+    public void setUploadFilesFileName(String[] uploadFilesFileName) {
+        this.uploadFilesFileName = uploadFilesFileName;
     }
 
-    public String[] getUploadFileContentType() {
-        return uploadFileContentType;
+    public String[] getUploadFilesContentType() {
+        return uploadFilesContentType;
     }
 
-    public void setUploadFileContentType(String[] uploadFileContentType) {
-        this.uploadFileContentType = uploadFileContentType;
+    public void setUploadFilesContentType(String[] uploadFilesContentType) {
+        this.uploadFilesContentType = uploadFilesContentType;
+    }
+
+    public Integer getMainImageIndex() {
+        return mainImageIndex;
+    }
+
+    public void setMainImageIndex(Integer mainImageIndex) {
+        this.mainImageIndex = mainImageIndex;
     }
 }

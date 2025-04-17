@@ -20,7 +20,6 @@
 <body>
 <h2>新增商品</h2>
 
-<!-- ✅ 改成新的 Action 並加上 enctype 和驗證事件 -->
 <s:form action="addProductWithImage" method="post" enctype="multipart/form-data" onsubmit="return validateForm();">
     <table>
         <tr>
@@ -69,11 +68,12 @@
             </td>
         </tr>
 
-        <!-- ✅ 圖片上傳欄位 -->
+        <!-- ✅ 圖片上傳欄位（支援多張） -->
         <tr>
-            <td><label for="uploadFile">上傳圖片</label></td>
+            <td><label for="uploadFiles">上傳圖片</label></td>
             <td>
-                <input type="file" name="uploadFile" id="uploadFile" multiple accept="image/*" />
+                <input type="file" name="uploadFiles" id="uploadFiles" multiple accept="image/*" />
+                <s:hidden name="mainImageIndex" id="mainImageIndex" value="0" />
                 <div id="preview" style="margin-top: 10px;"></div>
             </td>
         </tr>
@@ -85,8 +85,11 @@
     </table>
 </s:form>
 
-<!-- ✅ 表單驗證腳本 -->
+<!-- ✅ 驗證與預覽 -->
 <script>
+    let selectedFiles = [];
+    let mainImageIndex = 0;
+
     function validateForm() {
         const price = document.getElementById("productPrice").value.trim();
         const qty = document.getElementById("productAddQty").value.trim();
@@ -116,34 +119,89 @@
         return true;
     }
 
-    // ✅ 圖片預覽
-    document.getElementById("uploadFile").addEventListener("change", function (event) {
+    document.getElementById("uploadFiles").addEventListener("change", function (event) {
+        selectedFiles = Array.from(event.target.files);
+        mainImageIndex = 0;
+        rebuildPreview();
+    });
+
+    function rebuildPreview() {
         const preview = document.getElementById("preview");
+        const mainIndexInput = document.getElementById("mainImageIndex");
         preview.innerHTML = "";
 
-        const files = event.target.files;
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-
+        selectedFiles.forEach((file, index) => {
             if (file.type.startsWith("image/")) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
+                    const wrapper = document.createElement("div");
+                    wrapper.style.display = "inline-block";
+                    wrapper.style.margin = "5px";
+                    wrapper.style.position = "relative";
+
                     const img = document.createElement("img");
                     img.src = e.target.result;
                     img.style.maxWidth = "100px";
                     img.style.maxHeight = "100px";
-                    img.style.marginRight = "10px";
-                    img.style.marginBottom = "10px";
-                    img.style.border = "1px solid #ccc";
+                    img.style.border = (index === mainImageIndex) ? "3px solid red" : "1px solid #ccc";
                     img.style.padding = "3px";
-                    img.style.boxShadow = "1px 1px 4px rgba(0,0,0,0.2)";
-                    preview.appendChild(img);
+                    img.style.cursor = "pointer";
+
+                    img.onclick = function () {
+                        mainImageIndex = index;
+                        rebuildPreview();
+                    };
+
+                    const removeBtn = document.createElement("button");
+                    removeBtn.textContent = "×";
+                    removeBtn.style.position = "absolute";
+                    removeBtn.style.top = "0";
+                    removeBtn.style.right = "0";
+                    removeBtn.style.background = "red";
+                    removeBtn.style.color = "white";
+                    removeBtn.style.border = "none";
+                    removeBtn.style.cursor = "pointer";
+
+                    removeBtn.onclick = function () {
+                        selectedFiles.splice(index, 1);
+                        if (mainImageIndex >= selectedFiles.length) {
+                            mainImageIndex = selectedFiles.length - 1;
+                        }
+                        rebuildFileInput();
+                        rebuildPreview();
+                    };
+
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    preview.appendChild(wrapper);
                 };
                 reader.readAsDataURL(file);
             }
-        }
-    });
+        });
+
+        mainIndexInput.value = mainImageIndex;
+    }
+
+    function rebuildFileInput() {
+        const oldInput = document.getElementById("uploadFiles");
+        const newInput = oldInput.cloneNode();
+        oldInput.parentNode.replaceChild(newInput, oldInput);
+
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => dataTransfer.items.add(file));
+        newInput.files = dataTransfer.files;
+        newInput.id = "uploadFiles";
+
+        // 綁定 change 事件（防止遞迴）
+        newInput.addEventListener("change", function (e) {
+            selectedFiles = Array.from(e.target.files);
+            mainImageIndex = 0;
+            rebuildPreview();
+        });
+    }
 </script>
+
+
 <a href="/back">🔙 回後台首頁</a>
 </body>
 </html>

@@ -8,21 +8,26 @@ import com.google.api.services.drive.model.File;
 import com.google.api.services.drive.model.Permission;
 
 import java.io.IOException;
-import java.nio.file.Paths;
+import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 
 public class GoogleDriveUploader {
 
-    // ✅ 替換成你實際的資料夾 ID
+    // ✅ 你的 Google Drive 資料夾 ID
     private static final String FOLDER_ID = "1nyduWdeT_6Py4YjPVM7VPS-QtCX6I7Am";
 
-    // ✅ 替換為你的金鑰檔案路徑
-    private static final String CREDENTIALS_FILE_PATH = "src/main/resources/credentials/你的-json金鑰檔案.json";
+    // ✅ 金鑰檔案名稱（放在 resources 根目錄）
+    private static final String CREDENTIALS_FILE_NAME = "eshopjsp-e2e5a5c16eb4.json";
 
     private static Drive getDriveService() throws IOException, GeneralSecurityException {
-        GoogleCredential credential = GoogleCredential.fromStream(
-                        java.nio.file.Files.newInputStream(Paths.get(CREDENTIALS_FILE_PATH)))
+        InputStream in = GoogleDriveUploader.class.getClassLoader().getResourceAsStream(CREDENTIALS_FILE_NAME);
+
+        if (in == null) {
+            throw new IOException("❌ 找不到金鑰檔案：" + CREDENTIALS_FILE_NAME);
+        }
+
+        GoogleCredential credential = GoogleCredential.fromStream(in)
                 .createScoped(Collections.singleton(DriveScopes.DRIVE));
 
         return new Drive.Builder(
@@ -35,23 +40,46 @@ public class GoogleDriveUploader {
     public static String uploadImage(java.io.File imageFile) throws Exception {
         Drive service = getDriveService();
 
+        // ✅ 確保副檔名正確存在
+        String originalName = imageFile.getName();
+        String ext = originalName.contains(".") ? originalName.substring(originalName.lastIndexOf(".")).toLowerCase() : ".jpg";
+        if (!ext.matches("\\.(jpg|jpeg|png|gif)")) {
+            ext = ".jpg"; // 預設為 jpg
+        }
+
+        String safeFileName = originalName;
+        if (!originalName.toLowerCase().endsWith(ext)) {
+            safeFileName = originalName + ext;
+        }
+
+        // ✅ 設定檔案上傳資訊
         File fileMetadata = new File();
-        fileMetadata.setName(imageFile.getName());
+        fileMetadata.setName(safeFileName);
         fileMetadata.setParents(Collections.singletonList(FOLDER_ID));
 
-        FileContent mediaContent = new FileContent("image/jpeg", imageFile); // 可改判斷副檔名
+        // ✅ 根據副檔名設定 MIME Type
+        String mimeType = "image/jpeg";
+        if (ext.equals(".png")) mimeType = "image/png";
+        else if (ext.equals(".gif")) mimeType = "image/gif";
+
+        FileContent mediaContent = new FileContent(mimeType, imageFile);
         File uploadedFile = service.files().create(fileMetadata, mediaContent)
                 .setFields("id")
                 .execute();
 
-        // 設定圖片公開權限
+        // ✅ 設定公開權限
         Permission permission = new Permission()
                 .setType("anyone")
                 .setRole("reader");
         service.permissions().create(uploadedFile.getId(), permission).execute();
 
-        // 回傳 <img> 可用網址
-        return "https://drive.google.com/uc?export=view&id=" + uploadedFile.getId();
+        // ✅ 回傳可用圖片網址
+        return "https://drive.google.com/thumbnail?id=" + uploadedFile.getId();
     }
-}
+    public static void deleteFileById(String fileId) throws Exception {
+        Drive service = getDriveService();
+        service.files().delete(fileId).execute();
+    }
 
+
+}

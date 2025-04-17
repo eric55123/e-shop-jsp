@@ -28,6 +28,14 @@
     <title>商品詳情</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
         function reportComment(commentId, form) {
             const reason = $(form).find("select[name='reason']").val();
             if (!reason) {
@@ -98,14 +106,6 @@
                 alert("刪除失敗，請稍後再試");
             });
         }
-
-        function escapeHtml(str) {
-            return str
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;');
-        }
     </script>
 </head>
 <body>
@@ -124,6 +124,19 @@
     <input type="number" id="qty" name="quantity" value="1" min="1" max="<%= product.getRemainingQty() %>">
     <button type="submit">加入購物車</button>
 </form>
+
+<% if (product.getCoverImageUrl() != null) { %>
+<img src="https://drive.google.com/thumbnail?id=<%= product.getCoverImageThumbnailUrl().split("id=")[1] %>" width="120"/>
+<% } %>
+<% if (product.getProductImgs() != null && !product.getProductImgs().isEmpty()) { %>
+<h4>所有圖片：</h4>
+<% for (com.eshop.product.model.ProductImg img : product.getProductImgs()) { %>
+<% if (img.getProductImgUrl() != null && img.getProductImgUrl().contains("id=")) { %>
+<img src="https://drive.google.com/thumbnail?id=<%= img.getProductImgUrl().split("id=")[1] %>"
+     width="80" style="margin:5px; border:1px solid #ccc; padding:2px;" />
+<% } %>
+<% } %>
+<% } %>
 
 <hr>
 <h3>評論區</h3>

@@ -17,8 +17,17 @@ public class ProductDAO {
 
     public Product findById(int productNo) {
         EntityManager em = JPAUtil.getEntityManager();
-        Product product = em.find(Product.class, productNo);
-        em.close();
+        Product product = null;
+        try {
+            product = em.createQuery(
+                            "SELECT p FROM Product p LEFT JOIN FETCH p.productImgs WHERE p.productNo = :productNo", Product.class)
+                    .setParameter("productNo", productNo)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            // 可能找不到商品
+        } finally {
+            em.close();
+        }
         return product;
     }
 

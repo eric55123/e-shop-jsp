@@ -47,11 +47,12 @@
 
         <action name="addProductWithImage" class="com.eshop.product.action.product.AddProductWithImageAction">
             <interceptor-ref name="fileUpload">
-                <param name="maximumSize">2097152</param>
+                <param name="maximumSize">5242880</param>
             </interceptor-ref>
             <interceptor-ref name="defaultStack"/>
-            <result name="success" type="redirect">productList.action</result>
-            <result name="error">/error.jsp</result>
+
+            <result name="success" type="redirect">productManage.action</result>
+            <result name="error">/product/product_add.jsp</result>
         </action>
 
         <action name="deleteProductImg" class="com.eshop.product.action.product.DeleteProductImgAction">

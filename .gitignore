@@ -14,6 +14,7 @@ target/
 
 ### 個人金鑰設定 ###
 config.properties
+eshopjsp-e2e5a5c16eb4.json
 
 ### Eclipse ###
 .apt_generated

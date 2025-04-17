@@ -8,7 +8,6 @@ import com.eshop.product.model.Product;
 import com.eshop.product.model.ProductImg;
 import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.commons.io.FileUtils;
 import org.apache.struts2.ServletActionContext;
 
 import java.io.File;
@@ -29,7 +28,6 @@ public class UpdateProductWithImagesAction extends ActionSupport {
     public String execute() {
         try {
             Admin loggedInAdmin = RequestUtil.getLoggedInAdmin();
-            // 查出原本的 product（含圖片）
             Product dbProduct = productService.getProductById(product.getProductNo());
             dbProduct.setProductName(product.getProductName());
             dbProduct.setProductDesc(product.getProductDesc());
@@ -38,41 +36,30 @@ public class UpdateProductWithImagesAction extends ActionSupport {
             dbProduct.setProductStatus(product.getProductStatus());
             dbProduct.setProductCategory(product.getProductCategory());
 
-            // 刪除圖片
+            // ✅ 刪除勾選圖片（同時刪除 Google Drive 圖片）
             if (deleteImgNos != null && !deleteImgNos.isEmpty()) {
                 Iterator<ProductImg> iterator = dbProduct.getProductImgs().iterator();
                 while (iterator.hasNext()) {
                     ProductImg img = iterator.next();
                     if (deleteImgNos.contains(img.getProductImgNo())) {
                         iterator.remove();
-                        imgService.deleteImg(img.getProductImgNo());
+                        imgService.deleteImageAndDriveFile(img);
                     }
                 }
             }
 
-            // 上傳新圖片
+            // ✅ 上傳新圖片至 Google Drive
             if (uploadFiles != null && !uploadFiles.isEmpty()) {
-                String uploadPath = ServletActionContext.getServletContext().getRealPath("/uploads");
-                File saveDir = new File(uploadPath);
-                if (!saveDir.exists()) saveDir.mkdirs();
-
                 int nextOrder = imgService.getNextImgOrder(dbProduct);
 
                 for (int i = 0; i < uploadFiles.size(); i++) {
                     File file = uploadFiles.get(i);
-                    String fileName = uploadFilesFileName.get(i);
-                    File destFile = new File(uploadPath + File.separator + fileName);
-                    FileUtils.copyFile(file, destFile);
-
-                    String imageUrl = "uploads/" + fileName;
-                    imgService.uploadImage(imageUrl, nextOrder++, dbProduct);
+                    imgService.uploadImage(file, nextOrder++, dbProduct);
                 }
             }
 
-            // 更新商品
             productService.updateProduct(dbProduct);
 
-            // ✅ 寫入操作紀錄
             if (loggedInAdmin != null) {
                 new AdminLogService().log(
                         loggedInAdmin.getAdminId(),

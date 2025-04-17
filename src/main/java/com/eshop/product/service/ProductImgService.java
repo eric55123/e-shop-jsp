@@ -74,9 +74,64 @@ public class ProductImgService {
         List<ProductImg> imgs = getImagesByProduct(product);
 
         for (ProductImg img : imgs) {
-            // 這裡暫時只刪資料庫，還沒整合刪 Google Drive
+            // ✅ 從圖片 URL 抽出 Google Drive 檔案 ID
+            String url = img.getProductImgUrl();
+            if (url != null && url.contains("id=")) {
+                String fileId = url.substring(url.indexOf("id=") + 3);
+                try {
+                    GoogleDriveUploader.deleteFileById(fileId);
+                    System.out.println("🗑️ 已刪除 Google Drive 圖片：" + fileId);
+                } catch (Exception e) {
+                    System.err.println("❌ 無法刪除 Google Drive 圖片：" + fileId);
+                    e.printStackTrace();
+                }
+            }
+
+            // ✅ 刪除資料庫紀錄
             deleteImg(img.getProductImgNo());
             System.out.println("🗑️ 已刪除資料庫圖片記錄：imgNo = " + img.getProductImgNo());
         }
     }
+
+    public void deleteImageWithFile(int imgNo) {
+        ProductImg img = dao.findById(imgNo);
+
+        if (img != null && img.getProductImgUrl() != null) {
+            String url = img.getProductImgUrl();
+
+            if (url.contains("id=")) {
+                String fileId = url.substring(url.indexOf("id=") + 3);
+                try {
+                    GoogleDriveUploader.deleteFileById(fileId);
+                    System.out.println("✅ 已刪除 Google Drive 圖片：" + fileId);
+                } catch (Exception e) {
+                    System.err.println("❌ 無法刪除 Google Drive 圖片：" + fileId);
+                    e.printStackTrace();
+                }
+            }
+
+            dao.deleteById(imgNo);
+            System.out.println("✅ 已刪除資料庫圖片紀錄：imgNo = " + imgNo);
+        } else {
+            System.out.println("⚠️ 找不到圖片或圖片網址為空：imgNo = " + imgNo);
+        }
+    }
+
+    public void deleteImageAndDriveFile(ProductImg img) {
+        try {
+            // 解析圖片 ID
+            String url = img.getProductImgUrl();
+            if (url != null && url.contains("id=")) {
+                String fileId = url.substring(url.indexOf("id=") + 3);
+                GoogleDriveUploader.deleteFileById(fileId); // ⬅️ 加上這個方法
+            }
+        } catch (Exception e) {
+            System.err.println("⚠️ 刪除 Google Drive 圖片失敗：" + e.getMessage());
+        }
+
+        dao.deleteById(img.getProductImgNo());
+    }
+
+
+
 }
