@@ -107,7 +107,8 @@ h2
 	margin-left:5px;
 }
 
-@media (max-width:320px){
-	.left{
-		width:80%!important;
+@media (max-width: 320px) {
+	.left {
+		width: 80% !important;
 	}
+}

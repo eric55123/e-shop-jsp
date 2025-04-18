@@ -43,7 +43,7 @@ public class MemberAction extends ActionSupport {
             member.setName(null);
 
             memberService.register(member);
-            addActionMessage("註冊成功！");
+            addActionMessage("註冊成功！即將跳轉到登入頁...");
             return SUCCESS;
         }
         return INPUT;

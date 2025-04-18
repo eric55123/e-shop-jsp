@@ -87,7 +87,7 @@
 
         <!-- 會員 -->
         <action name="register" class="com.eshop.member.action.MemberAction" method="register">
-            <result name="success">/member/login.jsp</result>
+            <result name="success">/member/register.jsp</result>  <!--  回到原頁等 JS 跳轉 -->
             <result name="input">/member/register.jsp</result>
         </action>
 
@@ -314,20 +314,17 @@
 
 <!--       ========================================================== 模板===================================== -->
 
-<!--        index.jsp	http://localhost:8080/index.action-->
-<!--        about.jsp	http://localhost:8080/about.action-->
-<!--        contact.jsp	http://localhost:8080/contact.action-->
-<!--        login.jsp	http://localhost:8080/login.action-->
-<!--        register.jsp	http://localhost:8080/register.action-->
-<!--        basket.jsp	http://localhost:8080/basket.action-->
-<!--        men.jsp	http://localhost:8080/men.action-->
-<!--        women.jsp	http://localhost:8080/women.action-->
-<!--        single.jsp	http://localhost:8080/single.action-->
+<!--&lt;!&ndash; -->
+<!--&lt;!&ndash;        about.jsp	http://localhost:8080/about.action&ndash;&gt;-->
+<!--&lt;!&ndash;        contact.jsp	http://localhost:8080/contact.action&ndash;&gt;-->
+<!--&lt;!&ndash;  -->
 
-        <!-- 首頁 -->
-        <action name="index">
-            <result>/template/index.jsp</result>
-        </action>
+<!--&lt;!&ndash;        basket.jsp	http://localhost:8080/basket.action&ndash;&gt;-->
+<!--&lt;!&ndash;        men.jsp	http://localhost:8080/men.action&ndash;&gt;-->
+<!--&lt;!&ndash;        women.jsp	http://localhost:8080/women.action&ndash;&gt;-->
+<!--&lt;!&ndash;        single.jsp	http://localhost:8080/single.action&ndash;&gt;-->
+
+
 
         <!-- 關於我們 -->
         <action name="about">
@@ -344,15 +341,7 @@
             <result>/template/contact.jsp</result>
         </action>
 
-        <!-- 會員登入 -->
-        <action name="login">
-            <result>/template/login.jsp</result>
-        </action>
 
-        <!-- 會員註冊 -->
-        <action name="register">
-            <result>/template/register.jsp</result>
-        </action>
 
         <!-- 商品頁（男裝） -->
         <action name="men">
