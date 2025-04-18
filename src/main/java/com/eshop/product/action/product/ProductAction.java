@@ -54,36 +54,31 @@ public class ProductAction extends ActionSupport {
     }
 
 
-    // 商品詳情
     public String detail() {
         product = productService.getProductById(productNo);
 
-        // ✅ 確保有讀出所有圖片（用於 detail.jsp 顯示）
-        if (product != null) {
-            product.setProductImgs(imgService.getImagesByProduct(product)); // ⬅️ 加這行
-
-            // ✅ 主圖（可用圖片第一張）
-            if (product.getProductImgs() != null && !product.getProductImgs().isEmpty()) {
-                product.setCoverImageUrl(product.getProductImgs().get(0).getProductImgUrl());
-            }
+        if (product == null) {
+            return ERROR;
         }
 
-        // ✅ 登入會員
+        product.setProductImgs(imgService.getImagesByProduct(product));
+
+        if (product.getProductImgs() != null && !product.getProductImgs().isEmpty()) {
+            product.setCoverImageUrl(product.getProductImgs().get(0).getProductImgUrl());
+        }
+
         HttpSession session = ServletActionContext.getRequest().getSession();
         Member loginMember = (Member) session.getAttribute("loginMember");
 
-        if (product != null) {
-            comments = commentService.getPublicCommentsByProduct(product, loginMember);
+        comments = commentService.getPublicCommentsByProduct(product, loginMember);
 
-            for (ProductComment c : comments) {
-                if (c.getMember() != null) {
-                    c.getMember().getName(); // 強制讀 name（防 LazyInit）
-                }
+        for (ProductComment c : comments) {
+            if (c.getMember() != null) {
+                c.getMember().getName(); // LazyInit 保險
             }
-            return "success";
         }
 
-        return ERROR;
+        return "success";
     }
 
     // 顯示新增商品頁面

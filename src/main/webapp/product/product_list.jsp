@@ -72,7 +72,7 @@
                         <input type="hidden" name="pageNo" value="1" />
                         <label for="categorySelect" class="mr-2">分類：</label>
                         <select name="product.productCategory.productCategoryId" id="categorySelect" class="form-control" onchange="this.form.submit()">
-                            <option value="">全部分類</option>
+                            <option value="">全部商品</option>
                             <c:forEach var="cat" items="${categoryList}">
                                 <option value="${cat.productCategoryId}"
                                         <c:if test="${product.productCategory.productCategoryId == cat.productCategoryId}">selected</c:if>>
