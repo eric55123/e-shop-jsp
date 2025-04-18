@@ -106,4 +106,45 @@ public class ProductService {
     public Product findById(int productNo) {
         return dao.findById(productNo);
     }
+
+    // ✅ 全部商品：分頁查詢
+    public List<Product> findByPage(int pageNo, int pageSize) {
+        List<Product> list = dao.findByPage(pageNo, pageSize);
+
+        for (Product p : list) {
+            List<ProductImg> imgs = imgDAO.findByProduct(p);
+            p.setProductImgs(imgs);
+            if (imgs != null && !imgs.isEmpty()) {
+                p.setCoverImageUrl(imgs.get(0).getProductImgUrl());
+            }
+        }
+
+        return list;
+    }
+
+    // ✅ 全部商品：總頁數
+    public int getTotalPages(int pageSize) {
+        return dao.getTotalPages(pageSize);
+    }
+
+    // ✅ 分類商品：分頁查詢
+    public List<Product> findByCategoryWithPage(int categoryId, int pageNo, int pageSize) {
+        List<Product> list = dao.findByCategoryWithPage(categoryId, pageNo, pageSize);
+
+        for (Product p : list) {
+            List<ProductImg> imgs = imgDAO.findByProduct(p);
+            p.setProductImgs(imgs);
+            if (imgs != null && !imgs.isEmpty()) {
+                p.setCoverImageUrl(imgs.get(0).getProductImgUrl());
+            }
+        }
+
+        return list;
+    }
+
+    // ✅ 分類商品：總頁數
+    public int getTotalPagesByCategory(int categoryId, int pageSize) {
+        return dao.getTotalPagesByCategory(categoryId, pageSize);
+    }
+
 }

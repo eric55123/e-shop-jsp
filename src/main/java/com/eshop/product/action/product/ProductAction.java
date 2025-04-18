@@ -29,6 +29,8 @@ public class ProductAction extends ActionSupport {
     private Map<String, String> statusOptions = new LinkedHashMap<>();
     private List<ProductComment> comments;
     private Integer selectedCategoryId;
+    private int pageNo = 1;         // 當前頁碼，預設為第1頁
+    private int totalPages;         // 總頁數
 
     private ProductService productService = new ProductService();
     private ProductImgService imgService = new ProductImgService();
@@ -36,15 +38,21 @@ public class ProductAction extends ActionSupport {
 
     // 商品列表
     public String execute() {
-        productList = productService.getAllProducts();
+        int pageSize = 5;
         categoryList = new ProductCategoryDAO().findAll();
+
+        productList = productService.findByPage(pageNo, pageSize);
+        totalPages = productService.getTotalPages(pageSize);
+
         for (Product p : productList) {
             if (p.getProductImgs() != null && !p.getProductImgs().isEmpty()) {
                 p.setCoverImageUrl(p.getProductImgs().get(0).getProductImgUrl());
             }
         }
+
         return SUCCESS;
     }
+
 
     // 商品詳情
     public String detail() {
@@ -157,22 +165,31 @@ public class ProductAction extends ActionSupport {
     }
     // 查詢特定分類的商品
     public String listByCategory() {
-        categoryList = new ProductCategoryDAO().findAll(); // ⬅️ 一律先載入分類清單
+        int pageSize = 5;
+        categoryList = new ProductCategoryDAO().findAll();
 
         if (product != null && product.getProductCategory() != null &&
                 product.getProductCategory().getProductCategoryId() != null) {
 
             Integer categoryId = product.getProductCategory().getProductCategoryId();
-            System.out.println("📂 篩選分類 ID: " + categoryId); // ✅ Debug 確認有傳入
+            System.out.println("📂 篩選分類 ID: " + categoryId);
 
-            productList = productService.getProductsByCategoryId(categoryId);
+            productList = productService.findByCategoryWithPage(categoryId, pageNo, pageSize);
+            totalPages = productService.getTotalPagesByCategory(categoryId, pageSize);
         } else {
-            addActionError("未選擇商品分類");
-            productList = productService.getAllProducts(); // ⬅️ 不然畫面會是空的
+            productList = productService.findByPage(pageNo, pageSize);
+            totalPages = productService.getTotalPages(pageSize);
+        }
+
+        for (Product p : productList) {
+            if (p.getProductImgs() != null && !p.getProductImgs().isEmpty()) {
+                p.setCoverImageUrl(p.getProductImgs().get(0).getProductImgUrl());
+            }
         }
 
         return SUCCESS;
     }
+
 
 
     // 刪除商品（包含圖片與實體圖片檔案）
@@ -241,5 +258,21 @@ public class ProductAction extends ActionSupport {
 
     public void setCategoryList(List<ProductCategory> categoryList) {
         this.categoryList = categoryList;
+    }
+
+    public int getPageNo() {
+        return pageNo;
+    }
+
+    public void setPageNo(int pageNo) {
+        this.pageNo = pageNo;
+    }
+
+    public int getTotalPages() {
+        return totalPages;
+    }
+
+    public void setTotalPages(int totalPages) {
+        this.totalPages = totalPages;
     }
 }

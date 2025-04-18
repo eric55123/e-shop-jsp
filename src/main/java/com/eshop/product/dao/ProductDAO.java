@@ -109,4 +109,57 @@ public class ProductDAO {
             em.close();
         }
     }
+
+    public List<Product> findByPage(int pageNo, int pageSize) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery("FROM Product ORDER BY productNo", Product.class)
+                    .setFirstResult((pageNo - 1) * pageSize)
+                    .setMaxResults(pageSize)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public int getTotalPages(int pageSize) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Long count = em.createQuery("SELECT COUNT(p) FROM Product p", Long.class)
+                    .getSingleResult();
+            return (int) Math.ceil((double) count / pageSize);
+        } finally {
+            em.close();
+        }
+    }
+
+    public List<Product> findByCategoryWithPage(int categoryId, int pageNo, int pageSize) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            return em.createQuery(
+                            "FROM Product WHERE productCategory.productCategoryId = :categoryId ORDER BY productNo", Product.class)
+                    .setParameter("categoryId", categoryId)
+                    .setFirstResult((pageNo - 1) * pageSize)
+                    .setMaxResults(pageSize)
+                    .getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    public int getTotalPagesByCategory(int categoryId, int pageSize) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            Long count = em.createQuery(
+                            "SELECT COUNT(p) FROM Product p WHERE p.productCategory.productCategoryId = :categoryId", Long.class)
+                    .setParameter("categoryId", categoryId)
+                    .getSingleResult();
+            return (int) Math.ceil((double) count / pageSize);
+        } finally {
+            em.close();
+        }
+    }
+
+
+
 }
