@@ -1,138 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="s" uri="/struts-tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <title>會員註冊</title>
 
-    <!-- ✅ Bootstrap & 自訂樣式 -->
-    <link href="<%=request.getContextPath()%>/template/css/bootstrap.css" rel="stylesheet" />
-    <link href="<%=request.getContextPath()%>/template/css/style.css" rel="stylesheet" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/template/css/sticky-navigation.css" />
-    <link href="<%=request.getContextPath()%>/template/css/demo.css" rel="stylesheet" />
-
-    <!-- ✅ jQuery & jQuery UI -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-
-    <script>
-        function validateForm() {
-            const email = document.querySelector('[name="member.email"]').value.trim();
-            const username = document.querySelector('[name="member.username"]').value.trim();
-            const password = document.querySelector('[name="member.password"]').value.trim();
-            const phone = document.querySelector('[name="member.phone"]').value.trim();
-
-            if (email === "") {
-                alert("請輸入 Email！");
-                return false;
-            }
-
-            const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-            if (!emailRegex.test(email)) {
-                alert("Email 格式錯誤！");
-                return false;
-            }
-
-            if (username === "") {
-                alert("請輸入暱稱！");
-                return false;
-            }
-
-            if (password.length < 6) {
-                alert("密碼至少 6 碼！");
-                return false;
-            }
-
-            if (phone !== "") {
-                const phoneRegex = /^09\d{8}$/;
-                if (!phoneRegex.test(phone)) {
-                    alert("手機號碼格式錯誤！");
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        $(function () {
-            // ✅ 導覽列效果
-            var sticky_navigation_offset_top = $('#sticky_navigation').offset()?.top || 0;
-            var sticky_navigation = function () {
-                var scroll_top = $(window).scrollTop();
-                if (scroll_top > sticky_navigation_offset_top) {
-                    $('#sticky_navigation').css({ 'position': 'fixed', 'top': 0, 'left': 0 });
-                } else {
-                    $('#sticky_navigation').css({ 'position': 'relative' });
-                }
-            };
-            sticky_navigation();
-            $(window).scroll(function () { sticky_navigation(); });
-
-            $("span.menu").click(function () {
-                $(".navig").slideToggle("slow");
-            });
-
-            $("button.search").click(function () {
-                $(".serch").slideToggle("slow");
-            });
-
-            // ✅ 日期選擇器初始化
-            $("#birthday").datepicker({
-                dateFormat: "yy-mm-dd",
-                changeMonth: true,
-                changeYear: true,
-                yearRange: "1900:c",
-                maxDate: 0
-            });
-        });
-    </script>
-</head>
-
-<body>
-
-<!-- ✅ 導覽列 -->
-<div class="header">
-    <div class="container">
-        <div id="demo_top_wrapper">
-            <div id="sticky_navigation_wrapper">
-                <div id="sticky_navigation">
-                    <div class="demo_container navigation-bar">
-                        <div class="navigation">
-                            <div class="logo"><a href="productList.action">eShop</a></div>
-                            <span class="menu"></span>
-                            <div class="navig">
-                                <ul>
-                                    <li><a href="women.action">Woman</a></li>
-                                    <li><a href="men.action">Men</a></li>
-                                    <li><a href="#">Kids</a></li>
-                                    <li><a href="#">即將到來</a></li>
-                                    <li><a href="faqList.action">常見問題</a></li>
-                                </ul>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="navigation-right">
-                            <ul class="user">
-                                <li><span></span><a href="login.action">Log In</a></li>
-                                <li><span class="cart"></span><a href="cart.action">購物車</a></li>
-                                <li><button class="search"></button></li>
-                            </ul>
-                        </div>
-                        <div class="clearfix"></div>
-                        <div class="serch">
-                            <span>
-                                <input type="text" placeholder="Search" required="">
-                                <input type="submit" value="" />
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<jsp:include page="/includes/header.jsp" />
 
 <!-- ✅ 註冊區塊 -->
 <div class="container">
@@ -206,5 +76,55 @@
     </section>
 </div>
 
-</body>
-</html>
+<!-- ✅ 客製化 JavaScript -->
+<script>
+    function validateForm() {
+        const email = document.querySelector('[name="member.email"]').value.trim();
+        const username = document.querySelector('[name="member.username"]').value.trim();
+        const password = document.querySelector('[name="member.password"]').value.trim();
+        const phone = document.querySelector('[name="member.phone"]').value.trim();
+
+        if (email === "") {
+            alert("請輸入 Email！");
+            return false;
+        }
+
+        const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+        if (!emailRegex.test(email)) {
+            alert("Email 格式錯誤！");
+            return false;
+        }
+
+        if (username === "") {
+            alert("請輸入暱稱！");
+            return false;
+        }
+
+        if (password.length < 6) {
+            alert("密碼至少 6 碼！");
+            return false;
+        }
+
+        if (phone !== "") {
+            const phoneRegex = /^09\d{8}$/;
+            if (!phoneRegex.test(phone)) {
+                alert("手機號碼格式錯誤！");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    $(function () {
+        $("#birthday").datepicker({
+            dateFormat: "yy-mm-dd",
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "1900:c",
+            maxDate: 0
+        });
+    });
+</script>
+
+<jsp:include page="/includes/footer.jsp" />
