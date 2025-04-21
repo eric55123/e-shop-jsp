@@ -36,6 +36,7 @@ public class ECPayService {
             // ✅ 使用你的 ngrok 測試網址
             obj.setReturnURL("https://f706-36-227-252-85.ngrok-free.app/ecpayReturn.action");
             obj.setOrderResultURL("https://f706-36-227-252-85.ngrok-free.app/ecpay/result.jsp");
+            obj.setClientBackURL("http://localhost:8080/eshop/orderSuccess.action"); // ✅ 回你本地端，保留 session
 
             obj.setNeedExtraPaidInfo("N");
 
