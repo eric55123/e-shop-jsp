@@ -38,7 +38,7 @@ public class ProductAction extends ActionSupport {
 
     // 商品列表
     public String execute() {
-        int pageSize = 5;
+        int pageSize = 12;
         categoryList = new ProductCategoryDAO().findAll();
 
         productList = productService.findByPage(pageNo, pageSize);

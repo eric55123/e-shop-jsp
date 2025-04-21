@@ -7,18 +7,22 @@
             : null;
 %>
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><s:property value="pageTitle" default="eShop" /></title>
 
     <!-- ✅ Bootstrap & 自訂樣式 -->
-    <link href="<%=request.getContextPath()%>/template/css/bootstrap.css" rel="stylesheet" />
-    <link href="<%=request.getContextPath()%>/template/css/style.css" rel="stylesheet" />
-    <link href="<%=request.getContextPath()%>/template/css/sticky-navigation.css" rel="stylesheet" />
-    <link href="<%=request.getContextPath()%>/template/css/demo.css" rel="stylesheet" />
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/template/css/bootstrap.css" />
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/template/css/style.css" />
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/template/css/sticky-navigation.css" />
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/template/css/demo.css" />
 
+    <!-- ✅ jQuery -->
     <script src="<%=request.getContextPath()%>/template/js/jquery-1.11.0.min.js"></script>
 
+    <!-- ✅ Sticky nav JS -->
     <script>
         $(function () {
             var offsetTop = $('#sticky_navigation').offset()?.top || 0;
@@ -28,66 +32,65 @@
             };
             stickyNav();
             $(window).on('scroll', stickyNav);
-            $("span.menu").click(() => $(".navig").slideToggle("slow"));
-            $("button.search").click(() => $(".serch").slideToggle("slow"));
         });
     </script>
 </head>
 
 <body style="background-color: #fff;">
-
 <!-- ✅ 導覽列區塊 -->
-<div class="header">
+<div class="header border-bottom">
     <div class="container">
         <div id="demo_top_wrapper">
             <div id="sticky_navigation_wrapper">
                 <div id="sticky_navigation">
-                    <div class="demo_container navigation-bar">
-                        <!-- 左邊 logo + 選單 -->
-                        <div class="navigation">
-                            <div class="logo">
-                                <a href="<%=request.getContextPath()%>/productList.action">eShop</a>
+                    <div class="row align-items-center py-3">
+                        <!-- LOGO + 選單 -->
+                        <div class="col-md-8 d-flex align-items-center">
+                            <div class="logo mr-4">
+                                <a href="<%=request.getContextPath()%>/productList.action" class="h5 font-weight-bold text-dark">eShop</a>
                             </div>
-                            <span class="menu"></span>
-                            <div class="navig">
-                                <ul>
-                                    <li><a href="<%=request.getContextPath()%>/women.action">Woman</a></li>
-                                    <li><a href="<%=request.getContextPath()%>/men.action">Men</a></li>
-                                    <li><a href="#">Kids</a></li>
-                                    <li><a href="#">即將到來</a></li>
-                                    <li><a href="<%=request.getContextPath()%>/faqList.action">常見問題</a></li>
+                            <nav class="flex-grow-1">
+                                <ul class="list-inline mb-0">
+                                    <li class="list-inline-item px-2"><a href="<%=request.getContextPath()%>/women.action">Woman</a></li>
+                                    <li class="list-inline-item px-2"><a href="<%=request.getContextPath()%>/men.action">Men</a></li>
+                                    <li class="list-inline-item px-2"><a href="#">Kids</a></li>
+                                    <li class="list-inline-item px-2"><a href="#">即將到來</a></li>
+                                    <li class="list-inline-item px-2"><a href="<%=request.getContextPath()%>/faqList.action">常見問題</a></li>
                                 </ul>
-                            </div>
-                            <div class="clearfix"></div>
+                            </nav>
                         </div>
 
-                        <!-- 右邊使用者狀態 -->
-                        <div class="navigation-right">
-                            <ul class="user">
+                        <!-- 使用者狀態欄 -->
+                        <div class="col-md-4 text-md-right mt-3 mt-md-0">
+                            <ul class="list-inline mb-0">
                                 <% if (loginMember != null) { %>
-                                <li><span class="user-icon"></span>歡迎，<strong><%= displayName %></strong></li>
-                                <li><a href="<%=request.getContextPath()%>/logout.action">登出</a></li>
+                                <li class="list-inline-item">歡迎，<strong><%= displayName %></strong></li>
+                                <li class="list-inline-item"><a href="<%=request.getContextPath()%>/logout.action">登出</a></li>
                                 <% } else { %>
-                                <li><a href="<%=request.getContextPath()%>/login.action">登入</a></li>
-                                <li><a href="<%=request.getContextPath()%>/memberRegister.action">註冊</a></li>
+                                <li class="list-inline-item"><a href="<%=request.getContextPath()%>/login.action">登入</a></li>
+                                <li class="list-inline-item"><a href="<%=request.getContextPath()%>/memberRegister.action">註冊</a></li>
                                 <% } %>
-                                <li><a href="<%=request.getContextPath()%>/cart.action"><span class="cart"></span>購物車</a></li>
-                                <li><button class="search"></button></li>
+                                <li class="list-inline-item"><a href="<%=request.getContextPath()%>/cart.action">購物車</a></li>
                             </ul>
                         </div>
-
-                        <div class="clearfix"></div>
-
-                        <!-- 搜尋欄 -->
-                        <div class="serch">
-                            <span>
-                                <input type="text" placeholder="Search" />
-                                <input type="submit" value="" />
-                            </span>
-                        </div>
                     </div>
+                    <!-- optional 分隔線 -->
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<style>
+    /*!* ✅ 去除整體預設邊距 *!*/
+    /*html, body {*/
+    /*    margin: 0;*/
+    /*    padding: 0;*/
+    /*}*/
+
+    /* ✅ 去除 container 上層 padding（讓 header 貼齊最頂） */
+    .header {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+</style>
