@@ -34,8 +34,8 @@ public class ECPayService {
             obj.setItemName("商品共 " + order.getItems().size() + " 項");
 
             // ✅ 使用你的 ngrok 測試網址
-            obj.setReturnURL("https://56a5-36-227-210-125.ngrok-free.app/ecpayReturn.action");
-            obj.setOrderResultURL("https://56a5-36-227-210-125.ngrok-free.app/ecpay/result.jsp");
+            obj.setReturnURL("https://f706-36-227-252-85.ngrok-free.app/ecpayReturn.action");
+            obj.setOrderResultURL("https://f706-36-227-252-85.ngrok-free.app/ecpay/result.jsp");
 
             obj.setNeedExtraPaidInfo("N");
 
