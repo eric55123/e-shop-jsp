@@ -225,6 +225,12 @@
             <result name="error">/cartitem/cart.jsp</result>
         </action>
 
+        <action name="removeCoupon" class="com.eshop.cartitem.action.RemoveCouponAction">
+            <result name="success">/cartitem/cart.jsp</result>
+        </action>
+
+        <!-- 綠界 -->
+
         <action name="ecpayReturn" class="com.eshop.ecpay.ECPayReturnAction" />
 
         <action name="googleLoginCallback" class="com.eshop.member.action.GoogleLoginCallbackAction">
@@ -243,6 +249,7 @@
             <result name="success" type="redirect">/admin/adminLogin.jsp</result>
         </action>
 
+        <!-- 管理員檢舉省查 -->
         <action name="adminCommentReport" class="com.eshop.product.action.admin.AdminCommentReportAction">
             <result name="success">/admin/commentReport.jsp</result>
             <result name="login" type="redirect">/admin/adminLogin.jsp</result>
@@ -253,6 +260,8 @@
             <result name="login" type="redirect">/admin/adminLogin.jsp</result>
             <result name="error">/admin/commentReport.jsp</result>
         </action>
+
+        <!-- 常見問題 -->
 
         <action name="faqAdminList" class="com.eshop.faq.action.FaqAction" method="adminList">
             <result name="admin">/faq/faq_list_admin.jsp</result>
@@ -277,6 +286,8 @@
         <action name="faqList" class="com.eshop.faq.action.FaqAction" method="list">
             <result name="success">/faq/faq_front.jsp</result>
         </action>
+
+        <!-- 管理員 -->
 
         <action name="adminCreate" class="com.eshop.admin.action.AdminCreateAction">
             <result name="success">/admin/admin_create.jsp</result>

@@ -19,6 +19,9 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/template/css/sticky-navigation.css" />
     <link rel="stylesheet" href="<%=request.getContextPath()%>/template/css/demo.css" />
 
+    <!-- ✅ zmdi 圖示 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-design-iconic-font@2.2.0/dist/css/material-design-iconic-font.min.css">
+
     <!-- ✅ jQuery -->
     <script src="<%=request.getContextPath()%>/template/js/jquery-1.11.0.min.js"></script>
 

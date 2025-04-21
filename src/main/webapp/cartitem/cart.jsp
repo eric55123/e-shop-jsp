@@ -15,7 +15,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>購物車 | Shade Template</title>
+    <title>購物車 | eShop</title>
     <link href="<%=request.getContextPath()%>/template/css/bootstrap.css" rel="stylesheet" />
     <script src="<%=request.getContextPath()%>/template/js/jquery-1.11.0.min.js"></script>
     <link href="<%=request.getContextPath()%>/template/css/style.css" rel="stylesheet" />
@@ -30,57 +30,8 @@
 </head>
 <body>
 
-<!-- ✅ 導覽列 -->
-<div class="header">
-    <div class="container">
-        <div id="demo_top_wrapper">
-            <div id="sticky_navigation_wrapper">
-                <div id="sticky_navigation">
-                    <div class="demo_container navigation-bar">
-                        <div class="navigation">
-                            <div class="logo"><a href="productList.action">eShop</a></div>
-                            <span class="menu"></span>
-                            <script>
-                                $("span.menu").click(function() {
-                                    $(".navig").slideToggle("slow");
-                                });
-                            </script>
-                            <div class="navig">
-                                <ul>
-                                    <li><a href="women.action">Woman</a></li>
-                                    <li><a href="men.action">Men</a></li>
-                                    <li><a href="#">Kids</a></li>
-                                    <li><a href="#">即將到來</a></li>
-                                    <li><a href="faqList.action">常見問題</a></li>
-                                </ul>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="navigation-right">
-                            <ul class="user">
-                                <li><span></span><a href="login.action">Log In</a></li>
-                                <li><span class="cart"></span><a href="cart.action">購物車</a></li>
-                                <li><button class="search"></button></li>
-                            </ul>
-                        </div>
-                        <div class="clearfix"></div>
-                        <div class="serch">
-                            <span>
-                                <input type="text" placeholder="Search" required="">
-                                <input type="submit" value="" />
-                            </span>
-                        </div>
-                        <script>
-                            $("button.search").click(function() {
-                                $(".serch").slideToggle("slow");
-                            });
-                        </script>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- ✅ 頁首導覽列 -->
+<jsp:include page="/includes/header.jsp" />
 
 <!-- ✅ 主畫面 -->
 <div class="container">
@@ -123,12 +74,10 @@
                     <td><%= p.getProductName() %></td>
                     <td>$<%= p.getProductPrice() %></td>
                     <td>
-
                         <div class="d-flex justify-content-center">
                             <input type="number" name="quantity" class="form-control qty-input w-50" data-product="<%= p.getProductNo() %>"
                                    data-price="<%= p.getProductPrice() %>" value="<%= qty %>" min="0" max="<%= p.getRemainingQty() %>">
                         </div>
-
                     </td>
                     <td class="subtotal">$0.00</td>
                     <td>
@@ -231,6 +180,9 @@
     </section>
 </div>
 
+<!-- ✅ 頁尾 -->
+<jsp:include page="/includes/footer.jsp" />
+
 <script>
     $(document).ready(function () {
         function updateCartSummary() {
@@ -242,11 +194,23 @@
                 $(this).find(".subtotal").text("$" + subtotal.toFixed(2));
                 total += subtotal;
             });
-            $("#cart-total").text("$" + total.toFixed(2));
+
+            // ✅ 額外抓取折扣金額（從成功訊息裡）
+            let discountText = $(".alert-success").text();
+            let discountAmount = 0;
+            if (discountText.includes("折扣金額")) {
+                const match = discountText.match(/[$＄](\d+(\.\d+)?)/);
+                if (match) {
+                    discountAmount = parseFloat(match[1]);
+                }
+            }
+
+            // ✅ 套用折扣後的金額
+            let finalTotal = total - discountAmount;
+            $("#cart-total").text("$" + finalTotal.toFixed(2));
         }
 
         $(".qty-input").on("input", function () {
-
             updateCartSummary();
 
             // 🚀 同步更新後端購物車資料
@@ -257,7 +221,6 @@
                 quantity: quantity
             });
         });
-
 
         updateCartSummary();
     });
