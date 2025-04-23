@@ -7,8 +7,6 @@ import javax.persistence.*;
 import java.util.List;
 
 public class ProductDAO {
-    private static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("eShopPU");
-
 
     public List<Product> findAll() {
         EntityManager em = JPAUtil.getEntityManager();
@@ -100,7 +98,7 @@ public class ProductDAO {
     }
 
     public List<Product> findByCategoryId(Integer categoryId) {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         try {
             return em.createQuery("FROM Product WHERE productCategory.productCategoryId = :categoryId", Product.class)
                     .setParameter("categoryId", categoryId)
@@ -111,7 +109,7 @@ public class ProductDAO {
     }
 
     public List<Product> findByPage(int pageNo, int pageSize) {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         try {
             return em.createQuery("FROM Product ORDER BY productNo", Product.class)
                     .setFirstResult((pageNo - 1) * pageSize)
@@ -123,7 +121,7 @@ public class ProductDAO {
     }
 
     public int getTotalPages(int pageSize) {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         try {
             Long count = em.createQuery("SELECT COUNT(p) FROM Product p", Long.class)
                     .getSingleResult();
@@ -134,7 +132,7 @@ public class ProductDAO {
     }
 
     public List<Product> findByCategoryWithPage(int categoryId, int pageNo, int pageSize) {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         try {
             return em.createQuery(
                             "FROM Product WHERE productCategory.productCategoryId = :categoryId ORDER BY productNo", Product.class)
@@ -148,7 +146,7 @@ public class ProductDAO {
     }
 
     public int getTotalPagesByCategory(int categoryId, int pageSize) {
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = JPAUtil.getEntityManager();
         try {
             Long count = em.createQuery(
                             "SELECT COUNT(p) FROM Product p WHERE p.productCategory.productCategoryId = :categoryId", Long.class)

@@ -15,7 +15,7 @@ import java.util.Collections;
 public class GoogleDriveUploader {
 
     // ✅ 你的 Google Drive 資料夾 ID
-    private static final String FOLDER_ID = "1nyduWdeT_6Py4YjPVM7VPS-QtCX6I7Am";
+    private static final String FOLDER_ID = "1licyg-Bhj5xvr2UoEbjHcX2Nj2YRguIV";
 
     // ✅ 金鑰檔案名稱（放在 resources 根目錄）
     private static final String CREDENTIALS_FILE_NAME = "eshopjsp-e2e5a5c16eb4.json";
