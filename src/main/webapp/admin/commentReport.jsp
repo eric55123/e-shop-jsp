@@ -4,7 +4,7 @@
 <html>
 <head>
     <title>評論檢舉審核</title>
-    <a href="/back">🔙 回後台首頁</a>
+    <a href="<%= request.getContextPath() %>/back" class="btn btn-secondary">🔙 回後台首頁</a>
     <style>
         table {
             width: 100%;

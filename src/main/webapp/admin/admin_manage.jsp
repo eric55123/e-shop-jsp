@@ -81,7 +81,8 @@
 <h2>📋 管理員列表</h2>
 <div class="back-links">
     <a href="adminCreate.action">➕ 新增管理員</a>
-    <a href="/back">🔙 回後台首頁</a>
+    <a href="<%= request.getContextPath() %>/back" class="btn btn-secondary">🔙 回後台首頁</a>
+
 </div>
 
 <div class="error"><s:actionerror /></div>

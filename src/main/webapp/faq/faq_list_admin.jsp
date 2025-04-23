@@ -46,7 +46,7 @@
 <p style="text-align: right;">
     👤 歡迎，<strong><%= loggedInAdmin.getName() %></strong>（帳號：<%= loggedInAdmin.getUsername() %>） |
     <a href="adminLogout.action">🚪 登出</a>
-    <a href="/back">🔙 回後台首頁</a>
+    <a href="<%= request.getContextPath() %>/back" class="btn btn-secondary">🔙 回後台首頁</a>
 </p>
 
 <h2>📋 常見問題後台管理</h2>

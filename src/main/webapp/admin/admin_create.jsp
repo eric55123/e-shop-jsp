@@ -61,7 +61,7 @@
 
 <div class="btn-back">
     <a href="adminManage.action">📋 前往管理員列表</a>
-    <a href="/back">🔙 回後台首頁</a>
+    <a href="<%= request.getContextPath() %>/back" class="btn btn-secondary">🔙 回後台首頁</a>
 </div>
 
 </body>

@@ -54,9 +54,9 @@
                             </div>
                             <nav class="flex-grow-1">
                                 <ul class="list-inline mb-0">
-                                    <li class="list-inline-item px-2"><a href="<%=request.getContextPath()%>/women.action">Woman</a></li>
-                                    <li class="list-inline-item px-2"><a href="<%=request.getContextPath()%>/men.action">Men</a></li>
-                                    <li class="list-inline-item px-2"><a href="#">Kids</a></li>
+                                    <li class="list-inline-item px-2"><a href="#">即將到來</a></li>
+                                    <li class="list-inline-item px-2"><a href="#">即將到來</a></li>
+                                    <li class="list-inline-item px-2"><a href="#">即將到來</a></li>
                                     <li class="list-inline-item px-2"><a href="#">即將到來</a></li>
                                     <li class="list-inline-item px-2"><a href="<%=request.getContextPath()%>/faqList.action">常見問題</a></li>
                                 </ul>

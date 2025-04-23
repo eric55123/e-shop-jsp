@@ -57,7 +57,7 @@
 </table>
 
 <br>
-<a href="/back">🔙 回後台首頁</a>
+<a href="<%= request.getContextPath() %>/back" class="btn btn-secondary">🔙 回後台首頁</a>
 
 </body>
 </html>

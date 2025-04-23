@@ -63,8 +63,7 @@
     </s:iterator>
 </table>
 
-<p><a href="/back">🔙 回後台首頁</a></p>
-
+<a href="<%= request.getContextPath() %>/back" class="btn btn-secondary">🔙 回後台首頁</a>
 <script>
     function deleteProduct(productNo) {
         if (!confirm("確定要刪除這筆商品嗎？")) return;

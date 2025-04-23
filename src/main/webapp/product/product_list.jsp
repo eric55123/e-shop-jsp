@@ -125,7 +125,7 @@
             </nav>
 
             <div class="text-right mt-3">
-                <a href="/back" class="btn btn-secondary">🔙 回後台首頁</a>
+                <a href="<%= request.getContextPath() %>/back" class="btn btn-secondary">🔙 回後台首頁</a>
             </div>
         </div>
     </section>
