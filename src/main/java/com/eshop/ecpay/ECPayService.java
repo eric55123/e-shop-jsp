@@ -1,6 +1,7 @@
 package com.eshop.ecpay;
 
 import com.eshop.orders.model.Orders;
+import com.eshop.util.NgrokUtil;
 import ecpay.payment.integration.AllInOne;
 import ecpay.payment.integration.domain.AioCheckOutALL;
 
@@ -38,10 +39,13 @@ public class ECPayService {
             obj.setItemName("商品共 " + order.getItems().size() + " 項");
             obj.setNeedExtraPaidInfo("N");
 
-            // ✅ 自動讀 ngrok 網址
-            String baseUrl = getNgrokUrl(); // 自動讀 ngrok_url.txt
+            String baseUrl = NgrokUtil.getNgrokUrl() + "/eshop";
             obj.setReturnURL(baseUrl + "/ecpayReturn.action");
-            obj.setOrderResultURL(baseUrl + "/ecpay/result.jsp");
+            obj.setOrderResultURL(baseUrl + "/ecpay/result.action");
+            obj.setClientBackURL(baseUrl + "/orderSuccess.action");
+
+            obj.setReturnURL(baseUrl + "/ecpayReturn.action");
+            obj.setOrderResultURL(baseUrl + "/result.action");
             obj.setClientBackURL(baseUrl + "/eshop/orderSuccess.action");
 
             return allInOne.aioCheckOut(obj, null);
@@ -49,16 +53,6 @@ public class ECPayService {
             System.err.println("❌ 綠界結帳發生錯誤：" + e.getMessage());
             e.printStackTrace();
             return "<h3 style='color:red;'>發生錯誤：綠界付款失敗，請聯絡客服</h3>";
-        }
-    }
-
-    private String getNgrokUrl() {
-        try {
-            Path path = Paths.get("/home/ubuntu/ngrok_url.txt");
-            return new String(Files.readAllBytes(path)).trim();
-        } catch (IOException e) {
-            System.err.println("⚠️ 無法讀取 ngrok_url.txt，改用預設 localhost");
-            return "http://localhost:8080/eshop";
         }
     }
 }

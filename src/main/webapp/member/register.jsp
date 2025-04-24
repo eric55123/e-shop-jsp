@@ -4,6 +4,11 @@
 
 <jsp:include page="/includes/header.jsp" />
 
+<!-- ✅ jQuery & jQuery UI -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+
 <!-- ✅ 註冊區塊 -->
 <div class="container">
     <section id="main">
@@ -116,6 +121,7 @@
         return true;
     }
 
+    // ✅ jQuery UI 日期選擇器初始化
     $(function () {
         $("#birthday").datepicker({
             dateFormat: "yy-mm-dd",

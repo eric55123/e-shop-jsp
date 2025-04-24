@@ -162,6 +162,10 @@
             <result name="error">/cartitem/cart.jsp</result>
         </action>
 
+        <action name="result" class="com.eshop.payment.EcpayResultAction">
+            <result name="success">/ecpay/result.jsp</result>
+        </action>
+
         <action name="checkoutForm">
             <result>/cartitem/checkoutForm.jsp</result>
         </action>

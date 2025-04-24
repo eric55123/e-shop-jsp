@@ -49,7 +49,7 @@
     <% } %>
 
     <br>
-    <a href="http://localhost:8080/eshop/productList.action">回到首頁</a>
+    <a href="productList.action">回到首頁</a>
 </div>
 
 </body>
