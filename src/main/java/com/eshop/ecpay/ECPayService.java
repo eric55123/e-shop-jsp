@@ -40,9 +40,6 @@ public class ECPayService {
             obj.setNeedExtraPaidInfo("N");
 
             String baseUrl = NgrokUtil.getNgrokUrl() + "/eshop";
-            obj.setReturnURL(baseUrl + "/ecpayReturn.action");
-            obj.setOrderResultURL(baseUrl + "/ecpay/result.action");
-            obj.setClientBackURL(baseUrl + "/orderSuccess.action");
 
             obj.setReturnURL(baseUrl + "/ecpayReturn.action");
             obj.setOrderResultURL(baseUrl + "/result.action");

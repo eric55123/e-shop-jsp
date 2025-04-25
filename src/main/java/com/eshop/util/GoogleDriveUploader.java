@@ -74,8 +74,8 @@ public class GoogleDriveUploader {
                 .setRole("reader");
         service.permissions().create(uploadedFile.getId(), permission).execute();
 
-        // ✅ 回傳可用圖片網址
-        return "https://drive.google.com/thumbnail?id=" + uploadedFile.getId();
+        // ✅ 回傳可用圖片網址（原始圖片 URL）
+        return "https://drive.google.com/uc?export=view&id=" + uploadedFile.getId();
     }
     public static void deleteFileById(String fileId) throws Exception {
         Drive service = getDriveService();
