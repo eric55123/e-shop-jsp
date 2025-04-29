@@ -125,13 +125,11 @@
             <result name="success">/product/product_detail.jsp</result>
         </action>
 
-        <action name="updateComment" class="com.eshop.product.action.product.ProductCommentAction" method="updateComment">
-            <result name="success">/product/product_detail.jsp</result>
-        </action>
+        <!-- ✅ 編輯評論（AJAX 專用）-->
+        <action name="updateProductComment" class="com.eshop.product.action.product.ProductCommentAction" method="updateComment" />
 
-        <action name="deleteComment" class="com.eshop.product.action.product.ProductCommentAction" method="deleteComment">
-            <result name="success">/product/product_detail.jsp</result>
-        </action>
+        <!-- ✅ 刪除評論（AJAX 專用）-->
+        <action name="deleteProductComment" class="com.eshop.product.action.product.ProductCommentAction" method="deleteComment" />
 
         <!-- 購物車 -->
         <action name="addToCart" class="com.eshop.cartitem.action.AddToCartAction">
