@@ -115,4 +115,15 @@ public class MemberDAO {
             em.close();
         }
     }
+    public Member findByUsername(String username) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            TypedQuery<Member> query = em.createQuery(
+                    "FROM Member WHERE username = :username", Member.class);
+            query.setParameter("username", username);
+            return query.getResultStream().findFirst().orElse(null);
+        } finally {
+            em.close();
+        }
+    }
 }

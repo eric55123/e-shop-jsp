@@ -49,6 +49,10 @@ public class MemberService {
         return memberDAO.findById(memberId);
     }
 
+    public Member findByUsername(String username) {
+        return memberDAO.findByUsername(username);
+    }
+
     // ✅ 取得本月壽星
     public List<Member> getMembersWithBirthdayInCurrentMonth() {
         List<Member> all = getAllMembers();
@@ -106,6 +110,5 @@ public class MemberService {
     public void save(Member member) {
         memberDAO.save(member);  // 呼叫 DAO 層來儲存會員
     }
-
 
 }

@@ -10,7 +10,10 @@ import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpSession;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class MemberAction extends ActionSupport {
 
@@ -27,27 +30,67 @@ public class MemberAction extends ActionSupport {
 
     // 註冊
     public String register() {
-        if (member != null && member.getEmail() != null) {
-            boolean exists = memberService.findByEmail(member.getEmail()) != null;
-            if (exists) {
-                addActionError("此 Email 已被註冊！");
+        if (member == null || member.getEmail() == null) {
+            addActionError("請完整填寫註冊資料！");
+            return INPUT;
+        }
+
+        // ✅ Email 格式檢查
+        String email = member.getEmail().trim();
+        if (!email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
+            addActionError("Email 格式錯誤！");
+            return INPUT;
+        }
+
+        // ✅ Email 是否已註冊
+        if (memberService.findByEmail(email) != null) {
+            addActionError("此 Email 已被註冊！");
+            return INPUT;
+        }
+
+        String username = member.getUsername();
+        if (username != null && !username.trim().isEmpty()) {
+            if (memberService.findByUsername(username.trim()) != null) {
+                addActionError("此暱稱已被使用！");
                 return INPUT;
             }
+        }
 
-            // ✅ Local 註冊初始化欄位
-            member.setStatus((byte)1); // 啟用中
-            member.setCreatedAt(LocalDateTime.now());
-            member.setLoginType("local");
 
-            // Google 註冊才需要 name，local 可設為 null（避免亂塞）
-            member.setName(null);
+        // ✅ 密碼驗證
+        String password = member.getPassword();
+        if (password == null || password.length() < 6) {
+            addActionError("密碼至少 6 碼！");
+            return INPUT;
+        }
 
+        // ✅ 手機號碼驗證（可選，但格式必須正確）
+        String phone = member.getPhone();
+        if (phone != null && !phone.isEmpty()) {
+            if (!phone.matches("^09\\d{8}$")) {
+                addActionError("手機號碼格式錯誤！（需為 09 開頭共 10 碼）");
+                return INPUT;
+            }
+        }
+
+        // ✅ 設定初始欄位
+        member.setStatus((byte) 1); // 啟用中
+        member.setCreatedAt(LocalDateTime.now());
+        member.setLoginType("local");
+        member.setName(null); // Google 才需要 name
+
+        // ✅ 寫入資料庫，加上例外處理
+        try {
             memberService.register(member);
             addActionMessage("註冊成功！即將跳轉到登入頁...");
             return SUCCESS;
+        } catch (Exception e) {
+            e.printStackTrace(); // optional: log
+            addActionError("註冊失敗，請確認資料格式與唯一性！");
+            return INPUT;
         }
-        return INPUT;
     }
+
 
 
     // 登入
