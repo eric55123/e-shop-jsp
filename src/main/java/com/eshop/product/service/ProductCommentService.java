@@ -32,7 +32,7 @@ public class ProductCommentService {
     // 使用者自刪評論（狀態設為 0）
     public boolean deleteComment(int commentId) {
         try {
-            commentDAO.updateStatus(commentId, 0); // status 0 = 使用者刪除
+            commentDAO.updateStatus(commentId, (byte) 0);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -42,7 +42,7 @@ public class ProductCommentService {
 
     // 管理員封鎖不當評論（狀態設為 -1）
     public void markAsInappropriate(int commentId) {
-        commentDAO.updateStatus(commentId, -1); // status -1 = 不當言論
+        commentDAO.updateStatus(commentId, (byte) -1); // ✅ 明確轉型為 byte
     }
 
     // 查詢單一評論（編輯或驗證用）

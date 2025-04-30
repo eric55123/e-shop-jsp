@@ -22,16 +22,24 @@
     <!-- ✅ zmdi 圖示 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/material-design-iconic-font@2.2.0/dist/css/material-design-iconic-font.min.css">
 
-    <!-- ✅ jQuery -->
-    <script src="<%=request.getContextPath()%>/template/js/jquery-1.11.0.min.js"></script>
+    <!-- ✅ jQuery 3.6.0 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- ✅ jQuery UI（如果要用日期選擇器） -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 
     <!-- ✅ Sticky nav JS -->
     <script>
         $(function () {
-            var offsetTop = $('#sticky_navigation').offset()?.top || 0;
-            const stickyNav = () => {
+            var offsetTop = $('#sticky_navigation').length ? $('#sticky_navigation').offset().top : 0;
+            const stickyNav = function () {
                 const scrollTop = $(window).scrollTop();
-                $('#sticky_navigation').css({ position: scrollTop > offsetTop ? 'fixed' : 'relative' });
+                if (scrollTop > offsetTop) {
+                    $('#sticky_navigation').css({ position: 'fixed', top: 0, left: 0 });
+                } else {
+                    $('#sticky_navigation').css({ position: 'relative' });
+                }
             };
             stickyNav();
             $(window).on('scroll', stickyNav);
@@ -68,6 +76,7 @@
                             <ul class="list-inline mb-0">
                                 <% if (loginMember != null) { %>
                                 <li class="list-inline-item">歡迎，<strong><%= displayName %></strong></li>
+                                <li class="list-inline-item"><a href="<%=request.getContextPath()%>/profile.action">個人資料</a></li>
                                 <li class="list-inline-item"><a href="<%=request.getContextPath()%>/logout.action">登出</a></li>
                                 <% } else { %>
                                 <li class="list-inline-item"><a href="<%=request.getContextPath()%>/login.action">登入</a></li>
@@ -76,22 +85,15 @@
                                 <li class="list-inline-item"><a href="<%=request.getContextPath()%>/cart.action">購物車</a></li>
                             </ul>
                         </div>
-                    </div>
-                    <!-- optional 分隔線 -->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+                    </div> <!-- ✅ 關閉 row -->
+                </div> <!-- ✅ 關閉 sticky_navigation -->
+            </div> <!-- ✅ 關閉 sticky_navigation_wrapper -->
+        </div> <!-- ✅ 關閉 demo_top_wrapper -->
+    </div> <!-- ✅ 關閉 container -->
+</div> <!-- ✅ 關閉 header -->
 
+<!-- ✅ 小修CSS：讓 Header 貼頂 -->
 <style>
-    /*!* ✅ 去除整體預設邊距 *!*/
-    /*html, body {*/
-    /*    margin: 0;*/
-    /*    padding: 0;*/
-    /*}*/
-
-    /* ✅ 去除 container 上層 padding（讓 header 貼齊最頂） */
     .header {
         margin-top: 0 !important;
         padding-top: 0 !important;

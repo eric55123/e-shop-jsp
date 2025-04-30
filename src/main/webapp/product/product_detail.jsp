@@ -145,17 +145,23 @@
             <div class="col-md-12">
                 <h3 class="mb--30">評論區</h3>
                 <span class="rat__qun">(已有 <%= comments != null ? comments.size() : 0 %> 筆評論)</span>
+
                 <% if (comments != null && !comments.isEmpty()) { %>
                 <% for (ProductComment comment : comments) {
                     int cid = comment.getCommentId();
                     int status = comment.getStatus();
-                    boolean isOwner = loginMember != null && comment.getMember() != null && comment.getMember().getMemberId().equals(loginMember.getMemberId());
+                    boolean isOwner = loginMember != null && comment.getMember() != null &&
+                            comment.getMember().getMemberId().equals(loginMember.getMemberId());
                     String displayName = (comment.getMember() != null && comment.getMember().getUsername() != null)
-                            ? comment.getMember().getUsername() : (comment.getMember() != null ? comment.getMember().getName() : "匿名");
+                            ? comment.getMember().getUsername()
+                            : (comment.getMember() != null ? comment.getMember().getName() : "匿名");
                     String safeText = escapeHtml(comment.getCommentText());
                 %>
                 <div class="pro__review mb-4 p-3 border rounded bg-light">
                     <div class="review__details">
+
+                        <% if (status == 1) { %>
+                        <!-- ✅ 正常留言才顯示會員名字、星星 -->
                         <div class="review__info mb-2 d-flex align-items-center gap-2">
                             <h5 class="mb-0 me-2"><%= displayName %></h5>
                             <div>
@@ -164,10 +170,21 @@
                                 <% } %>
                             </div>
                         </div>
-                        <div class="review__date mb-1">
+                        <% } %>
+
+                        <div class="review__date mb-1 d-flex justify-content-between">
                             <small class="text-muted"><%= comment.getCommentTime().format(formatter) %></small>
+
+                            <% if (status == 1 && isOwner) { %>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-primary" onclick="toggleEditForm('<%= cid %>')">編輯</button>
+                                <button class="btn btn-sm btn-outline-danger" onclick="deleteComment('<%= cid %>')">刪除</button>
+                            </div>
+                            <% } %>
                         </div>
-                        <p class="mb-0">
+
+                        <!-- 留言內容 -->
+                        <p id="comment-text-<%= cid %>" class="mb-0">
                             <% if (status == 0) { %>
                             <span style="color:gray; font-style:italic;">此留言已由使用者刪除</span>
                             <% } else if (status == -1) { %>
@@ -176,13 +193,36 @@
                             <%= safeText %>
                             <% } %>
                         </p>
+
+                        <% if (status == 1 && isOwner) { %>
+                        <form id="edit-form-<%= cid %>" onsubmit="submitEditForm(event, '<%= cid %>')" class="mt-3" style="display: none;">
+                            <input type="hidden" name="commentId" value="<%= cid %>">
+                            <div class="form-group mb-2">
+                                <label>修改評分</label>
+                                <select name="rating" class="form-control" required>
+                                    <% for (int i = 5; i >= 1; i--) { %>
+                                    <option value="<%= i %>" <%= i == comment.getRating() ? "selected" : "" %>><%= i %> 顆星</option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="form-group mb-3">
+                                <label>修改評論內容</label>
+                                <textarea name="commentText" class="form-control" rows="3" required><%= comment.getCommentText() %></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-sm btn-success">保存修改</button>
+                            <button type="button" class="btn btn-sm btn-secondary" onclick="toggleEditForm('<%= cid %>')">取消</button>
+                        </form>
+                        <% } %>
+
                     </div>
                 </div>
                 <% } %>
+
                 <% } else { %>
                 <p>目前尚無評論。</p>
                 <% } %>
 
+                <!-- 發表新評論 -->
                 <% if (loginMember != null) { %>
                 <hr>
                 <h4>發表評論</h4>
@@ -213,5 +253,63 @@
     <p>查無此商品。</p>
     <% } %>
 </div>
+
+<script>
+    function toggleEditForm(commentId) {
+        const form = document.getElementById('edit-form-' + commentId);
+        const text = document.getElementById('comment-text-' + commentId);
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            text.style.display = 'none';
+        } else {
+            form.style.display = 'none';
+            text.style.display = 'block';
+        }
+    }
+
+    function submitEditForm(event, commentId) {
+        event.preventDefault();
+        const form = document.getElementById('edit-form-' + commentId);
+        const formData = new FormData(form);
+
+        fetch('updateProductComment.action', {
+            method: 'POST',
+            body: formData
+        })
+            .then(resp => resp.json())
+            .then(result => {
+                if (result.message === "success") {
+                    alert('✅ 評論已更新');
+                    location.reload();
+                } else {
+                    alert('❌ 更新失敗');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('❌ 系統錯誤');
+            });
+    }
+
+    function deleteComment(commentId) {
+        if (!confirm('確定要刪除這則評論嗎？')) return;
+
+        fetch('deleteProductComment.action?commentId=' + commentId)
+            .then(resp => resp.json())
+            .then(result => {
+                if (result.message === "deleted") {
+                    alert('🗑 已刪除評論');
+                    location.reload();
+                } else {
+                    alert('❌ 刪除失敗');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('❌ 系統錯誤');
+            });
+    }
+</script>
+
 
 <jsp:include page="/includes/footer.jsp" />

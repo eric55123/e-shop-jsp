@@ -53,21 +53,18 @@ public class ProductCommentDAO {
         }
     }
 
-    // 更新評論狀態（0: 使用者刪除，-1: 管理員封鎖）
-    public void updateStatus(int commentId, int newStatus) {
-
+    // 更新評論狀態（例如 0: 刪除, -1: 封鎖）
+    public void updateStatus(int commentId, byte newStatus) {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            int updatedCount = em.createQuery(
+            em.createQuery(
                             "UPDATE ProductComment c SET c.status = :status WHERE c.commentId = :id")
                     .setParameter("status", newStatus)
                     .setParameter("id", commentId)
                     .executeUpdate();
             tx.commit();
-
-
         } catch (Exception e) {
             tx.rollback();
             e.printStackTrace();

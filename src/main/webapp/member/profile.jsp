@@ -34,8 +34,8 @@
                     </div>
 
                     <div class="form-group mb-3">
-                        <label for="birthday">生日 (yyyy-MM-dd)</label>
-                        <input type="text" name="member.birthday" id="birthday" class="form-control" value="${member.birthday}" />
+                        <label for="birthday">生日</label>
+                        <input type="text" name="member.birthday" id="birthday" class="form-control" value="${member.birthday}" placeholder="yyyy-mm-dd" />
                     </div>
 
                     <div class="form-group d-flex justify-content-center">
@@ -47,7 +47,7 @@
     </section>
 </div>
 
-<!-- ✅ 驗證與滾動 JS -->
+<!-- ✅ 驗證與 jQuery UI 日期選擇器與 Sticky Nav -->
 <script>
     function validateMemberForm() {
         const username = document.querySelector('[name="member.username"]').value.trim();
@@ -55,7 +55,7 @@
         const birthday = document.querySelector('[name="member.birthday"]').value.trim();
 
         if (username.length > 50) {
-            alert("帳號不能超過 50 字！");
+            alert("暱稱不能超過 50 字！");
             return false;
         }
 
@@ -79,7 +79,8 @@
     }
 
     $(function () {
-        const stickyTop = $('#sticky_navigation').offset()?.top || 0;
+        // ✅ Sticky nav
+        const stickyTop = $('#sticky_navigation').length ? $('#sticky_navigation').offset().top : 0;
         const stickyNav = function () {
             const scrollTop = $(window).scrollTop();
             if (scrollTop > stickyTop) {
@@ -89,7 +90,19 @@
             }
         };
         stickyNav();
-        $(window).scroll(function () { stickyNav(); });
+        $(window).scroll(function () {
+            stickyNav();
+        });
+
+        // ✅ Datepicker 生日選擇器
+        $("#birthday").datepicker({
+            dateFormat: "yy-mm-dd",
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "1900:c",
+            minDate: new Date(1900, 0, 1),
+            maxDate: 0
+        });
     });
 </script>
 
