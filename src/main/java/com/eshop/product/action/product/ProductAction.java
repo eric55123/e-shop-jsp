@@ -4,6 +4,7 @@ import com.eshop.admin.model.Admin;
 import com.eshop.admin.service.AdminLogService;
 import com.eshop.member.model.Member;
 import com.eshop.product.model.ProductCategory;
+import com.eshop.product.service.CommentReportService;
 import com.eshop.product.service.ProductImgService;
 import com.eshop.product.service.ProductService;
 import com.eshop.product.service.ProductCommentService;
@@ -35,6 +36,7 @@ public class ProductAction extends ActionSupport {
     private ProductService productService = new ProductService();
     private ProductImgService imgService = new ProductImgService();
     private ProductCommentService commentService = new ProductCommentService();
+    private CommentReportService reportService = new CommentReportService();
 
     // 商品列表
     public String execute() {
@@ -76,6 +78,12 @@ public class ProductAction extends ActionSupport {
             if (c.getMember() != null) {
                 c.getMember().getName(); // LazyInit 保險
             }
+        }
+
+        // ✅ 加上這段：取得該會員已檢舉的評論 ID 清單
+        if (loginMember != null) {
+            List<Integer> reportedIds = reportService.getReportedCommentIdsByMember(loginMember.getMemberId());
+            ServletActionContext.getRequest().setAttribute("reportedCommentIds", new java.util.HashSet<>(reportedIds));
         }
 
         return "success";

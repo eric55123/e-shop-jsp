@@ -194,6 +194,17 @@
                             <% } %>
                         </p>
 
+                        <% if (status == 1 && !isOwner && loginMember != null && (reportedCommentIds == null || !reportedCommentIds.contains(cid))) { %>
+                        <div class="text-end mt-2">
+                            <button class="btn btn-sm btn-outline-warning" onclick="reportComment('<%= cid %>')">檢舉</button>
+                        </div>
+                        <% } else if (status == 1 && !isOwner && loginMember != null && reportedCommentIds.contains(cid)) { %>
+                        <div class="text-end mt-2 text-muted" style="font-size: 0.85rem;">
+                            您已檢舉過此留言
+                        </div>
+                        <% } %>
+
+
                         <% if (status == 1 && isOwner) { %>
                         <form id="edit-form-<%= cid %>" onsubmit="submitEditForm(event, '<%= cid %>')" class="mt-3" style="display: none;">
                             <input type="hidden" name="commentId" value="<%= cid %>">
@@ -309,6 +320,38 @@
                 alert('❌ 系統錯誤');
             });
     }
+
+    function reportComment(commentId) {
+        const reason = prompt("請輸入檢舉理由：");
+        if (!reason || reason.trim() === "") {
+            alert("❗ 檢舉理由不得為空");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("commentId", commentId);
+        formData.append("reason", reason);
+        formData.append("productNo", "<%= product.getProductNo() %>");
+
+        fetch("commentReport.action", {
+            method: "POST",
+            body: formData
+        })
+            .then(resp => resp.json())
+            .then(result => {
+                if (result.message === "檢舉成功") {
+                    alert("✅ 檢舉已送出，感謝您的協助！");
+                    location.reload();
+                } else {
+                    alert("⚠️ " + result.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("❌ 檢舉失敗，請稍後再試！");
+            });
+    }
+
 </script>
 
 
