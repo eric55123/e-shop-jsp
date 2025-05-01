@@ -37,13 +37,19 @@ public class CommentReportAction extends ActionSupport {
                 return writeJson("{\"message\":\"找不到該評論\"}");
             }
 
+            // ✅ 檢查是否已經檢舉過此評論
+            if (reportService.hasReported(commentId, member.getMemberId())) {
+                return writeJson("{\"message\":\"您已檢舉過這則留言\"}");
+            }
+
+            // ✅ 新增檢舉記錄
             CommentReport report = new CommentReport();
             report.setComment(comment);
             report.setReporter(member);
             report.setReason(reason);
             report.setReportTime(LocalDateTime.now());
             report.setCommentTime(comment.getCommentTime());
-            report.setStatus((byte) 0);// 預設未處理
+            report.setStatus((byte) 0); // 預設未處理
 
             reportService.insert(report);
 

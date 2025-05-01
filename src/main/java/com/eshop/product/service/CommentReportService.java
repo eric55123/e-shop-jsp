@@ -51,4 +51,7 @@ public class CommentReportService {
         return reportDAO.findPendingReports();
     }
 
+    public boolean hasReported(int commentId, int memberId) {
+        return reportDAO.existsByCommentIdAndReporter(commentId, memberId);
+    }
 }

@@ -121,9 +121,7 @@
         </action>
 
         <!-- 評論 -->
-        <action name="reportComment" class="com.eshop.product.action.member.CommentReportAction" method="execute">
-            <result name="success">/product/product_detail.jsp</result>
-        </action>
+        <action name="commentReport" class="com.eshop.product.action.member.CommentReportAction"/>
 
         <!-- ✅ 編輯評論（AJAX 專用）-->
         <action name="updateProductComment" class="com.eshop.product.action.product.ProductCommentAction" method="updateComment" />

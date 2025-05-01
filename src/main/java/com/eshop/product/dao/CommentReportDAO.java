@@ -91,4 +91,19 @@ public class CommentReportDAO {
         em.close();
         return list;
     }
+
+    public boolean existsByCommentIdAndReporter(int commentId, int memberId) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            String jpql = "SELECT COUNT(r) FROM CommentReport r WHERE r.comment.commentId = :commentId AND r.reporter.memberId = :memberId";
+            Long count = em.createQuery(jpql, Long.class)
+                    .setParameter("commentId", commentId)
+                    .setParameter("memberId", memberId)
+                    .getSingleResult();
+            return count > 0;
+        } finally {
+            em.close();
+        }
+    }
+
 }
