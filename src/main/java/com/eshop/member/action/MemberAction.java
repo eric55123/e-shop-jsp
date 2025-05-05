@@ -8,6 +8,7 @@ import com.eshop.util.RequestUtil;
 import com.opensymphony.xwork2.ActionSupport;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.struts2.ServletActionContext;
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
@@ -63,6 +64,10 @@ public class MemberAction extends ActionSupport {
             addActionError("密碼至少 6 碼！");
             return INPUT;
         }
+
+        // ✅ 加密密碼
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        member.setPassword(hashedPassword);
 
         // ✅ 手機號碼驗證（可選，但格式必須正確）
         String phone = member.getPhone();

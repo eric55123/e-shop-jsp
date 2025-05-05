@@ -2,6 +2,7 @@ package com.eshop.member.service;
 
 import com.eshop.member.dao.MemberDAO;
 import com.eshop.member.model.Member;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ public class MemberService {
     // 登入驗證（使用 email 與 password）
     public Member login(String email, String password) {
         Member found = memberDAO.findByEmail(email);
-        if (found != null && password.equals(found.getPassword())) {
+        if (found != null && BCrypt.checkpw(password, found.getPassword())) {
             return found;
         }
         return null;

@@ -341,21 +341,15 @@ VALUES
 
 -- 插入會員
 INSERT INTO member (username, password, email, login_type, name, phone, status, birthday)
-VALUES ('user1', 'pwd1', 'user1@test.com', 'local', '小明', '0911111111', 1, '1990-01-01'),
-       ('user2', 'pwd2', 'user2@test.com', 'google', '小華', '0922222222', 1, '1992-02-02'),
-       ('user3', 'pwd3', 'user3@test.com', 'local', '小美', '0933333333', 1, '1995-03-03');
+VALUES ('user1', '$2a$10$cPaDqp2nPB3cDi.KWTYKa.iIFvjDralPzlJ7OnEHIjX03gw3FtMYK', 'user1@test.com', 'local', '小明', '0911111111', 1, '1990-01-01'),
+       ('user2', '$2a$10$6zCNGWBF0QqeJr2ItA.IMOv8/WxLnspX3pIO8fr1ETeB/mVKL6xZq', 'user2@test.com', 'local', '小華', '0922222222', 1, '1992-02-02'),
+       ('user3', '$2a$10$dNlmU8qLFTU6BDGYsk2bTOej9tieEueI/29UCUpr1DqBqF6IqafX6', 'user3@test.com', 'local', '小美', '0933333333', 1, '1995-03-03');
 
 -- 插入管理員
 INSERT INTO admin (username, password, name, email, role, status)
 VALUES ('admin1', '$2a$10$M6ul9qlE/FCDt1y0Tdjl4ex5aDXPGy0rmYpxRJTdTN95WWyPkxfxe', '管理員一', 'admin1@test.com', 'super', 1),
        ('admin2', '$2a$10$HufSr8B/hdQjpAq75FOtV.XmUhUVdAX15qfOvnvWrxZFmNfki9Gj6', '管理員二', 'admin2@test.com', 'editor', 1),
        ('admin3', '$2a$10$G2m.GIZBJ/VXfCfjks9dLOUGetC0wYCmbZ4EmCpzSWo.Q69UqtEQa', '管理員三', 'admin3@test.com', 'reviewer', 1);
-
--- 會員
-INSERT INTO member (username, password, email, login_type, google_sub, name, phone, status, birthday)
-VALUES ('alice', 'pass1', 'alice@example.com', 'local', NULL, 'Alice', '0911000111', 1, '1990-01-01'),
-       ('bob', NULL, 'bob@example.com', 'google', 'google-sub-id-bob', 'Bob', '0922000222', 1, '1992-02-02'),
-       ('charlie', 'pass3', 'charlie@example.com', 'local', NULL, 'Charlie', '0933000333', 1, '1993-03-03');
 
 -- 商品評論
 INSERT INTO product_comment (product_no, member_id, rating, comment_text, status)
